@@ -10,20 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install dependencies
         run: pip install google-api-python-client google-auth
 
-      - name: Download from Google Drive
+      - name: Download latest index.html from Google Drive
         env:
           GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
-          GDRIVE_FILE_ID: ${{ secrets.GDRIVE_FILE_ID }}
+          GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FILE_ID }}
         run: |
           cat << 'EOF' > sync.py
           import os, json
@@ -38,7 +38,23 @@ jobs:
               scopes=['https://www.googleapis.com/auth/drive.readonly']
           )
           service = build('drive', 'v3', credentials=creds)
-          file_id = os.environ['GDRIVE_FILE_ID']
+          
+          # Search for most recent index.html in the folder
+          folder_id = os.environ['GDRIVE_FOLDER_ID']
+          results = service.files().list(
+              q=f"name='index.html' and '{folder_id}' in parents and trashed=false",
+              orderBy='modifiedTime desc',
+              pageSize=1,
+              fields='files(id, name, modifiedTime)'
+          ).execute()
+          
+          files = results.get('files', [])
+          if not files:
+              raise Exception('No index.html found in Drive folder')
+          
+          file_id = files[0]['id']
+          print(f"Downloading: {files[0]['name']} (modified: {files[0]['modifiedTime']})")
+          
           request = service.files().get_media(fileId=file_id)
           fh = io.BytesIO()
           downloader = MediaIoBaseDownload(fh, request)
