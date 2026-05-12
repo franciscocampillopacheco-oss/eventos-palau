@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eventos — Palau de Congressos</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --border: #1e2230;
+    --accent: #c8a96e;
+    --accent2: #5b8fa8;
+    --accent3: #7db88e;
+    --accent5: #9b7dc8;
+    --text: #e8e4dc;
+    --muted: #6b7280;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    padding: 2rem 1.5rem 4rem;
+  }
+  header {
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  header h1 span { color: var(--accent); }
+  .header-meta p { font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; text-align:right }
+  .header-meta p:first-child { color: var(--accent); margin-bottom: 0.2rem; }
+
+  .legend { display:flex; gap:1.2rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+  .legend-item { display:flex; align-items:center; gap:0.4rem; font-size:0.6rem; color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; }
+  .legend-dot { width:8px; height:8px; border-radius:50%; }
+
+  .week-nav { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:2rem; }
+  .week-btn {
+    background:var(--surface); border:1px solid var(--border);
+    color:var(--muted); font-family:'DM Mono',monospace;
+    font-size:0.65rem; letter-spacing:0.08em;
+    padding:0.5rem 1rem; cursor:pointer; transition:all 0.2s; text-transform:uppercase;
+  }
+  .week-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .week-btn.active { background:var(--accent); border-color:var(--accent); color:#0a0c10; font-weight:700; }
+
+  .week-panel { display:none; }
+  .week-panel.active { display:block; }
+
+  .week-header { display:flex; align-items:baseline; gap:1rem; margin-bottom:1.5rem; }
+  .week-label { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; color:var(--accent); letter-spacing:0.05em; text-transform:uppercase; }
+  .week-range { font-size:0.68rem; color:var(--muted); letter-spacing:0.1em; }
+
+  .day-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:1px; background:var(--border); border:1px solid var(--border);
+    margin-bottom:1.5rem;
+  }
+  .day-col { background:var(--surface); }
+  .day-header {
+    background:#13161e; padding:0.55rem 0.9rem;
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:baseline; justify-content:space-between;
+  }
+  .day-name { font-family:'Syne',sans-serif; font-weight:700; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.1em; }
+  .day-date { font-size:0.62rem; color:var(--muted); letter-spacing:0.08em; }
+  .event-list { padding:0.5rem; }
+
+  .booking-label {
+    font-size:0.52rem; color:#3a4058; letter-spacing:0.08em;
+    text-transform:uppercase; padding:0.35rem 0.6rem 0.1rem;
+    border-top:1px solid #181c28; margin-top:0.2rem;
+  }
+  .booking-label:first-child { border-top:none; margin-top:0; }
+
+  .event-card {
+    border-left:3px solid var(--border);
+    padding:0.5rem 0.7rem; margin-bottom:0.35rem;
+    background:#0d0f14; transition:border-color 0.15s;
+  }
+  .event-card:hover { border-left-color:var(--accent); }
+  .event-card.type-cafe   { border-left-color:#3d2a0a; }
+  .event-card.type-lunch  { border-left-color:#0e3020; }
+  .event-card.type-coctel { border-left-color:#2a1040; }
+
+  .event-time { font-size:0.6rem; color:var(--muted); letter-spacing:0.1em; margin-bottom:0.2rem; }
+  .event-name { font-size:0.72rem; font-family:'Syne',sans-serif; font-weight:700; color:var(--text); line-height:1.2; margin-bottom:0.35rem; }
+  .event-meta { display:flex; flex-wrap:wrap; gap:0.3rem; }
+
+  .tag { font-size:0.54rem; padding:0.15rem 0.4rem; letter-spacing:0.07em; text-transform:uppercase; }
+  .tag-room   { background:#1a2030; color:var(--accent2); border:1px solid #2a3550; }
+  .tag-cafe   { background:#201a08; color:var(--accent);  border:1px solid #403010; }
+  .tag-lunch  { background:#0f2018; color:var(--accent3); border:1px solid #1e4028; }
+  .tag-coctel { background:#180f28; color:var(--accent5); border:1px solid #301a50; }
+  .tag-other  { background:#1a1a20; color:#9090b0;        border:1px solid #2a2a40; }
+  .tag-pax    { background:#201010; color:#d07070;        border:1px solid #402020; }
+  .tag-setup  { background:#101820; color:#6090a0;        border:1px solid #204060; font-size:0.5rem; }
+
+  .empty-day { padding:1.4rem; font-size:0.6rem; color:#202430; text-align:center; letter-spacing:0.08em; text-transform:uppercase; }
+
+  .stats-bar { display:flex; gap:2rem; flex-wrap:wrap; padding:1rem 0; border-top:1px solid var(--border); }
+  .stat { display:flex; flex-direction:column; gap:0.2rem; }
+  .stat-value { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--accent); line-height:1; }
+  .stat-label { font-size:0.58rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; }
+  .stat-rooms { margin-left:auto; }
+  .stat-rooms .stat-value { font-size:0.58rem; color:var(--muted); font-family:'DM Mono'; line-height:1.7; font-weight:400; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Palau de Congressos <span>/ F&amp;B Events</span></h1>
+    <p style="font-size:0.68rem;color:var(--muted);margin-top:0.3rem;letter-spacing:0.1em;text-transform:uppercase">Palma · Mayo 2026</p>
+  </div>
+  <div class="header-meta">
+    <p>Calendario operacional</p>
+    <p>Coffee · Lunch · Cóctel · Servicios F&amp;B</p>
+  </div>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#5b8fa8"></div>Sala</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Coffee Break</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent3)"></div>Lunch Break</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent5)"></div>Cóctel</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#d07070"></div>Pax confirmados</div>
+</div>
+
+<div class="week-nav" id="weekNav"></div>
+<div id="weekPanels"></div>
+
+<script>
+const RAW = [
+  {date:"11-MAY-26",time:"10:30-11:00",booking:"LREC CONFERENCE",name:"Coffee Break Palau",room:"HALL MENORCA",pax:422,setup:"Pausa de Café"},
+  {date:"11-MAY-26",time:"13:00-14:00",booking:"LREC CONFERENCE",name:"Lunch Break",room:"PALMA + ROOFTOP",pax:null,setup:"Ver notas"},
+  {date:"11-MAY-26",time:"16:00-16:30",booking:"LREC CONFERENCE",name:"Coffee Break Palau",room:"HALL MENORCA",pax:491,setup:"Pausa de Café"},
+  {date:"12-MAY-26",time:"10:30-11:00",booking:"LREC CONFERENCE",name:"Coffee Break Palau",room:"HALL MENORCA",pax:374,setup:"Pausa de Café"},
+  {date:"12-MAY-26",time:"13:00-14:00",booking:"LREC CONFERENCE",name:"Lunch Break",room:"PALMA + ROOFTOP",pax:null,setup:"Ver notas"},
+  {date:"12-MAY-26",time:"16:00-16:30",booking:"LREC CONFERENCE",name:"Coffee Break Palau",room:"HALL MENORCA",pax:384,setup:"Pausa de Café"},
+  {date:"13-MAY-26",time:"11:00-11:20",booking:"LREC CONFERENCE",name:"Coffee Break Palau",room:"EXPO 1+2",pax:1200,setup:"Pausa de Café"},
+  {date:"13-MAY-26",time:"12:00-15:00",booking:"LREC CONFERENCE",name:"Lunch Break",room:"PALMA + ROOFTOP",pax:null,setup:"Ver notas"},
+  {date:"13-MAY-26",time:"17:00-17:20",booking:"LREC CONFERENCE",name:"Coffee Break Palau",room:"EXPO 1+2",pax:1200,setup:"Pausa de Café"},
+  {date:"13-MAY-26",time:"20:00-21:30",booking:"LREC CONFERENCE",name:"Cocktail Palau",room:"EXPO 1+2",pax:1200,setup:"Cóctel"},
+  {date:"14-MAY-26",time:"10:40-11:00",booking:"LREC CONFERENCE",name:"Coffee Break Palau",room:"EXPO 1+2",pax:1200,setup:"Pausa de Café"},
+  {date:"14-MAY-26",time:"13:20-14:45",booking:"LREC CONFERENCE",name:"Lunch Break",room:"PALMA + ROOFTOP",pax:null,setup:"Ver notas"},
+  {date:"14-MAY-26",time:"17:00-17:20",booking:"LREC CONFERENCE",name:"Coffee Break Palau",room:"EXPO 1+2",pax:1200,setup:"Pausa de Café"},
+  {date:"15-MAY-26",time:"10:40-11:00",booking:"LREC CONFERENCE",name:"Coffee Break Palau",room:"EXPO 1+2",pax:1200,setup:"Pausa de Café"},
+  {date:"15-MAY-26",time:"12:40-14:10",booking:"LREC CONFERENCE",name:"Lunch Break",room:"PALMA + ROOFTOP",pax:null,setup:"Ver notas"},
+  {date:"15-MAY-26",time:"16:40-17:00",booking:"LREC CONFERENCE",name:"Coffee Break Palau",room:"EXPO 1+2",pax:1200,setup:"Pausa de Café"},
+  {date:"16-MAY-26",time:"10:30-11:00",booking:"LREC CONFERENCE",name:"Coffee Break Palau",room:"HALL MENORCA",pax:434,setup:"Pausa de Café"},
+  {date:"16-MAY-26",time:"13:00-14:00",booking:"LREC CONFERENCE",name:"Lunch Break",room:"PALMA + ROOFTOP",pax:null,setup:"Ver notas"},
+  {date:"16-MAY-26",time:"16:00-16:30",booking:"LREC CONFERENCE",name:"Coffee Break Palau",room:"HALL MENORCA",pax:338,setup:"Pausa de Café"},
+  {date:"19-MAY-26",time:"15:00-15:30",booking:"WELLSTER WORKSHOP",name:"Coffee Break Dulce",room:"PORTOPI",pax:3,setup:"Pausa de Café"},
+  {date:"20-MAY-26",time:"11:00-11:30",booking:"WELLSTER WORKSHOP",name:"Liquid Coffee Break",room:"PORTOPI",pax:5,setup:"Pausa de Café"},
+  {date:"20-MAY-26",time:"15:00-15:30",booking:"WELLSTER WORKSHOP",name:"Coffee Break Dulce",room:"PORTOPI",pax:5,setup:"Pausa de Café"},
+  {date:"21-MAY-26",time:"11:00-11:30",booking:"WELLSTER WORKSHOP",name:"Liquid Coffee Break",room:"PORTOPI",pax:5,setup:"Pausa de Café"},
+  {date:"21-MAY-26",time:"15:00-15:30",booking:"WELLSTER WORKSHOP",name:"Coffee Break Dulce",room:"PORTOPI",pax:5,setup:"Pausa de Café"},
+  {date:"26-MAY-26",time:"11:00-11:30",booking:"BCD CAMPSA STORE MANAGER",name:"Coffee Break",room:"PORTOPI",pax:25,setup:"Pausa de Café"},
+  {date:"26-MAY-26",time:"15:00-16:30",booking:"BCD CAMPSA STORE MANAGER",name:"Cocktail",room:"REST. TRASLUZ",pax:25,setup:"Cóctel"},
+  {date:"26-MAY-26",time:"20:30-22:00",booking:"FORO ECONÓMICO 2026",name:"Cocktail Palau",room:"PALMA + ROOFTOP",pax:200,setup:"A ser informado"},
+];
+
+const MONTH_IDX = {JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11};
+const MONTHS_ES = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+// Mon=0 … Sun=6  (our internal index, NOT JS getDay)
+const DAYS_ES_MON = ['LUN','MAR','MIÉ','JUE','VIE','SÁB','DOM'];
+
+// Returns integer days since epoch, timezone-safe
+function toDays(y,m,d) {
+  // Use UTC to avoid any DST / timezone offset
+  return Math.round(Date.UTC(y,m,d) / 86400000);
+}
+
+// Parse "DD-MON-YY" → integer days
+function parseDateDays(str) {
+  const [d,m,y] = str.split('-');
+  return toDays(2000+parseInt(y), MONTH_IDX[m], parseInt(d));
+}
+
+// Day of week: 0=Mon … 6=Sun (ISO week)
+function isoDow(days) {
+  // epoch day 0 = Thu Jan 1 1970 → JS getDay()=4
+  return (days + 3) % 7; // 0=Mon
+}
+
+// Monday of the ISO week (in days)
+function mondayDays(days) { return days - isoDow(days); }
+
+// Format days back to display
+function daysToDisplay(days) {
+  const d = new Date(days * 86400000);
+  return { day: d.getUTCDate(), month: d.getUTCMonth(), dow: isoDow(days) };
+}
+
+function typeOf(name, setup) {
+  const s = (name+setup).toLowerCase();
+  if (s.includes('lunch')) return 'lunch';
+  if (s.includes('cocktail')||s.includes('cóctel')||s.includes('coctel')) return 'coctel';
+  if (s.includes('coffee')||s.includes('café')||s.includes('cafe')) return 'cafe';
+  return 'other';
+}
+
+// parse & group by Monday
+const events = RAW.map(r => ({...r, days: parseDateDays(r.date)}));
+const weekMap = {};
+events.forEach(ev => {
+  const k = mondayDays(ev.days);
+  if (!weekMap[k]) weekMap[k] = [];
+  weekMap[k].push(ev);
+});
+const weekKeys = Object.keys(weekMap).map(Number).sort((a,b)=>a-b);
+
+const nav = document.getElementById('weekNav');
+const panels = document.getElementById('weekPanels');
+
+weekKeys.forEach((monDays, wi) => {
+  const sunDays = monDays + 6;
+  const monD = daysToDisplay(monDays);
+  const sunD = daysToDisplay(sunDays);
+  const rangeStr = `${monD.day} – ${sunD.day} ${MONTHS_ES[sunD.month]} 2026`;
+
+  const btn = document.createElement('button');
+  btn.className = 'week-btn'+(wi===0?' active':'');
+  btn.innerHTML = `Semana ${wi+1} &nbsp;·&nbsp; ${rangeStr}`;
+  btn.onclick = () => {
+    document.querySelectorAll('.week-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.week-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('wp'+wi).classList.add('active');
+  };
+  nav.appendChild(btn);
+
+  const panel = document.createElement('div');
+  panel.className = 'week-panel'+(wi===0?' active':'');
+  panel.id = 'wp'+wi;
+
+  const wh = document.createElement('div');
+  wh.className = 'week-header';
+  wh.innerHTML = `<span class="week-label">Semana ${wi+1}</span><span class="week-range">${rangeStr}</span>`;
+  panel.appendChild(wh);
+
+  const grid = document.createElement('div');
+  grid.className = 'day-grid';
+
+  let totalSvcs=0, typeCounts={cafe:0,lunch:0,coctel:0,other:0};
+  const roomSet=new Set(), maxPax={};
+
+  // LUN(0) → DOM(6)
+  for (let di=0; di<7; di++) {
+    const curDays = monDays + di;
+    const curD = daysToDisplay(curDays);
+    const dayEvs = weekMap[monDays]
+      .filter(e => e.days === curDays)
+      .sort((a,b)=>a.time.localeCompare(b.time));
+
+    const col = document.createElement('div');
+    col.className = 'day-col';
+    col.innerHTML = `<div class="day-header">
+      <span class="day-name">${DAYS_ES_MON[curD.dow]}</span>
+      <span class="day-date">${curD.day} ${MONTHS_ES[curD.month]}</span>
+    </div>`;
+
+    const list = document.createElement('div');
+    list.className = 'event-list';
+
+    if (!dayEvs.length) {
+      list.innerHTML = '<div class="empty-day">Sin servicios</div>';
+    } else {
+      // group by booking
+      const bkMap = {};
+      dayEvs.forEach(ev => { (bkMap[ev.booking]=bkMap[ev.booking]||[]).push(ev); });
+
+      Object.entries(bkMap).forEach(([bk, evs], bi) => {
+        const lbl = document.createElement('div');
+        lbl.className = 'booking-label';
+        lbl.textContent = bk;
+        if (bi===0) lbl.style.borderTop='none';
+        list.appendChild(lbl);
+
+        evs.forEach(ev => {
+          totalSvcs++;
+          roomSet.add(ev.room);
+          const t = typeOf(ev.name, ev.setup);
+          typeCounts[t]=(typeCounts[t]||0)+1;
+          if (ev.pax && ev.pax>1) maxPax[ev.room]=(maxPax[ev.room]||0)+ev.pax;
+
+          const card = document.createElement('div');
+          card.className = `event-card type-${t}`;
+
+          const paxTag = ev.pax&&ev.pax>1 ? `<span class="tag tag-pax">${ev.pax.toLocaleString()} pax</span>` : '';
+          const extraTag = ev.setup&&!['Pausa de Café'].includes(ev.setup)
+            ? `<span class="tag tag-setup">${ev.setup}</span>` : '';
+
+          card.innerHTML = `
+            <div class="event-time">${ev.time}</div>
+            <div class="event-name">${ev.name}</div>
+            <div class="event-meta">
+              <span class="tag tag-room">${ev.room}</span>
+              <span class="tag tag-${t}">${t==='cafe'?'Coffee':t==='lunch'?'Lunch':t==='coctel'?'Cóctel':'Servicio'}</span>
+              ${paxTag}${extraTag}
+            </div>`;
+          list.appendChild(card);
+        });
+      });
+    }
+
+    col.appendChild(list);
+    grid.appendChild(col);
+  }
+
+  panel.appendChild(grid);
+
+  const stats = document.createElement('div');
+  stats.className = 'stats-bar';
+  stats.innerHTML = `
+    <div class="stat"><span class="stat-value">${totalSvcs}</span><span class="stat-label">Servicios</span></div>
+    <div class="stat"><span class="stat-value">${typeCounts.cafe||0}</span><span class="stat-label">Coffee Breaks</span></div>
+    <div class="stat"><span class="stat-value">${typeCounts.lunch||0}</span><span class="stat-label">Lunch Breaks</span></div>
+    <div class="stat"><span class="stat-value">${typeCounts.coctel||0}</span><span class="stat-label">Cócteles</span></div>
+    <div class="stat"><span class="stat-value">${roomSet.size}</span><span class="stat-label">Espacios</span></div>
+    <div class="stat stat-rooms">
+      <span class="stat-value">${[...roomSet].join(' · ')}</span>
+      <span class="stat-label">Espacios activos</span>
+    </div>`;
+  panel.appendChild(stats);
+  panels.appendChild(panel);
+});
+</script>
+</body>
+</html>
