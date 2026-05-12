@@ -180,36 +180,13 @@ const RAW = [
 
 const MONTH_IDX = {JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11};
 const MONTHS_ES = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
-// Mon=0 … Sun=6  (our internal index, NOT JS getDay)
 const DAYS_ES_MON = ['LUN','MAR','MIÉ','JUE','VIE','SÁB','DOM'];
 
-// Returns integer days since epoch, timezone-safe
-function toDays(y,m,d) {
-  // Use UTC to avoid any DST / timezone offset
-  return Math.round(Date.UTC(y,m,d) / 86400000);
-}
-
-// Parse "DD-MON-YY" → integer days
-function parseDateDays(str) {
-  const [d,m,y] = str.split('-');
-  return toDays(2000+parseInt(y), MONTH_IDX[m], parseInt(d));
-}
-
-// Day of week: 0=Mon … 6=Sun (ISO week)
-function isoDow(days) {
-  // epoch day 0 = Thu Jan 1 1970 → JS getDay()=4
-  return (days + 3) % 7; // 0=Mon
-}
-
-// Monday of the ISO week (in days)
+function toDays(y,m,d) { return Math.round(Date.UTC(y,m,d) / 86400000); }
+function parseDateDays(str) { const [d,m,y] = str.split('-'); return toDays(2000+parseInt(y), MONTH_IDX[m], parseInt(d)); }
+function isoDow(days) { return (days + 3) % 7; }
 function mondayDays(days) { return days - isoDow(days); }
-
-// Format days back to display
-function daysToDisplay(days) {
-  const d = new Date(days * 86400000);
-  return { day: d.getUTCDate(), month: d.getUTCMonth(), dow: isoDow(days) };
-}
-
+function daysToDisplay(days) { const d = new Date(days * 86400000); return { day: d.getUTCDate(), month: d.getUTCMonth(), dow: isoDow(days) }; }
 function typeOf(name, setup) {
   const s = (name+setup).toLowerCase();
   if (s.includes('lunch')) return 'lunch';
@@ -218,14 +195,9 @@ function typeOf(name, setup) {
   return 'other';
 }
 
-// parse & group by Monday
 const events = RAW.map(r => ({...r, days: parseDateDays(r.date)}));
 const weekMap = {};
-events.forEach(ev => {
-  const k = mondayDays(ev.days);
-  if (!weekMap[k]) weekMap[k] = [];
-  weekMap[k].push(ev);
-});
+events.forEach(ev => { const k = mondayDays(ev.days); if (!weekMap[k]) weekMap[k] = []; weekMap[k].push(ev); });
 const weekKeys = Object.keys(weekMap).map(Number).sort((a,b)=>a-b);
 
 const nav = document.getElementById('weekNav');
@@ -263,20 +235,14 @@ weekKeys.forEach((monDays, wi) => {
   let totalSvcs=0, typeCounts={cafe:0,lunch:0,coctel:0,other:0};
   const roomSet=new Set(), maxPax={};
 
-  // LUN(0) → DOM(6)
   for (let di=0; di<7; di++) {
     const curDays = monDays + di;
     const curD = daysToDisplay(curDays);
-    const dayEvs = weekMap[monDays]
-      .filter(e => e.days === curDays)
-      .sort((a,b)=>a.time.localeCompare(b.time));
+    const dayEvs = weekMap[monDays].filter(e => e.days === curDays).sort((a,b)=>a.time.localeCompare(b.time));
 
     const col = document.createElement('div');
     col.className = 'day-col';
-    col.innerHTML = `<div class="day-header">
-      <span class="day-name">${DAYS_ES_MON[curD.dow]}</span>
-      <span class="day-date">${curD.day} ${MONTHS_ES[curD.month]}</span>
-    </div>`;
+    col.innerHTML = `<div class="day-header"><span class="day-name">${DAYS_ES_MON[curD.dow]}</span><span class="day-date">${curD.day} ${MONTHS_ES[curD.month]}</span></div>`;
 
     const list = document.createElement('div');
     list.className = 'event-list';
@@ -284,44 +250,27 @@ weekKeys.forEach((monDays, wi) => {
     if (!dayEvs.length) {
       list.innerHTML = '<div class="empty-day">Sin servicios</div>';
     } else {
-      // group by booking
       const bkMap = {};
       dayEvs.forEach(ev => { (bkMap[ev.booking]=bkMap[ev.booking]||[]).push(ev); });
-
       Object.entries(bkMap).forEach(([bk, evs], bi) => {
         const lbl = document.createElement('div');
         lbl.className = 'booking-label';
         lbl.textContent = bk;
         if (bi===0) lbl.style.borderTop='none';
         list.appendChild(lbl);
-
         evs.forEach(ev => {
-          totalSvcs++;
-          roomSet.add(ev.room);
+          totalSvcs++; roomSet.add(ev.room);
           const t = typeOf(ev.name, ev.setup);
           typeCounts[t]=(typeCounts[t]||0)+1;
-          if (ev.pax && ev.pax>1) maxPax[ev.room]=(maxPax[ev.room]||0)+ev.pax;
-
           const card = document.createElement('div');
           card.className = `event-card type-${t}`;
-
           const paxTag = ev.pax&&ev.pax>1 ? `<span class="tag tag-pax">${ev.pax.toLocaleString()} pax</span>` : '';
-          const extraTag = ev.setup&&!['Pausa de Café'].includes(ev.setup)
-            ? `<span class="tag tag-setup">${ev.setup}</span>` : '';
-
-          card.innerHTML = `
-            <div class="event-time">${ev.time}</div>
-            <div class="event-name">${ev.name}</div>
-            <div class="event-meta">
-              <span class="tag tag-room">${ev.room}</span>
-              <span class="tag tag-${t}">${t==='cafe'?'Coffee':t==='lunch'?'Lunch':t==='coctel'?'Cóctel':'Servicio'}</span>
-              ${paxTag}${extraTag}
-            </div>`;
+          const extraTag = ev.setup&&!['Pausa de Café'].includes(ev.setup) ? `<span class="tag tag-setup">${ev.setup}</span>` : '';
+          card.innerHTML = `<div class="event-time">${ev.time}</div><div class="event-name">${ev.name}</div><div class="event-meta"><span class="tag tag-room">${ev.room}</span><span class="tag tag-${t}">${t==='cafe'?'Coffee':t==='lunch'?'Lunch':t==='coctel'?'Cóctel':'Servicio'}</span>${paxTag}${extraTag}</div>`;
           list.appendChild(card);
         });
       });
     }
-
     col.appendChild(list);
     grid.appendChild(col);
   }
@@ -336,10 +285,7 @@ weekKeys.forEach((monDays, wi) => {
     <div class="stat"><span class="stat-value">${typeCounts.lunch||0}</span><span class="stat-label">Lunch Breaks</span></div>
     <div class="stat"><span class="stat-value">${typeCounts.coctel||0}</span><span class="stat-label">Cócteles</span></div>
     <div class="stat"><span class="stat-value">${roomSet.size}</span><span class="stat-label">Espacios</span></div>
-    <div class="stat stat-rooms">
-      <span class="stat-value">${[...roomSet].join(' · ')}</span>
-      <span class="stat-label">Espacios activos</span>
-    </div>`;
+    <div class="stat stat-rooms"><span class="stat-value">${[...roomSet].join(' · ')}</span><span class="stat-label">Espacios activos</span></div>`;
   panel.appendChild(stats);
   panels.appendChild(panel);
 });
