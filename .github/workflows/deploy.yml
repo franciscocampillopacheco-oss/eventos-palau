@@ -1,0 +1,14 @@
+name: Deploy desde Google Drive
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1'  # Cada lunes a las 6am
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download from Drive and deploy
+        run: echo "Manual trigger ready"
