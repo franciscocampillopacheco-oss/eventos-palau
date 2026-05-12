@@ -1,14 +1,60 @@
-name: Deploy desde Google Drive
+name: Sync desde Google Drive
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 6 * * 1'  # Cada lunes a las 6am
+    - cron: '0 6 * * 1'
 
 jobs:
-  deploy:
+  sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Download from Drive and deploy
-        run: echo "Manual trigger ready"
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install google-api-python-client google-auth
+
+      - name: Download from Google Drive
+        env:
+          GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
+          GDRIVE_FILE_ID: ${{ secrets.GDRIVE_FILE_ID }}
+        run: |
+          cat << 'EOF' > sync.py
+          import os, json
+          from google.oauth2 import service_account
+          from googleapiclient.discovery import build
+          from googleapiclient.http import MediaIoBaseDownload
+          import io
+
+          creds_json = json.loads(os.environ['GDRIVE_CREDENTIALS'])
+          creds = service_account.Credentials.from_service_account_info(
+              creds_json,
+              scopes=['https://www.googleapis.com/auth/drive.readonly']
+          )
+          service = build('drive', 'v3', credentials=creds)
+          file_id = os.environ['GDRIVE_FILE_ID']
+          request = service.files().get_media(fileId=file_id)
+          fh = io.BytesIO()
+          downloader = MediaIoBaseDownload(fh, request)
+          done = False
+          while not done:
+              _, done = downloader.next_chunk()
+          with open('index.html', 'wb') as f:
+              f.write(fh.getvalue())
+          print("Descargado correctamente")
+          EOF
+          python sync.py
+
+      - name: Commit y push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add index.html
+          git diff --staged --quiet || git commit -m "Actualizar infografia desde Drive"
+          git push
