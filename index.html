@@ -18,65 +18,108 @@
     --muted: #6b7280;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    min-height: 100vh;
-    padding: 2rem 1.5rem 4rem;
-  }
+  body { background:var(--bg); color:var(--text); font-family:'DM Mono',monospace; min-height:100vh; padding:2rem 1.5rem 4rem; }
+
   header {
-    border-bottom: 1px solid var(--accent);
-    padding-bottom: 1.5rem;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
+    border-bottom:1px solid var(--accent); padding-bottom:1.5rem; margin-bottom:2rem;
+    display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:1rem;
   }
-  header h1 {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(1.4rem, 4vw, 2.2rem);
-    letter-spacing: -0.02em;
-    line-height: 1;
+  header h1 { font-family:'Syne',sans-serif; font-weight:800; font-size:clamp(1.4rem,4vw,2.2rem); letter-spacing:-0.02em; line-height:1; }
+  header h1 span { color:var(--accent); }
+  .header-meta p { font-size:0.62rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; text-align:right; }
+  .header-meta p:first-child { color:var(--accent); margin-bottom:0.2rem; }
+
+  /* ── NAVIGATION ── */
+  .nav-bar {
+    display:flex; align-items:center; gap:0.5rem;
+    margin-bottom:2rem; flex-wrap:wrap;
   }
-  header h1 span { color: var(--accent); }
-  .header-meta p { font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; text-align:right }
-  .header-meta p:first-child { color: var(--accent); margin-bottom: 0.2rem; }
+  .nav-sep { color:var(--border); font-size:1rem; padding:0 0.2rem; }
 
-  .legend { display:flex; gap:1.2rem; flex-wrap:wrap; margin-bottom:1.5rem; }
-  .legend-item { display:flex; align-items:center; gap:0.4rem; font-size:0.6rem; color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; }
-  .legend-dot { width:8px; height:8px; border-radius:50%; }
-
-  .week-nav { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:2rem; }
-  .week-btn {
-    background:var(--surface); border:1px solid var(--border);
-    color:var(--muted); font-family:'DM Mono',monospace;
-    font-size:0.65rem; letter-spacing:0.08em;
-    padding:0.5rem 1rem; cursor:pointer; transition:all 0.2s; text-transform:uppercase;
+  .year-btn, .month-btn, .week-btn {
+    font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.08em;
+    text-transform:uppercase; cursor:pointer; border:1px solid var(--border);
+    background:var(--surface); color:var(--muted); padding:0.45rem 0.9rem;
+    transition:all 0.2s;
   }
-  .week-btn:hover { border-color:var(--accent); color:var(--accent); }
-  .week-btn.active { background:var(--accent); border-color:var(--accent); color:#0a0c10; font-weight:700; }
+  .year-btn:hover, .month-btn:hover, .week-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .year-btn.active, .month-btn.active, .week-btn.active {
+    background:var(--accent); border-color:var(--accent); color:#0a0c10; font-weight:700;
+  }
+  .month-btn.has-events { border-color:#3a3010; color:#a08040; }
+  .month-btn.has-events.active { background:var(--accent); color:#0a0c10; }
+  .month-btn.empty { opacity:0.35; }
 
-  .week-panel { display:none; }
-  .week-panel.active { display:block; }
+  /* ── FILTERS ── */
+  .filters-label {
+    font-family:'Syne',sans-serif; font-weight:800;
+    font-size:1.1rem; letter-spacing:0.05em; text-transform:uppercase;
+    color:var(--accent);
+  }
+  .filters { display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; }
+  .months-nav { display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+  .filters-row { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap; }
 
-  .week-header { display:flex; align-items:baseline; gap:1rem; margin-bottom:1.5rem; }
-  .week-label { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; color:var(--accent); letter-spacing:0.05em; text-transform:uppercase; }
-  .week-range { font-size:0.68rem; color:var(--muted); letter-spacing:0.1em; }
+  .filter-btn {
+    font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.08em;
+    text-transform:uppercase; cursor:pointer; border:1px solid var(--border);
+    background:var(--surface); color:var(--muted); padding:0.4rem 0.8rem;
+    transition:all 0.2s; position:relative; display:flex; align-items:center; gap:0.4rem;
+  }
+  .filter-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .filter-btn.active { border-color:var(--accent); color:var(--accent); background:#1a1505; }
+  .filter-btn .dot { width:6px; height:6px; border-radius:50%; background:var(--accent); display:none; }
+  .filter-btn.active .dot { display:inline-block; }
 
+  .filter-dropdown {
+    position:absolute; top:calc(100% + 6px); left:0; z-index:100;
+    background:#13161e; border:1px solid var(--border);
+    min-width:180px; padding:0.4rem 0;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    display:none;
+  }
+  .filter-dropdown.open { display:block; }
+
+  .filter-option {
+    display:flex; align-items:center; gap:0.6rem;
+    padding:0.45rem 0.8rem; font-size:0.62rem; letter-spacing:0.06em;
+    text-transform:uppercase; cursor:pointer; color:var(--muted);
+    transition:background 0.15s;
+  }
+  .filter-option:hover { background:#1a1e2a; color:var(--text); }
+  .filter-option.selected { color:var(--accent); }
+  .filter-option .check { width:10px; height:10px; border:1px solid var(--border); flex-shrink:0; }
+  .filter-option.selected .check { background:var(--accent); border-color:var(--accent); }
+
+  .filter-clear {
+    font-size:0.55rem; color:var(--muted); padding:0.3rem 0.8rem;
+    border-top:1px solid var(--border); margin-top:0.3rem;
+    cursor:pointer; letter-spacing:0.08em; text-transform:uppercase;
+  }
+  .filter-clear:hover { color:var(--accent); }
+
+  /* Card dimmed when filtered out */
+  .event-card.dimmed {
+    opacity:0.12; pointer-events:none;
+  }
+  .event-card.highlighted {
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+
+  .weeks-nav  { display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:2rem; }
+
+  /* Breadcrumb */
+  .breadcrumb { font-size:0.6rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1.5rem; }
+  .breadcrumb span { color:var(--accent); }
+
+  /* ── DAY GRID ── */
   .day-grid {
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
-    gap:1px; background:var(--border); border:1px solid var(--border);
-    margin-bottom:1.5rem;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:1.5rem;
   }
   .day-col { background:var(--surface); }
   .day-header {
-    background:#13161e; padding:0.55rem 0.9rem;
-    border-bottom:1px solid var(--border);
+    background:#13161e; padding:0.55rem 0.9rem; border-bottom:1px solid var(--border);
     display:flex; align-items:baseline; justify-content:space-between;
   }
   .day-name { font-family:'Syne',sans-serif; font-weight:700; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.1em; }
@@ -84,15 +127,13 @@
   .event-list { padding:0.5rem; }
 
   .booking-label {
-    font-size:0.52rem; color:#3a4058; letter-spacing:0.08em;
-    text-transform:uppercase; padding:0.35rem 0.6rem 0.1rem;
-    border-top:1px solid #181c28; margin-top:0.2rem;
+    font-size:0.52rem; color:#3a4058; letter-spacing:0.08em; text-transform:uppercase;
+    padding:0.35rem 0.6rem 0.1rem; border-top:1px solid #181c28; margin-top:0.2rem;
   }
   .booking-label:first-child { border-top:none; margin-top:0; }
 
   .event-card {
-    border-left:3px solid var(--border);
-    padding:0.5rem 0.7rem; margin-bottom:0.35rem;
+    border-left:3px solid var(--border); padding:0.5rem 0.7rem; margin-bottom:0.35rem;
     background:#0d0f14; transition:border-color 0.15s;
   }
   .event-card:hover { border-left-color:var(--accent); }
@@ -109,18 +150,47 @@
   .tag-cafe   { background:#201a08; color:var(--accent);  border:1px solid #403010; }
   .tag-lunch  { background:#0f2018; color:var(--accent3); border:1px solid #1e4028; }
   .tag-coctel { background:#180f28; color:var(--accent5); border:1px solid #301a50; }
+  .tag-gala   { background:#1a0f20; color:#e090c0; border:1px solid #401050; }
+  .tag-vino   { background:#200a10; color:#d06080; border:1px solid #501028; }
+  .tag-deli   { background:#101a10; color:#80c080; border:1px solid #204020; }
+  .tag-buffet { background:#0f1520; color:#80a0c0; border:1px solid #203050; }
+  .event-card.type-gala   { border-left-color:#401050; }
+  .event-card.type-vino   { border-left-color:#501028; }
+  .event-card.type-deli   { border-left-color:#204020; }
+  .event-card.type-buffet { border-left-color:#203050; }
   .tag-other  { background:#1a1a20; color:#9090b0;        border:1px solid #2a2a40; }
   .tag-pax    { background:#201010; color:#d07070;        border:1px solid #402020; }
   .tag-setup  { background:#101820; color:#6090a0;        border:1px solid #204060; font-size:0.5rem; }
 
-  .empty-day { padding:1.4rem; font-size:0.6rem; color:#202430; text-align:center; letter-spacing:0.08em; text-transform:uppercase; }
+  .empty-day  { padding:1.4rem; font-size:0.6rem; color:#202430; text-align:center; letter-spacing:0.08em; text-transform:uppercase; }
+  .empty-week { padding:3rem 1rem; font-size:0.65rem; color:#252830; text-align:center; letter-spacing:0.1em; text-transform:uppercase; border:1px solid var(--border); margin-bottom:1.5rem; }
 
+  /* ── STATS ── */
   .stats-bar { display:flex; gap:2rem; flex-wrap:wrap; padding:1rem 0; border-top:1px solid var(--border); }
   .stat { display:flex; flex-direction:column; gap:0.2rem; }
   .stat-value { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--accent); line-height:1; }
   .stat-label { font-size:0.58rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; }
   .stat-rooms { margin-left:auto; }
   .stat-rooms .stat-value { font-size:0.58rem; color:var(--muted); font-family:'DM Mono'; line-height:1.7; font-weight:400; }
+
+  /* ── LEGEND ── */
+  .legend { display:flex; gap:1.2rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+  .legend-item { display:flex; align-items:center; gap:0.4rem; font-size:0.6rem; color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; }
+  .legend-dot { width:8px; height:8px; border-radius:50%; }
+
+  /* Month overview grid */
+  .month-overview {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+    gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:1.5rem;
+  }
+  .month-card { background:var(--surface); padding:1rem; cursor:pointer; transition:background 0.15s; }
+  .month-card:hover { background:#161820; }
+  .month-card-name { font-family:'Syne',sans-serif; font-weight:700; font-size:0.9rem; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.5rem; }
+  .month-card-name.has-events { color:var(--accent); }
+  .month-card-name.empty { color:#2a2e3a; }
+  .month-card-stat { font-size:0.58rem; color:var(--muted); letter-spacing:0.06em; }
+  .month-card-count { font-family:'Syne',sans-serif; font-size:1.2rem; font-weight:800; color:var(--accent); line-height:1; margin-bottom:0.2rem; }
+  .month-card-count.empty { color:#2a2e3a; }
 </style>
 </head>
 <body>
@@ -128,7 +198,7 @@
 <header>
   <div>
     <h1>Palau de Congressos <span>/ F&amp;B Events</span></h1>
-    <p style="font-size:0.68rem;color:var(--muted);margin-top:0.3rem;letter-spacing:0.1em;text-transform:uppercase">Palma · Mayo 2026</p>
+    <p style="font-size:0.68rem;color:var(--muted);margin-top:0.3rem;letter-spacing:0.1em;text-transform:uppercase">Palma · 2026</p>
   </div>
   <div class="header-meta">
     <p>Calendario operacional</p>
@@ -144,10 +214,65 @@
   <div class="legend-item"><div class="legend-dot" style="background:#d07070"></div>Pax confirmados</div>
 </div>
 
-<div class="week-nav" id="weekNav"></div>
-<div id="weekPanels"></div>
+<!-- Year tab -->
+<div class="nav-bar">
+  <button class="year-btn active">2026</button>
+</div>
+
+<!-- Month nav -->
+<div class="months-nav" id="monthsNav"></div>
+
+<!-- Filters (shown only when week is active) -->
+<div class="filters-row" id="filtersRow" style="display:none">
+  <span class="filters-label" id="filtersLabel">FILTROS</span>
+  <div class="filters" id="filters">
+
+    <!-- PAX filter -->
+    <div class="filter-btn" id="paxBtn" onclick="toggleDropdown('paxDrop', event)">
+      <span class="dot"></span>PAX
+      <div class="filter-dropdown" id="paxDrop">
+        <div class="filter-option" data-pax="0-100" onclick="togglePax(this,event)"><span class="check"></span>0 – 100</div>
+        <div class="filter-option" data-pax="100-500" onclick="togglePax(this,event)"><span class="check"></span>100 – 500</div>
+        <div class="filter-option" data-pax="500-1000" onclick="togglePax(this,event)"><span class="check"></span>500 – 1.000</div>
+        <div class="filter-option" data-pax="1000+" onclick="togglePax(this,event)"><span class="check"></span>+1.000</div>
+        <div class="filter-clear" onclick="clearFilter('pax',event)">Limpiar filtro</div>
+      </div>
+    </div>
+
+    <!-- ESPACIO filter -->
+    <div class="filter-btn" id="salaBtn" onclick="toggleDropdown('salaDrop', event)">
+      <span class="dot"></span>ESPACIO
+      <div class="filter-dropdown" id="salaDrop"></div>
+    </div>
+
+    <!-- SERVICIO filter -->
+    <div class="filter-btn" id="servicioBtn" onclick="toggleDropdown('servicioDrop', event)">
+      <span class="dot"></span>SERVICIO
+      <div class="filter-dropdown" id="servicioDrop">
+        <div class="filter-option" data-servicio="cafe" onclick="toggleServicio(this,event)"><span class="check"></span>Coffee</div>
+        <div class="filter-option" data-servicio="lunch" onclick="toggleServicio(this,event)"><span class="check"></span>Lunch</div>
+        <div class="filter-option" data-servicio="coctel" onclick="toggleServicio(this,event)"><span class="check"></span>Cóctel</div>
+        <div class="filter-option" data-servicio="gala" onclick="toggleServicio(this,event)"><span class="check"></span>Gala</div>
+        <div class="filter-option" data-servicio="vino" onclick="toggleServicio(this,event)"><span class="check"></span>Vino Español</div>
+        <div class="filter-option" data-servicio="deli" onclick="toggleServicio(this,event)"><span class="check"></span>Deli Buffet</div>
+        <div class="filter-clear" onclick="clearFilter('servicio',event)">Limpiar filtro</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Weeks nav -->
+<div class="weeks-nav" id="weeksNav" style="display:none"></div>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb" id="breadcrumb"></div>
+
+<!-- Content -->
+<div id="content"></div>
 
 <script>
+// ── DATA ──
 const RAW = [
   {date:"11-MAY-26",time:"10:30-11:00",booking:"LREC CONFERENCE",name:"Coffee Break Palau",room:"HALL MENORCA",pax:422,setup:"Pausa de Café"},
   {date:"11-MAY-26",time:"13:00-14:00",booking:"LREC CONFERENCE",name:"Lunch Break",room:"PALMA + ROOFTOP",pax:null,setup:"Ver notas"},
@@ -178,95 +303,221 @@ const RAW = [
   {date:"26-MAY-26",time:"20:30-22:00",booking:"FORO ECONÓMICO 2026",name:"Cocktail Palau",room:"PALMA + ROOFTOP",pax:200,setup:"A ser informado"},
 ];
 
+// ── DATE UTILS (timezone-safe) ──
 const MONTH_IDX = {JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11};
 const MONTHS_ES = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
-const DAYS_ES_MON = ['LUN','MAR','MIÉ','JUE','VIE','SÁB','DOM'];
+const MONTHS_FULL = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DAYS_ES = ['LUN','MAR','MIÉ','JUE','VIE','SÁB','DOM'];
 
-function toDays(y,m,d) { return Math.round(Date.UTC(y,m,d) / 86400000); }
-function parseDateDays(str) { const [d,m,y] = str.split('-'); return toDays(2000+parseInt(y), MONTH_IDX[m], parseInt(d)); }
-function isoDow(days) { return (days + 3) % 7; }
-function mondayDays(days) { return days - isoDow(days); }
-function daysToDisplay(days) { const d = new Date(days * 86400000); return { day: d.getUTCDate(), month: d.getUTCMonth(), dow: isoDow(days) }; }
-function typeOf(name, setup) {
-  const s = (name+setup).toLowerCase();
-  if (s.includes('lunch')) return 'lunch';
-  if (s.includes('cocktail')||s.includes('cóctel')||s.includes('coctel')) return 'coctel';
-  if (s.includes('coffee')||s.includes('café')||s.includes('cafe')) return 'cafe';
+function toDays(y,m,d) { return Math.round(Date.UTC(y,m,d)/86400000); }
+function parseDateDays(str) { const [d,m,y]=str.split('-'); return toDays(2000+parseInt(y),MONTH_IDX[m],parseInt(d)); }
+function isoDow(days) { return (days+3)%7; }
+function mondayDays(days) { return days-isoDow(days); }
+function daysToUTC(days) { return new Date(days*86400000); }
+function getMonth(days) { return daysToUTC(days).getUTCMonth(); }
+function getDay(days) { return daysToUTC(days).getUTCDate(); }
+
+function typeOf(name,setup) {
+  const s=(name+setup).toLowerCase();
+  if(s.includes('buffet')||s.includes('deli')) return 'deli';
+  if(s.includes('gala')) return 'gala';
+  if(s.includes('vino español')||s.includes('vino espanol')) return 'vino';
+  if(s.includes('lunch')) return 'lunch';
+  if(s.includes('cocktail')||s.includes('cóctel')||s.includes('coctel')) return 'coctel';
+  if(s.includes('coffee')||s.includes('café')||s.includes('cafe')) return 'cafe';
   return 'other';
 }
 
-const events = RAW.map(r => ({...r, days: parseDateDays(r.date)}));
-const weekMap = {};
-events.forEach(ev => { const k = mondayDays(ev.days); if (!weekMap[k]) weekMap[k] = []; weekMap[k].push(ev); });
-const weekKeys = Object.keys(weekMap).map(Number).sort((a,b)=>a-b);
+// ── ALL 12 MONTHS ──
+const ALL_MONTHS = Array.from({length:12},(_,i)=>i); // 0=Jan … 11=Dec
 
-const nav = document.getElementById('weekNav');
-const panels = document.getElementById('weekPanels');
+// Parse events
+const events = RAW.map(r=>({...r, days:parseDateDays(r.date)}));
 
-weekKeys.forEach((monDays, wi) => {
-  const sunDays = monDays + 6;
-  const monD = daysToDisplay(monDays);
-  const sunD = daysToDisplay(sunDays);
-  const rangeStr = `${monD.day} – ${sunD.day} ${MONTHS_ES[sunD.month]} 2026`;
+// Group by month
+const byMonth = {};
+ALL_MONTHS.forEach(m=>{ byMonth[m]=[]; });
+events.forEach(ev=>{ const m=getMonth(ev.days); byMonth[m].push(ev); });
 
-  const btn = document.createElement('button');
-  btn.className = 'week-btn'+(wi===0?' active':'');
-  btn.innerHTML = `Semana ${wi+1} &nbsp;·&nbsp; ${rangeStr}`;
-  btn.onclick = () => {
-    document.querySelectorAll('.week-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.week-panel').forEach(p=>p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('wp'+wi).classList.add('active');
-  };
-  nav.appendChild(btn);
+// Group by week within month
+function weeksInMonth(monthIdx) {
+  const evs = byMonth[monthIdx];
+  const wm = {};
+  evs.forEach(ev=>{
+    const k=mondayDays(ev.days);
+    if(!wm[k]) wm[k]=[];
+    wm[k].push(ev);
+  });
+  return Object.keys(wm).map(Number).sort((a,b)=>a-b).map(monDays=>({monDays, evs:wm[monDays]}));
+}
 
-  const panel = document.createElement('div');
-  panel.className = 'week-panel'+(wi===0?' active':'');
-  panel.id = 'wp'+wi;
+// ── STATE — auto-detect current week ──
+const _now = new Date();
+const _todayDays = toDays(_now.getUTCFullYear(), _now.getUTCMonth(), _now.getUTCDate());
+const _todayMonday = mondayDays(_todayDays);
+const _todayMonth = _now.getUTCMonth();
 
-  const wh = document.createElement('div');
-  wh.className = 'week-header';
-  wh.innerHTML = `<span class="week-label">Semana ${wi+1}</span><span class="week-range">${rangeStr}</span>`;
-  panel.appendChild(wh);
+let activeMonth = _todayMonth;
+let activeWeek  = null;
 
-  const grid = document.createElement('div');
-  grid.className = 'day-grid';
+// Try to land on today's week; if not found, find nearest future week with events
+(function initState() {
+  // First try current month
+  if(byMonth[_todayMonth].length > 0) {
+    activeMonth = _todayMonth;
+    const weeks = weeksInMonth(_todayMonth);
+    const cur = weeks.find(w => w.monDays === _todayMonday);
+    if(cur) { activeWeek = _todayMonday; return; }
+    const future = weeks.find(w => w.monDays > _todayMonday);
+    if(future) { activeWeek = future.monDays; return; }
+    const past = weeks[weeks.length-1];
+    if(past) { activeWeek = past.monDays; return; }
+  }
+  // Scan forward through months
+  for(let i=0; i<12; i++) {
+    const m = (_todayMonth + i) % 12;
+    if(byMonth[m].length > 0) {
+      activeMonth = m;
+      const weeks = weeksInMonth(m);
+      activeWeek = weeks[0]?.monDays ?? null;
+      return;
+    }
+  }
+})();
+
+// ── RENDER MONTHS NAV ──
+function renderMonthsNav() {
+  const nav = document.getElementById('monthsNav');
+  nav.innerHTML = '';
+  ALL_MONTHS.forEach(m=>{
+    const count = byMonth[m].length;
+    const btn = document.createElement('button');
+    btn.className = 'month-btn' + (count>0?' has-events':' empty') + (m===activeMonth?' active':'');
+    btn.textContent = MONTHS_ES[m];
+    btn.onclick = ()=>{ activeMonth=m; activeWeek=null; renderAll(); };
+    nav.appendChild(btn);
+  });
+}
+
+// ── RENDER WEEKS NAV ──
+function renderWeeksNav() {
+  const nav = document.getElementById('weeksNav');
+  const weeks = weeksInMonth(activeMonth);
+  if(weeks.length===0){ nav.style.display='none'; return; }
+  nav.style.display='flex';
+  nav.innerHTML='';
+  weeks.forEach((w,wi)=>{
+    const sunDays = w.monDays+6;
+    const monD = daysToUTC(w.monDays);
+    const sunD = daysToUTC(sunDays);
+    const label = `S${wi+1} · ${monD.getUTCDate()}–${sunD.getUTCDate()} ${MONTHS_ES[sunD.getUTCMonth()]}`;
+    const btn = document.createElement('button');
+    btn.className = 'week-btn'+(w.monDays===activeWeek?' active':'');
+    btn.textContent = label;
+    btn.onclick = ()=>{ activeWeek=w.monDays; renderAll(); };
+    nav.appendChild(btn);
+  });
+}
+
+// ── RENDER BREADCRUMB ──
+function renderBreadcrumb() {
+  const bc = document.getElementById('breadcrumb');
+  let html = `<span>2026</span> / <span>${MONTHS_FULL[activeMonth]}</span>`;
+  if(activeWeek!==null) {
+    const sunDays=activeWeek+6;
+    const monD=daysToUTC(activeWeek);
+    const sunD=daysToUTC(sunDays);
+    html += ` / <span>Semana ${monD.getUTCDate()}–${sunD.getUTCDate()} ${MONTHS_ES[sunD.getUTCMonth()]}</span>`;
+  }
+  bc.innerHTML = html;
+}
+
+// ── RENDER CONTENT ──
+function renderContent() {
+  const content = document.getElementById('content');
+  content.innerHTML='';
+  const weeks = weeksInMonth(activeMonth);
+
+  if(weeks.length===0) {
+    content.innerHTML=`<div class="empty-week">Sin servicios registrados para ${MONTHS_FULL[activeMonth]}</div>`;
+    return;
+  }
+
+  // If no week selected, show month overview
+  if(activeWeek===null) {
+    const overview = document.createElement('div');
+    overview.className='month-overview';
+    weeks.forEach((w,wi)=>{
+      const sunDays=w.monDays+6;
+      const monD=daysToUTC(w.monDays);
+      const sunD=daysToUTC(sunDays);
+      const card=document.createElement('div');
+      card.className='month-card';
+      card.innerHTML=`
+        <div class="month-card-name has-events">Semana ${wi+1}</div>
+        <div class="month-card-count">${w.evs.length}</div>
+        <div class="month-card-stat">servicios · ${monD.getUTCDate()}–${sunD.getUTCDate()} ${MONTHS_ES[sunD.getUTCMonth()]}</div>`;
+      card.onclick=()=>{ activeWeek=w.monDays; renderAll(); };
+      overview.appendChild(card);
+    });
+    content.appendChild(overview);
+    return;
+  }
+
+  // Show selected week
+  const week = weeks.find(w=>w.monDays===activeWeek);
+  if(!week) return;
+
+  const grid=document.createElement('div');
+  grid.className='day-grid';
 
   let totalSvcs=0, typeCounts={cafe:0,lunch:0,coctel:0,other:0};
-  const roomSet=new Set(), maxPax={};
+  const roomSet=new Set();
 
-  for (let di=0; di<7; di++) {
-    const curDays = monDays + di;
-    const curD = daysToDisplay(curDays);
-    const dayEvs = weekMap[monDays].filter(e => e.days === curDays).sort((a,b)=>a.time.localeCompare(b.time));
+  for(let di=0;di<7;di++){
+    const curDays=activeWeek+di;
+    const curUTC=daysToUTC(curDays);
+    const dayEvs=week.evs.filter(e=>e.days===curDays).sort((a,b)=>a.time.localeCompare(b.time));
 
-    const col = document.createElement('div');
-    col.className = 'day-col';
-    col.innerHTML = `<div class="day-header"><span class="day-name">${DAYS_ES_MON[curD.dow]}</span><span class="day-date">${curD.day} ${MONTHS_ES[curD.month]}</span></div>`;
+    const col=document.createElement('div');
+    col.className='day-col';
+    col.innerHTML=`<div class="day-header">
+      <span class="day-name">${DAYS_ES[isoDow(curDays)]}</span>
+      <span class="day-date">${curUTC.getUTCDate()} ${MONTHS_ES[curUTC.getUTCMonth()]}</span>
+    </div>`;
 
-    const list = document.createElement('div');
-    list.className = 'event-list';
+    const list=document.createElement('div');
+    list.className='event-list';
 
-    if (!dayEvs.length) {
-      list.innerHTML = '<div class="empty-day">Sin servicios</div>';
+    if(!dayEvs.length){
+      list.innerHTML='<div class="empty-day">Sin servicios</div>';
     } else {
-      const bkMap = {};
-      dayEvs.forEach(ev => { (bkMap[ev.booking]=bkMap[ev.booking]||[]).push(ev); });
-      Object.entries(bkMap).forEach(([bk, evs], bi) => {
-        const lbl = document.createElement('div');
-        lbl.className = 'booking-label';
-        lbl.textContent = bk;
-        if (bi===0) lbl.style.borderTop='none';
+      const bkMap={};
+      dayEvs.forEach(ev=>{ (bkMap[ev.booking]=bkMap[ev.booking]||[]).push(ev); });
+      Object.entries(bkMap).forEach(([bk,evs],bi)=>{
+        const lbl=document.createElement('div');
+        lbl.className='booking-label';
+        lbl.textContent=bk;
+        if(bi===0) lbl.style.borderTop='none';
         list.appendChild(lbl);
-        evs.forEach(ev => {
+        evs.forEach(ev=>{
           totalSvcs++; roomSet.add(ev.room);
-          const t = typeOf(ev.name, ev.setup);
+          const t=typeOf(ev.name,ev.setup);
           typeCounts[t]=(typeCounts[t]||0)+1;
-          const card = document.createElement('div');
-          card.className = `event-card type-${t}`;
-          const paxTag = ev.pax&&ev.pax>1 ? `<span class="tag tag-pax">${ev.pax.toLocaleString()} pax</span>` : '';
-          const extraTag = ev.setup&&!['Pausa de Café'].includes(ev.setup) ? `<span class="tag tag-setup">${ev.setup}</span>` : '';
-          card.innerHTML = `<div class="event-time">${ev.time}</div><div class="event-name">${ev.name}</div><div class="event-meta"><span class="tag tag-room">${ev.room}</span><span class="tag tag-${t}">${t==='cafe'?'Coffee':t==='lunch'?'Lunch':t==='coctel'?'Cóctel':'Servicio'}</span>${paxTag}${extraTag}</div>`;
+          const card=document.createElement('div');
+          card.className=`event-card type-${t}`;
+          card.dataset.pax = ev.pax || 0;
+          card.dataset.sala = ev.room;
+          card.dataset.servicio = t;
+          const paxTag=ev.pax&&ev.pax>1?`<span class="tag tag-pax">${ev.pax.toLocaleString()} pax</span>`:'';
+          const extraTag=ev.setup&&!['Pausa de Café','Ver notas','A ser informado'].includes(ev.setup)?`<span class="tag tag-setup">${ev.setup}</span>`:'';
+          const typeLabel = {cafe:'Coffee',lunch:'Lunch',coctel:'Cóctel',gala:'Gala',vino:'Vino Español',deli:'Deli Buffet',other:'Servicio'}[t]||'Servicio';
+          card.innerHTML=`<div class="event-time">${ev.time}</div><div class="event-name">${ev.name}</div>
+            <div class="event-meta">
+              <span class="tag tag-room">${ev.room}</span>
+              <span class="tag tag-${t}">${typeLabel}</span>
+              ${paxTag}${extraTag}
+            </div>`;
           list.appendChild(card);
         });
       });
@@ -274,21 +525,167 @@ weekKeys.forEach((monDays, wi) => {
     col.appendChild(list);
     grid.appendChild(col);
   }
+  content.appendChild(grid);
 
-  panel.appendChild(grid);
+  // Build sala filter with rooms from this week
+  buildSalaFilter([...roomSet].sort());
 
-  const stats = document.createElement('div');
-  stats.className = 'stats-bar';
-  stats.innerHTML = `
+  // Stats
+  const stats=document.createElement('div');
+  stats.className='stats-bar';
+  stats.innerHTML=`
     <div class="stat"><span class="stat-value">${totalSvcs}</span><span class="stat-label">Servicios</span></div>
     <div class="stat"><span class="stat-value">${typeCounts.cafe||0}</span><span class="stat-label">Coffee Breaks</span></div>
     <div class="stat"><span class="stat-value">${typeCounts.lunch||0}</span><span class="stat-label">Lunch Breaks</span></div>
     <div class="stat"><span class="stat-value">${typeCounts.coctel||0}</span><span class="stat-label">Cócteles</span></div>
     <div class="stat"><span class="stat-value">${roomSet.size}</span><span class="stat-label">Espacios</span></div>
     <div class="stat stat-rooms"><span class="stat-value">${[...roomSet].join(' · ')}</span><span class="stat-label">Espacios activos</span></div>`;
-  panel.appendChild(stats);
-  panels.appendChild(panel);
+  content.appendChild(stats);
+}
+
+// ── FILTERS ──
+let activePax = new Set();
+let activeSalas = new Set();
+let activeServicios = new Set();
+
+function toggleDropdown(id, e) {
+  e.stopPropagation();
+  document.querySelectorAll('.filter-dropdown').forEach(d => {
+    if(d.id !== id) d.classList.remove('open');
+  });
+  document.getElementById(id).classList.toggle('open');
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('open'));
 });
+
+function togglePax(el, e) {
+  e.stopPropagation();
+  const val = el.dataset.pax;
+  if(activePax.has(val)) activePax.delete(val);
+  else activePax.add(val);
+  document.querySelectorAll('[data-pax]').forEach(o => {
+    o.classList.toggle('selected', activePax.has(o.dataset.pax));
+  });
+  document.getElementById('paxBtn').classList.toggle('active', activePax.size > 0);
+  updateFiltersLabel();
+  applyFilters();
+}
+
+function toggleServicio(el, e) {
+  e.stopPropagation();
+  const val = el.dataset.servicio;
+  if(activeServicios.has(val)) activeServicios.delete(val);
+  else activeServicios.add(val);
+  document.querySelectorAll('[data-servicio]').forEach(o => {
+    o.classList.toggle('selected', activeServicios.has(o.dataset.servicio));
+  });
+  document.getElementById('servicioBtn').classList.toggle('active', activeServicios.size > 0);
+  updateFiltersLabel();
+  applyFilters();
+}
+
+function toggleSala(el, e) {
+  e.stopPropagation();
+  const val = el.dataset.sala;
+  if(activeSalas.has(val)) activeSalas.delete(val);
+  else activeSalas.add(val);
+  document.querySelectorAll('[data-sala]').forEach(o => {
+    o.classList.toggle('selected', activeSalas.has(o.dataset.sala));
+  });
+  document.getElementById('salaBtn').classList.toggle('active', activeSalas.size > 0);
+  updateFiltersLabel();
+  applyFilters();
+}
+
+function clearFilter(type, e) {
+  e.stopPropagation();
+  if(type === 'pax') {
+    activePax.clear();
+    document.querySelectorAll('[data-pax]').forEach(o => o.classList.remove('selected'));
+    document.getElementById('paxBtn').classList.remove('active');
+    updateFiltersLabel();
+  } else if(type === 'sala') {
+    activeSalas.clear();
+    document.querySelectorAll('[data-sala]').forEach(o => o.classList.remove('selected'));
+    document.getElementById('salaBtn').classList.remove('active');
+    updateFiltersLabel();
+  } else if(type === 'servicio') {
+    activeServicios.clear();
+    document.querySelectorAll('[data-servicio]').forEach(o => o.classList.remove('selected'));
+    document.getElementById('servicioBtn').classList.remove('active');
+    updateFiltersLabel();
+  }
+  applyFilters();
+}
+
+function paxInRange(pax, range) {
+  if(!pax) pax = 0;
+  if(range === '0-100') return pax >= 0 && pax <= 100;
+  if(range === '100-500') return pax > 100 && pax <= 500;
+  if(range === '500-1000') return pax > 500 && pax <= 1000;
+  if(range === '1000+') return pax > 1000;
+  return false;
+}
+
+function applyFilters() {
+  const noFilter = activePax.size === 0 && activeSalas.size === 0 && activeServicios.size === 0;
+  document.querySelectorAll('.event-card').forEach(card => {
+    if(noFilter) {
+      card.classList.remove('dimmed','highlighted');
+      return;
+    }
+    const pax = parseInt(card.dataset.pax || '0');
+    const sala = card.dataset.sala || '';
+    const servicio = card.dataset.servicio || '';
+    let matchPax = activePax.size === 0 || [...activePax].some(r => paxInRange(pax, r));
+    let matchSala = activeSalas.size === 0 || activeSalas.has(sala);
+    let matchServicio = activeServicios.size === 0 || activeServicios.has(servicio);
+    const match = matchPax && matchSala && matchServicio;
+    card.classList.toggle('dimmed', !match);
+    card.classList.toggle('highlighted', match);
+  });
+}
+
+function updateFiltersLabel() {
+  const hasActive = activePax.size > 0 || activeSalas.size > 0 || activeServicios.size > 0;
+  document.getElementById('filtersLabel').classList.toggle('active', hasActive);
+}
+
+function buildSalaFilter(rooms) {
+  const drop = document.getElementById('salaDrop');
+  drop.innerHTML = '';
+  rooms.forEach(r => {
+    const opt = document.createElement('div');
+    opt.className = 'filter-option' + (activeSalas.has(r) ? ' selected' : '');
+    opt.dataset.sala = r;
+    opt.innerHTML = `<span class="check"></span>${r}`;
+    opt.onclick = (e) => toggleSala(opt, e);
+    drop.appendChild(opt);
+  });
+  const clearEl = document.createElement('div');
+  clearEl.className = 'filter-clear';
+  clearEl.textContent = 'Limpiar filtro';
+  clearEl.onclick = (e) => clearFilter('sala', e);
+  drop.appendChild(clearEl);
+}
+
+function renderAll() {
+  renderMonthsNav();
+  renderWeeksNav();
+  renderBreadcrumb();
+  renderContent();
+  const hasWeek = activeWeek !== null;
+  document.getElementById('filtersRow').style.display = hasWeek ? 'flex' : 'none';
+  if(hasWeek) applyFilters();
+}
+
+function updateFiltersLabel() {
+  const hasActive = activePax.size > 0 || activeSalas.size > 0;
+  document.getElementById('filtersLabel').classList.toggle('active', hasActive);
+}
+
+renderAll();
 </script>
 </body>
 </html>
