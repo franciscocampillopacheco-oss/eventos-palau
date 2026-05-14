@@ -41,7 +41,6 @@
   .filter-clear:hover{color:var(--accent);}
   .event-card.dimmed{opacity:0.1;pointer-events:none;}
   .event-card.highlighted{box-shadow:0 0 0 1px var(--accent);}
-  .weeks-nav{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:2rem;}
   .breadcrumb{font-size:0.6rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.5rem;}
   .breadcrumb span{color:var(--accent);}
   .day-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1.5rem;}
@@ -49,7 +48,7 @@
   .day-col.today .day-header{border-bottom:2px solid var(--accent);}
   .day-col.today .day-name{color:var(--accent);}
   .day-header{background:#13161e;padding:0.55rem 0.9rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;justify-content:space-between;}
-  .day-name{font-family:"Syne",sans-serif;font-weight:700;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.1em;}
+  .day-name{font-family:"Syne",sans-serif;font-weight:700;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.05em;}
   .day-date{font-size:0.62rem;color:var(--muted);letter-spacing:0.08em;}
   .event-list{padding:0.5rem;}
   .booking-label{font-size:0.52rem;color:#3a4058;letter-spacing:0.08em;text-transform:uppercase;padding:0.35rem 0.6rem 0.1rem;border-top:1px solid #181c28;margin-top:0.2rem;}
@@ -124,7 +123,7 @@
 </div>
 <div class="nav-bar" id="yearNav"></div>
 <div class="months-nav" id="monthsNav"></div>
-<div class="filters-row" id="filtersRow" style="display:none">
+<div class="filters-row" id="filtersRow">
   <span class="filters-label" id="filtersLabel">FILTROS</span>
   <div class="filters" id="filters">
     <div class="filter-btn" id="paxBtn" onclick="toggleDropdown('paxDrop',event)">
@@ -161,7 +160,6 @@
     </div>
   </div>
 </div>
-<div class="weeks-nav" id="weeksNav" style="display:none"></div>
 <div class="breadcrumb" id="breadcrumb"></div>
 <div id="content"></div>
 
@@ -6092,17 +6090,17 @@ const RAW=[
   {date:"26-MAY-26",time:"20:30-22:00",booking:"FORO ECONOMICO 2026",name:"Cocktail Palau",room:"PALMA + ROOFTOP",pax:200,type:"coctel",status:"DEF"}
 ];
 
-const HIDDEN_SETUP=['Pausa de Café','Ver notas','A ser informado','Montaje Existente','Imperial','Forma U','Teatro','Clase','Banquete','Cóctel','Standing'];
+// ── UTILS ──
 const MONTH_IDX={JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11};
 const MONTHS_ES=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
 const MONTHS_FULL=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const DAYS_ES=['LUN','MAR','MIÉ','JUE','VIE','SÁB','DOM'];
+const DAYS_FULL=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
 const TYPE_LABELS={cafe:'Coffee',lunch:'Lunch',coctel:'Cóctel',gala:'Gala',reunion:'Reunión',open_bar:'Open Bar',desayuno:'Desayuno',box_lunch:'Box Lunch',deli:'Deli Buffet',other:'Servicio'};
 
 function toDays(y,m,d){return Math.round(Date.UTC(y,m,d)/86400000);}
 function parseDateDays(str){const[d,m,y]=str.split('-');return toDays(2000+parseInt(y),MONTH_IDX[m],parseInt(d));}
 function isoDow(days){return(days+3)%7;}
-function mondayDays(days){return days-isoDow(days);}
 function daysToUTC(days){return new Date(days*86400000);}
 function getYear(days){return daysToUTC(days).getUTCFullYear();}
 function getMonth(days){return daysToUTC(days).getUTCMonth();}
@@ -6113,7 +6111,7 @@ const YEARS=[2022,2023,2024,2025,2026];
 // Parse all events
 const allEvents=RAW.map(r=>({...r,days:parseDateDays(r.date)}));
 
-// Group by year → month
+// Group by year → month → day
 const byYearMonth={};
 YEARS.forEach(y=>{byYearMonth[y]={};ALL_MONTHS.forEach(m=>{byYearMonth[y][m]=[];});});
 allEvents.forEach(ev=>{
@@ -6122,41 +6120,20 @@ allEvents.forEach(ev=>{
   if(byYearMonth[y]&&byYearMonth[y][m]!==undefined) byYearMonth[y][m].push(ev);
 });
 
-function weeksInMonth(year,month){
-  const evs=byYearMonth[year][month]||[];
-  const wm={};
-  evs.forEach(ev=>{const k=mondayDays(ev.days);if(!wm[k])wm[k]=[];wm[k].push(ev);});
-  return Object.keys(wm).map(Number).sort((a,b)=>a-b).map(monDays=>({monDays,evs:wm[monDays]}));
-}
-
 // State
 const _now=new Date();
 const _todayDays=toDays(_now.getUTCFullYear(),_now.getUTCMonth(),_now.getUTCDate());
-const _todayMonday=mondayDays(_todayDays);
 
 let activeYear=2026;
 let activeMonth=_now.getUTCMonth();
-let activeWeek=null;
 
-// Init to current week
+// Init to current month (or nearest with events)
 (function initState(){
   const m=_now.getUTCMonth();
-  if(byYearMonth[2026][m].length>0){
-    activeYear=2026;activeMonth=m;
-    const weeks=weeksInMonth(2026,m);
-    const cur=weeks.find(w=>w.monDays===_todayMonday);
-    if(cur){activeWeek=_todayMonday;return;}
-    const fut=weeks.find(w=>w.monDays>_todayMonday);
-    if(fut){activeWeek=fut.monDays;return;}
-    if(weeks.length){activeWeek=weeks[weeks.length-1].monDays;return;}
-  }
+  if(byYearMonth[2026][m].length>0){activeYear=2026;activeMonth=m;return;}
   for(let i=0;i<12;i++){
     const mm=(m+i)%12;
-    if(byYearMonth[2026][mm].length>0){
-      activeYear=2026;activeMonth=mm;
-      const weeks=weeksInMonth(2026,mm);
-      if(weeks.length){activeWeek=weeks[0].monDays;return;}
-    }
+    if(byYearMonth[2026][mm].length>0){activeYear=2026;activeMonth=mm;return;}
   }
 })();
 
@@ -6169,9 +6146,9 @@ function renderYearNav(){
     btn.className='year-btn'+(y===activeYear?' active':'');
     btn.textContent=y;
     btn.onclick=()=>{
-      activeYear=y;activeMonth=0;activeWeek=null;
-      // Find first month with events
-      for(let m=0;m<12;m++){if(byYearMonth[y][m].length>0){activeMonth=m;break;}}
+      activeYear=y;
+      activeMonth=0;
+      for(let m=0;m<12;m++){if((byYearMonth[y][m]||[]).length>0){activeMonth=m;break;}}
       renderAll();
     };
     nav.appendChild(btn);
@@ -6187,128 +6164,96 @@ function renderMonthsNav(){
     const btn=document.createElement('button');
     btn.className='month-btn'+(count>0?' has-events':' empty')+(m===activeMonth?' active':'');
     btn.textContent=MONTHS_ES[m];
-    btn.onclick=()=>{activeMonth=m;activeWeek=null;renderAll();};
-    nav.appendChild(btn);
-  });
-}
-
-// ── RENDER WEEKS NAV ──
-function renderWeeksNav(){
-  const nav=document.getElementById('weeksNav');
-  const weeks=weeksInMonth(activeYear,activeMonth);
-  if(!weeks.length){nav.style.display='none';return;}
-  nav.style.display='flex';nav.innerHTML='';
-  weeks.forEach((w,wi)=>{
-    const sunDays=w.monDays+6;
-    const monD=daysToUTC(w.monDays);
-    const sunD=daysToUTC(sunDays);
-    const label=`S${wi+1} · ${monD.getUTCDate()}–${sunD.getUTCDate()} ${MONTHS_ES[sunD.getUTCMonth()]}`;
-    const btn=document.createElement('button');
-    btn.className='week-btn'+(w.monDays===activeWeek?' active':'');
-    btn.textContent=label;
-    btn.onclick=()=>{activeWeek=w.monDays;renderAll();};
+    btn.onclick=()=>{activeMonth=m;renderAll();};
     nav.appendChild(btn);
   });
 }
 
 // ── RENDER BREADCRUMB ──
 function renderBreadcrumb(){
-  const bc=document.getElementById('breadcrumb');
-  let html=`<span>${activeYear}</span> / <span>${MONTHS_FULL[activeMonth]}</span>`;
-  if(activeWeek!==null){
-    const monD=daysToUTC(activeWeek);
-    const sunD=daysToUTC(activeWeek+6);
-    html+=` / <span>Semana ${monD.getUTCDate()}–${sunD.getUTCDate()} ${MONTHS_ES[sunD.getUTCMonth()]}</span>`;
-  }
-  bc.innerHTML=html;
+  document.getElementById('breadcrumb').innerHTML=`<span>${activeYear}</span> / <span>${MONTHS_FULL[activeMonth]}</span>`;
 }
 
-// ── RENDER CONTENT ──
+// ── RENDER CONTENT — day by day ──
 function renderContent(){
   const content=document.getElementById('content');
   content.innerHTML='';
-  const weeks=weeksInMonth(activeYear,activeMonth);
+  const monthEvs=byYearMonth[activeYear][activeMonth]||[];
 
-  if(!weeks.length){
+  if(!monthEvs.length){
     content.innerHTML=`<div class="empty-week">Sin servicios registrados para ${MONTHS_FULL[activeMonth]} ${activeYear}</div>`;
     return;
   }
 
-  if(activeWeek===null){
-    const overview=document.createElement('div');
-    overview.className='month-overview';
-    weeks.forEach((w,wi)=>{
-      const monD=daysToUTC(w.monDays);
-      const sunD=daysToUTC(w.monDays+6);
-      const card=document.createElement('div');
-      card.className='month-card';
-      card.innerHTML=`<div class="month-card-name">Semana ${wi+1}</div><div class="month-card-count">${w.evs.length}</div><div class="month-card-stat">servicios · ${monD.getUTCDate()}–${sunD.getUTCDate()} ${MONTHS_ES[sunD.getUTCMonth()]}</div>`;
-      card.onclick=()=>{activeWeek=w.monDays;renderAll();};
-      overview.appendChild(card);
-    });
-    content.appendChild(overview);
-    return;
-  }
-
-  const week=weeks.find(w=>w.monDays===activeWeek);
-  if(!week)return;
-
+  // Get all days in month that have events (+ some empty days for context)
+  const daysWithEvents=new Set(monthEvs.map(e=>e.days));
+  
+  // Days in month
+  const firstDay=toDays(activeYear,activeMonth,1);
+  const lastDay=toDays(activeYear,activeMonth+1,0); // day 0 of next month = last day of current
+  
   const grid=document.createElement('div');
   grid.className='day-grid';
+  
   let totalSvcs=0;
   const typeCounts={};
   const roomSet=new Set();
 
-  for(let di=0;di<7;di++){
-    const curDays=activeWeek+di;
-    const curUTC=daysToUTC(curDays);
-    const isToday=curDays===_todayDays;
-    const dayEvs=week.evs.filter(e=>e.days===curDays).sort((a,b)=>a.time.localeCompare(b.time));
+  for(let d=firstDay;d<=lastDay;d++){
+    const dayEvs=monthEvs.filter(e=>e.days===d).sort((a,b)=>a.time.localeCompare(b.time));
+    if(!dayEvs.length) continue; // Only show days with events
+
+    const curUTC=daysToUTC(d);
+    const isToday=d===_todayDays;
+    const dow=isoDow(d);
 
     const col=document.createElement('div');
     col.className='day-col'+(isToday?' today':'');
-    col.innerHTML=`<div class="day-header"><span class="day-name">${DAYS_ES[isoDow(curDays)]}</span><span class="day-date">${curUTC.getUTCDate()} ${MONTHS_ES[curUTC.getUTCMonth()]}</span></div>`;
+    col.innerHTML=`<div class="day-header">
+      <span class="day-name">${DAYS_FULL[dow]} ${curUTC.getUTCDate()}</span>
+      <span class="day-date">${MONTHS_ES[curUTC.getUTCMonth()]}</span>
+    </div>`;
 
     const list=document.createElement('div');
     list.className='event-list';
 
-    if(!dayEvs.length){
-      list.innerHTML='<div class="empty-day">Sin servicios</div>';
-    } else {
-      const bkMap={};
-      dayEvs.forEach(ev=>{(bkMap[ev.booking||'—']=bkMap[ev.booking||'—']||[]).push(ev);});
-      Object.entries(bkMap).forEach(([bk,evs],bi)=>{
-        const lbl=document.createElement('div');
-        lbl.className='booking-label';
-        lbl.textContent=bk;
-        if(bi===0)lbl.style.borderTop='none';
-        list.appendChild(lbl);
-        evs.forEach(ev=>{
-          totalSvcs++;
-          roomSet.add(ev.room);
-          const t=ev.type||'other';
-          typeCounts[t]=(typeCounts[t]||0)+1;
-          const card=document.createElement('div');
-          card.className=`event-card type-${t}`;
-          card.dataset.pax=ev.pax||0;
-          card.dataset.sala=ev.room;
-          card.dataset.servicio=t;
-          const paxTag=ev.pax&&ev.pax>1?`<span class="tag tag-pax">${ev.pax.toLocaleString()} pax</span>`:'';
-          card.innerHTML=`<div class="event-time">${ev.time}</div><div class="event-name">${ev.name}</div>
-            <div class="event-meta">
-              ${ev.room?`<span class="tag tag-room">${ev.room}</span>`:''}
-              <span class="tag tag-${t}">${TYPE_LABELS[t]||t}</span>
-              ${paxTag}
-            </div>`;
-          list.appendChild(card);
-        });
+    const bkMap={};
+    dayEvs.forEach(ev=>{(bkMap[ev.booking||'—']=bkMap[ev.booking||'—']||[]).push(ev);});
+
+    Object.entries(bkMap).forEach(([bk,evs],bi)=>{
+      const lbl=document.createElement('div');
+      lbl.className='booking-label';
+      lbl.textContent=bk==='—'?'':bk;
+      if(bi===0||!bk||bk==='—') lbl.style.borderTop='none';
+      if(bk&&bk!=='—') list.appendChild(lbl);
+
+      evs.forEach(ev=>{
+        totalSvcs++;
+        roomSet.add(ev.room);
+        const t=ev.type||'other';
+        typeCounts[t]=(typeCounts[t]||0)+1;
+        const card=document.createElement('div');
+        card.className=`event-card type-${t}`;
+        card.dataset.pax=ev.pax||0;
+        card.dataset.sala=ev.room;
+        card.dataset.servicio=t;
+        const paxTag=ev.pax&&ev.pax>1?`<span class="tag tag-pax">${ev.pax.toLocaleString()} pax</span>`:'';
+        card.innerHTML=`<div class="event-time">${ev.time}</div>
+          <div class="event-name">${ev.name}</div>
+          <div class="event-meta">
+            ${ev.room?`<span class="tag tag-room">${ev.room}</span>`:''}
+            <span class="tag tag-${t}">${TYPE_LABELS[t]||t}</span>
+            ${paxTag}
+          </div>`;
+        list.appendChild(card);
       });
-    }
+    });
+
     col.appendChild(list);
     grid.appendChild(col);
   }
-  content.appendChild(grid);
 
+  content.appendChild(grid);
   buildSalaFilter([...roomSet].sort());
   applyFilters();
 
@@ -6328,7 +6273,6 @@ function renderContent(){
     {v:typeCounts.deli||0,l:'Deli Buffet'},
     {v:roomSet.size,l:'Espacios'},
   ].filter(s=>s.v>0);
-
   stats.innerHTML=statItems.map(s=>`<div class="stat"><span class="stat-value">${s.v}</span><span class="stat-label">${s.l}</span></div>`).join('');
   content.appendChild(stats);
 }
@@ -6392,16 +6336,14 @@ function buildSalaFilter(rooms){
 function renderAll(){
   renderYearNav();
   renderMonthsNav();
-  renderWeeksNav();
   renderBreadcrumb();
   renderContent();
-  const hasWeek=activeWeek!==null;
-  document.getElementById('filtersRow').style.display=hasWeek?'flex':'none';
-  if(hasWeek)applyFilters();
-  else document.querySelectorAll('.event-card').forEach(c=>c.classList.remove('dimmed','highlighted'));
+  document.getElementById('filtersRow').style.display='flex';
 }
 
 renderAll();
+
+
 </script>
 </body>
 </html>
