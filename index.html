@@ -6401,7 +6401,40 @@ function toggleServicio(el,e){e.stopPropagation();const val=el.dataset.servicio;
 function toggleSala(el,e){e.stopPropagation();const val=el.dataset.sala;if(activeSalas.has(val))activeSalas.delete(val);else activeSalas.add(val);document.querySelectorAll('[data-sala]').forEach(o=>o.classList.toggle('selected',activeSalas.has(o.dataset.sala)));document.getElementById('salaBtn').classList.toggle('active',activeSalas.size>0);updateFiltersLabel();applyFilters();}
 function clearFilter(type,e){e.stopPropagation();if(type==='pax'){activePax.clear();document.querySelectorAll('[data-pax]').forEach(o=>o.classList.remove('selected'));document.getElementById('paxBtn').classList.remove('active');}else if(type==='sala'){activeSalas.clear();document.querySelectorAll('[data-sala]').forEach(o=>o.classList.remove('selected'));document.getElementById('salaBtn').classList.remove('active');}else if(type==='servicio'){activeServicios.clear();document.querySelectorAll('[data-servicio]').forEach(o=>o.classList.remove('selected'));document.getElementById('servicioBtn').classList.remove('active');}updateFiltersLabel();applyFilters();}
 function paxInRange(pax,range){if(!pax)pax=0;if(range==='0-100')return pax<=100;if(range==='100-500')return pax>100&&pax<=500;if(range==='500-1000')return pax>500&&pax<=1000;if(range==='1000+')return pax>1000;return false;}
-function applyFilters(){const noFilter=activePax.size===0&&activeSalas.size===0&&activeServicios.size===0&&!cocinaActive;document.querySelectorAll('.event-card').forEach(card=>{if(noFilter){card.classList.remove('dimmed','highlighted');return;}const pax=parseInt(card.dataset.pax||'0');const sala=card.dataset.sala||'';const servicio=card.dataset.servicio||'';const matchPax=activePax.size===0||[...activePax].some(r=>paxInRange(pax,r));const matchSala=activeSalas.size===0||activeSalas.has(sala);const matchServicio=activeServicios.size===0||activeServicios.has(servicio);const matchCocina=!cocinaActive||isCocinaMatch(card);const match=matchPax&&matchSala&&matchServicio&&matchCocina;card.classList.toggle('dimmed',!match);card.classList.toggle('highlighted',match);});}
+function applyFilters(){
+  const noFilter=activePax.size===0&&activeSalas.size===0&&activeServicios.size===0&&!cocinaActive;
+  // Show/hide individual cards
+  document.querySelectorAll('.event-card').forEach(card=>{
+    if(noFilter){card.classList.remove('dimmed','highlighted');card.style.display='';return;}
+    const pax=parseInt(card.dataset.pax||'0');
+    const sala=card.dataset.sala||'';
+    const servicio=card.dataset.servicio||'';
+    const matchPax=activePax.size===0||[...activePax].some(r=>paxInRange(pax,r));
+    const matchSala=activeSalas.size===0||activeSalas.has(sala);
+    const matchServicio=activeServicios.size===0||activeServicios.has(servicio);
+    const matchCocina=!cocinaActive||isCocinaMatch(card);
+    const match=matchPax&&matchSala&&matchServicio&&matchCocina;
+    card.style.display=match?'':'none';
+    card.classList.remove('dimmed','highlighted');
+  });
+  // Hide booking labels with no visible cards
+  document.querySelectorAll('.booking-label').forEach(lbl=>{
+    if(noFilter){lbl.style.display='';return;}
+    let next=lbl.nextElementSibling;
+    let hasVisible=false;
+    while(next&&next.classList.contains('event-card')){
+      if(next.style.display!=='none'){hasVisible=true;break;}
+      next=next.nextElementSibling;
+    }
+    lbl.style.display=hasVisible?'':'none';
+  });
+  // Hide day columns with no visible cards
+  document.querySelectorAll('.day-col').forEach(col=>{
+    if(noFilter){col.style.display='';return;}
+    const visibleCards=[...col.querySelectorAll('.event-card')].filter(c=>c.style.display!=='none');
+    col.style.display=visibleCards.length?'':'none';
+  });
+}
 function updateFiltersLabel(){const h=activePax.size>0||activeSalas.size>0||activeServicios.size>0||cocinaActive;document.getElementById('filtersLabel').classList.toggle('active',h);}
 function buildSalaFilter(rooms){const drop=document.getElementById('salaDrop');drop.innerHTML='';rooms.forEach(r=>{if(!r)return;const opt=document.createElement('div');opt.className='filter-option'+(activeSalas.has(r)?' selected':'');opt.dataset.sala=r;opt.innerHTML=`<span class="check"></span>${r}`;opt.onclick=(e)=>toggleSala(opt,e);drop.appendChild(opt);});const cl=document.createElement('div');cl.className='filter-clear';cl.textContent='Limpiar filtro';cl.onclick=(e)=>clearFilter('sala',e);drop.appendChild(cl);}
 
