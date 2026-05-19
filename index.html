@@ -6542,11 +6542,14 @@ function showPage(name){
 }
 
 // ── OSMOSIS DASHBOARD ──
+// Force white legend text on all charts via global plugin
+Chart.register({id:'whiteLegend',beforeDraw:chart=>{if(chart.config.type==='doughnut'){const ctx=chart.ctx;ctx.save();chart.legend.legendItems?.forEach(item=>{item.fontColor='#ffffff';});ctx.restore();}}});
+
 function osmosisInit(){
-// Force Chart.js legend labels white globally for this dashboard
+// Force Chart.js global defaults
 if(window.Chart){
-  Chart.defaults.plugins.legend.labels.color='#e8f0fe';
-  Chart.defaults.color='#e8f0fe';
+  Chart.defaults.plugins.legend.labels.color='#ffffff';
+  Chart.defaults.color='#ffffff';
 }
 const DATA=[
   {mes:'ago-24',coffe:351,lunch:232,welcome:78,gala:0,coctel:0,total:1119.10,roi:3.73,flujoNeto:1094.10,acum:-28905.90},
@@ -6604,7 +6607,7 @@ function updateMainChart(rows){
 }
 function updateROIChart(rows){if(chartROI)chartROI.destroy();chartROI=new Chart(document.getElementById('chartROI'),{type:'bar',data:{labels:rows.map(r=>r.mes),datasets:[{label:'ROI %',data:rows.map(r=>r.roi),backgroundColor:rows.map(r=>r.roi>100?'rgba(16,185,129,0.7)':r.roi>30?'rgba(245,158,11,0.7)':'rgba(59,130,246,0.55)'),borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#162032',borderColor:'rgba(100,160,255,0.25)',borderWidth:1,titleColor:'#e8f0fe',bodyColor:'#94a3b8',callbacks:{label:ctx=>' ROI: '+ctx.parsed.y.toFixed(2)+'%'}}},scales:{x:{grid:{color:'rgba(100,160,255,0.06)'},ticks:{color:'#64748b',font:{size:10}}},y:{grid:{color:'rgba(100,160,255,0.06)'},ticks:{color:'#64748b',font:{size:11},callback:v=>v+'%'}}}}});}
 function updateCatChart(rows){const activeCatsList=CATS.filter(c=>activeCats.has(c));if(chartCat)chartCat.destroy();chartCat=new Chart(document.getElementById('chartCat'),{type:'bar',data:{labels:rows.map(r=>r.mes),datasets:activeCatsList.map(c=>({label:CAT_LABELS[c],data:rows.map(r=>r[c]),backgroundColor:CAT_COLORS[c]+'bb',borderRadius:3,borderSkipped:false,stack:'s'}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#162032',borderColor:'rgba(100,160,255,0.25)',borderWidth:1,titleColor:'#e8f0fe',bodyColor:'#94a3b8',callbacks:{label:ctx=>' '+ctx.dataset.label+': '+fmtEur(ctx.parsed.y)}}},scales:{x:{stacked:true,grid:{color:'rgba(100,160,255,0.06)'},ticks:{color:'#64748b',font:{size:10}}},y:{stacked:true,grid:{color:'rgba(100,160,255,0.06)'},ticks:{color:'#64748b',font:{size:11},callback:v=>fmtEurK(v)}}}}});}
-function updateDonut(rows){const activeCatsList=CATS.filter(c=>activeCats.has(c));const sums=activeCatsList.map(c=>rows.reduce((s,r)=>s+r[c],0));const total=sums.reduce((a,b)=>a+b,0);if(chartDonut)chartDonut.destroy();chartDonut=new Chart(document.getElementById('chartDonut'),{type:'doughnut',data:{labels:activeCatsList.map(c=>CAT_LABELS[c]),datasets:[{data:sums,backgroundColor:activeCatsList.map(c=>CAT_COLORS[c]+'dd'),borderColor:'#162032',borderWidth:2,hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:true,position:'right',labels:{color:'#e8f0fe',font:{size:11},boxWidth:10,padding:10,generateLabels:chart=>{const d=chart.data;return d.labels.map((l,i)=>({text:l+'  '+((sums[i]/total*100).toFixed(1))+'%',fillStyle:d.datasets[0].backgroundColor[i],hidden:false,index:i,strokeStyle:'transparent'}));}}},tooltip:{backgroundColor:'#162032',borderColor:'rgba(100,160,255,0.25)',borderWidth:1,titleColor:'#e8f0fe',bodyColor:'#94a3b8',callbacks:{label:ctx=>' '+fmtEur(ctx.parsed)+' ('+(ctx.parsed/total*100).toFixed(1)+'%)'}}}}})}
+function updateDonut(rows){const activeCatsList=CATS.filter(c=>activeCats.has(c));const sums=activeCatsList.map(c=>rows.reduce((s,r)=>s+r[c],0));const total=sums.reduce((a,b)=>a+b,0);if(chartDonut)chartDonut.destroy();chartDonut=new Chart(document.getElementById('chartDonut'),{type:'doughnut',data:{labels:activeCatsList.map(c=>CAT_LABELS[c]),datasets:[{data:sums,backgroundColor:activeCatsList.map(c=>CAT_COLORS[c]+'dd'),borderColor:'#162032',borderWidth:2,hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:true,position:'right',labels:{color:'#ffffff',font:{size:11,family:"'DM Mono', monospace"},boxWidth:10,padding:10,generateLabels:chart=>{const d=chart.data;return d.labels.map((l,i)=>({text:l+'  '+((sums[i]/total*100).toFixed(1))+'%',fillStyle:d.datasets[0].backgroundColor[i],fontColor:'#ffffff',hidden:false,index:i,strokeStyle:'transparent'}));}}},tooltip:{backgroundColor:'#162032',borderColor:'rgba(100,160,255,0.25)',borderWidth:1,titleColor:'#ffffff',bodyColor:'#94a3b8',callbacks:{label:ctx=>' '+fmtEur(ctx.parsed)+' ('+(ctx.parsed/total*100).toFixed(1)+'%)'}}}}})}
 
 function updateTable(rows){
   const maxTotal=Math.max(...rows.map(r=>r.total));
