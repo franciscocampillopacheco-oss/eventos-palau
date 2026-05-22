@@ -199,6 +199,63 @@
   /* Force Chart.js legend text white */
   #page-propuesta .chart-card { --chartjs-legend-color: #e8f0fe; }
 
+  /* ── COSTE SOCIAL ── */
+  #page-coste { font-family: "DM Mono", monospace; }
+  .coste-wrap { padding: 0 0 4rem; }
+  .coste-header { display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;border-bottom:1px solid var(--accent);padding-bottom:1.5rem;margin-bottom:2rem; }
+  .coste-title { font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(1.3rem,3vw,2rem);color:var(--text); }
+  .coste-title span { color:var(--accent); }
+  .coste-week-nav { display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:1.5rem; }
+  .coste-week-btn { font-family:"DM Mono",monospace;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--muted);padding:0.4rem 0.9rem;transition:all 0.2s; }
+  .coste-week-btn:hover { border-color:var(--accent);color:var(--accent); }
+  .coste-week-btn.active { background:var(--accent);border-color:var(--accent);color:#0a0c10;font-weight:700; }
+  /* RATIOS EDITOR */
+  .ratios-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:2rem; }
+  .ratio-card { background:var(--surface);border:1px solid var(--border);padding:1rem 1.1rem; }
+  .ratio-card-title { font-family:"Syne",sans-serif;font-weight:700;font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.5rem; }
+  .ratio-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+  .ratio-row { display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem;font-size:0.62rem;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase; }
+  .ratio-label { min-width:80px; }
+  .ratio-input { width:65px;text-align:right;background:#0d0f14;border:1px solid var(--border);color:var(--text);font-family:"DM Mono",monospace;font-size:0.72rem;padding:0.25rem 0.5rem;outline:none;transition:border 0.2s; }
+  .ratio-input:focus { border-color:var(--accent); }
+  .ratio-unit { color:var(--muted);font-size:0.58rem; }
+  /* RESUMEN SEMANAL */
+  .coste-summary { display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:2rem; }
+  .coste-kpi { background:var(--surface);border:1px solid var(--border);padding:1rem 1.1rem;position:relative;overflow:hidden; }
+  .coste-kpi::before { content:'';position:absolute;top:0;left:0;right:0;height:2px; }
+  .coste-kpi.banq::before { background:linear-gradient(90deg,#5b8fa8,transparent); }
+  .coste-kpi.coc::before { background:linear-gradient(90deg,#7db88e,transparent); }
+  .coste-kpi.tot::before { background:linear-gradient(90deg,var(--accent),transparent); }
+  .coste-kpi-label { font-size:0.58rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem; }
+  .coste-kpi-value { font-family:"Syne",sans-serif;font-weight:800;font-size:1.6rem;color:var(--text);line-height:1; }
+  .coste-kpi.banq .coste-kpi-value { color:#5b8fa8; }
+  .coste-kpi.coc .coste-kpi-value { color:#7db88e; }
+  .coste-kpi.tot .coste-kpi-value { color:var(--accent); }
+  .coste-kpi-sub { font-size:0.58rem;color:var(--muted);margin-top:0.3rem; }
+  /* DAY TABLE */
+  .coste-table-wrap { background:var(--surface);border:1px solid var(--border);overflow:hidden;margin-bottom:2rem; }
+  .coste-table-header { padding:0.8rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.5rem; }
+  .coste-table-title { font-family:"Syne",sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent); }
+  .coste-table { width:100%;border-collapse:collapse;font-size:0.65rem; }
+  .coste-table thead th { padding:0.5rem 0.8rem;text-align:left;font-size:0.58rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;background:#0d0f14;border-bottom:1px solid var(--border); }
+  .coste-table thead th.num { text-align:right; }
+  .coste-table tbody tr { border-bottom:1px solid #111520;transition:background 0.15s; }
+  .coste-table tbody tr:hover { background:#111520; }
+  .coste-table tbody tr:last-child { border-bottom:none; }
+  .coste-table td { padding:0.5rem 0.8rem;color:var(--muted);vertical-align:top; }
+  .coste-table td.num { text-align:right;font-variant-numeric:tabular-nums; }
+  .coste-table td.day-label { color:var(--text);font-weight:700;font-family:"Syne",sans-serif;white-space:nowrap; }
+  .coste-table td.ev-name { color:var(--text); }
+  .coste-badge { display:inline-block;padding:0.1rem 0.4rem;font-size:0.55rem;letter-spacing:0.05em;text-transform:uppercase;border:1px solid; }
+  .coste-badge.banq { color:#5b8fa8;border-color:#5b8fa822;background:#5b8fa810; }
+  .coste-badge.coc { color:#7db88e;border-color:#7db88e22;background:#7db88e10; }
+  .coste-bar { display:flex;align-items:center;gap:6px; }
+  .coste-bar-track { flex:1;height:4px;background:var(--border);min-width:40px; }
+  .coste-bar-fill { height:100%;transition:width 0.4s; }
+  /* SECTION LABEL */
+  .coste-section { font-size:0.6rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.8rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border); }
+  .coste-empty { padding:3rem 1rem;text-align:center;font-size:0.65rem;color:#252830;letter-spacing:0.1em;text-transform:uppercase; }
+
 </style>
 </head>
 <body>
@@ -226,6 +283,7 @@
   <!-- MAIN NAV -->
   <nav class="main-nav">
     <button class="nav-tab active" onclick="showPage('home')">🏠 Home</button>
+    <button class="nav-tab" onclick="showPage('coste')">👥 Coste Social</button>
     <button class="nav-tab" onclick="showPage('propuesta')">💧 ROI Ósmosis</button>
   </nav>
 
@@ -6358,6 +6416,7 @@ const TYPE_LABELS={cafe:'Coffee',lunch:'Lunch',coctel:'Cóctel',gala:'Gala',reun
 function toDays(y,m,d){return Math.round(Date.UTC(y,m,d)/86400000);}
 function parseDateDays(str){const[d,m,y]=str.split('-');return toDays(2000+parseInt(y),MONTH_IDX[m],parseInt(d));}
 function isoDow(days){return(days+3)%7;}
+function mondayDays(days){return days-isoDow(days);}
 function daysToUTC(days){return new Date(days*86400000);}
 function getYear(days){return daysToUTC(days).getUTCFullYear();}
 function getMonth(days){return daysToUTC(days).getUTCMonth();}
@@ -6520,7 +6579,8 @@ function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
-  document.querySelectorAll('.nav-tab').forEach(t=>{if(t.textContent.toLowerCase().includes(name==='home'?'home':'roi'))t.classList.add('active');});
+  document.querySelectorAll('.nav-tab').forEach(t=>{const map={'home':'home','coste':'coste','propuesta':'roi'};if(t.textContent.toLowerCase().includes(map[name]||name))t.classList.add('active');});
+  if(name==='coste'&&!window._costeInited){window._costeInited=true;costeInit();}
   if(name==='propuesta'&&!window._osmosisInited){window._osmosisInited=true;osmosisInit();}
 }
 
@@ -6549,8 +6609,8 @@ const DATA=[
   {mes:'jul-25',coffe:901,lunch:201,welcome:30,gala:0,coctel:640,total:1497.02,roi:4.99,flujoNeto:1472.02,acum:228918.92},
 ];
 const CATS=['coffe','lunch','welcome','gala','coctel'];
-let RATIOS={coffe:0.5,lunch:4,welcome:2,gala:8,coctel:4};
-const RATIOS_DEFAULT={coffe:0.5,lunch:4,welcome:2,gala:8,coctel:4};
+let RATIOS={coffe:0.1,lunch:1.5,welcome:1,gala:4,coctel:1.5};
+const RATIOS_DEFAULT={coffe:0.1,lunch:1.5,welcome:1,gala:4,coctel:1.5};
 const CAT_COLORS={coffe:'#3b82f6',lunch:'#f59e0b',welcome:'#10b981',gala:'#a855f7',coctel:'#ef4444'};
 const CAT_LABELS={coffe:'Coffee',lunch:'Lunch',welcome:'Welcome',gala:'Gala',coctel:'Cóctel'};
 let sortKey='mes',sortDir=1,chartView='acum';
@@ -6602,10 +6662,32 @@ function sortTable(key){if(sortKey===key)sortDir*=-1;else{sortKey=key;sortDir=1;
 
 function renderRatioEditor(){const el=document.getElementById('ratio-editor');if(!el)return;const maxR=Math.max(...Object.values(RATIOS),1);el.innerHTML=CATS.map(c=>{const pct=Math.min((RATIOS[c]/maxR*100),100).toFixed(0);const isDefault=RATIOS[c]===RATIOS_DEFAULT[c];return`<div style="display:flex;align-items:center;gap:10px;margin-bottom:13px"><div style="min-width:66px;font-size:12px;color:#94a3b8;display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:2px;background:${CAT_COLORS[c]};flex-shrink:0;display:inline-block"></span>${CAT_LABELS[c]}</div><div class="bar-track" style="flex:1;height:7px"><div id="rbar-${c}" class="bar-fill" style="width:${pct}%;background:${CAT_COLORS[c]}bb"></div></div><div style="display:flex;align-items:center;gap:4px"><input type="number" id="ratio-input-${c}" value="${RATIOS[c]}" min="0" max="999" step="0.1" style="width:62px;text-align:right;background:#141e30;border:1px solid ${isDefault?'rgba(100,160,255,0.22)':CAT_COLORS[c]+'88'};border-radius:6px;color:${isDefault?'#e8f0fe':CAT_COLORS[c]};font-size:13px;font-weight:500;padding:4px 7px;outline:none" oninput="window._onRatioChange('${c}',this.value)"><button onclick="window._resetRatio('${c}')" style="background:transparent;border:none;cursor:pointer;color:#64748b;font-size:14px;padding:2px 4px">↺</button></div></div>`;}).join('');}
 
-window._onRatioChange=function(cat,val){const v=parseFloat(val);if(isNaN(v)||v<0)return;RATIOS[cat]=v;const maxR=Math.max(...Object.values(RATIOS),1);CATS.forEach(c=>{const bar=document.getElementById('rbar-'+c);if(bar)bar.style.width=Math.min((RATIOS[c]/maxR*100),100).toFixed(0)+'%';});updateCosteCamareros();};
-window._resetRatio=function(cat){RATIOS[cat]=RATIOS_DEFAULT[cat];renderRatioEditor();updateCosteCamareros();};
+window._onRatioChange=function(cat,val){const v=parseFloat(val);if(isNaN(v)||v<0)return;RATIOS[cat]=v;const maxR=Math.max(...Object.values(RATIOS),1);CATS.forEach(c=>{const bar=document.getElementById('rbar-'+c);if(bar)bar.style.width=Math.min((RATIOS[c]/maxR*100),100).toFixed(0)+'%';const inp=document.getElementById('ratio-input-'+c);if(inp){const isDef=RATIOS[c]===RATIOS_DEFAULT[c];inp.style.borderColor=isDef?'rgba(100,160,255,0.22)':CAT_COLORS[c]+'88';inp.style.color=isDef?'#e8f0fe':CAT_COLORS[c];}});update();};
+window._resetRatio=function(cat){RATIOS[cat]=RATIOS_DEFAULT[cat];renderRatioEditor();update();};
 
-function updateCosteCamareros(){const rows=getFiltered();const costeHora=parseFloat(document.getElementById('coste-hora')?.value)||12;let costTotal=0,ingrTotal=0;rows.forEach(r=>{CATS.filter(c=>activeCats.has(c)).forEach(c=>{costTotal+=r[c]*RATIOS[c]*costeHora;ingrTotal+=r[c];});});const margen=ingrTotal-costTotal;const elCost=document.getElementById('kpi-coste-cam');const elMarg=document.getElementById('kpi-margen-cam');if(elCost)elCost.textContent=fmtEurK(costTotal);if(elMarg){elMarg.textContent=fmtEurK(margen);elMarg.style.color=margen>=0?'#34d399':'#ef4444';}}
+function updateCosteCamareros(){
+  const rows=getFiltered();
+  const costeHora=parseFloat(document.getElementById('coste-hora')?.value)||12;
+  // Ahorro personal = por cada mes, por cada categoría:
+  // eventos_categoria × ratio_fregadores × 8h × coste/hora
+  // Los valores en DATA (coffe, lunch, welcome, gala, coctel) son unidades de servicio (no EUR)
+  let ahorroPersonal=0;
+  let ahorroAgua=0;
+  rows.forEach(r=>{
+    CATS.filter(c=>activeCats.has(c)).forEach(c=>{
+      // r[c] = unidades de servicio de esa categoría ese mes
+      // RATIOS[c] = fregadores por 100 unidades
+      // × 8h jornada × coste/hora = ahorro en personal ese mes esa cat
+      ahorroPersonal+=(r[c]/100)*RATIOS[c]*8*costeHora;
+    });
+    ahorroAgua+=r.total; // ahorro real en agua EUR
+  });
+  const totalAhorro=ahorroPersonal+ahorroAgua;
+  const elCost=document.getElementById('kpi-coste-cam');
+  const elMarg=document.getElementById('kpi-margen-cam');
+  if(elCost) elCost.textContent=fmtEurK(ahorroPersonal);
+  if(elMarg) elMarg.textContent=fmtEurK(totalAhorro);
+}
 
 window.setView=function(v){chartView=v;['acum','mes','both'].forEach(x=>{document.getElementById('v-'+x).classList.toggle('active',x===v);});update();};
 window.resetFilters=function(){document.getElementById('f-desde').value='0';document.getElementById('f-hasta').value='11';document.getElementById('f-roi-min').value='0';document.getElementById('f-roi-max').value='999';activeCats=new Set(CATS);document.querySelectorAll('.toggle-btn[data-cat]').forEach(b=>b.classList.add('cat-active'));CATS.forEach(c=>{RATIOS[c]=RATIOS_DEFAULT[c];});const ch=document.getElementById('coste-hora');if(ch)ch.value=12;setView('acum');update();};
@@ -6613,10 +6695,581 @@ window.exportCSV=function(){const rows=getFiltered();const header=['Mes','Coffee
 
 document.getElementById('cat-toggles').addEventListener('click',e=>{const btn=e.target.closest('[data-cat]');if(!btn)return;const cat=btn.dataset.cat;if(activeCats.has(cat)){if(activeCats.size===1)return;activeCats.delete(cat);btn.classList.remove('cat-active');}else{activeCats.add(cat);btn.classList.add('cat-active');}update();});
 ['f-desde','f-hasta','f-roi-min','f-roi-max'].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener('change',update);el.addEventListener('input',update);}});
-document.addEventListener('input',e=>{if(e.target.id==='coste-hora')updateCosteCamareros();});
+document.addEventListener('input',e=>{if(e.target.id==='coste-hora')update();});
 window.sortTable=sortTable;
 update();
 } // end osmosisInit
+
+
+// ── COSTE SOCIAL ──
+function costeInit(){
+  const RATIOS_DEF = {
+    cafe:     {factor:0.10, banq:1.00, coc:0.00, label:'Coffee Break',   color:'#c8a96e'},
+    lunch:    {factor:1.00, banq:0.50, coc:0.50, label:'Lunch / Buffet', color:'#7db88e'},
+    coctel:   {factor:1.00, banq:0.50, coc:0.50, label:'Cóctel',         color:'#9b7dc8'},
+    gala:     {factor:2.00, banq:0.50, coc:0.50, label:'Gala',           color:'#e090c0'},
+    vino:     {factor:0.50, banq:1.00, coc:0.00, label:'Vino / Welcome', color:'#c8a96e'},
+    deli:     {factor:0.25, banq:0.50, coc:0.50, label:'Deli Buffet',    color:'#7db88e'},
+    open_bar: {factor:0.25, banq:1.00, coc:0.00, label:'Open Bar',       color:'#5b8fa8'},
+    desayuno: {factor:0.50, banq:0.50, coc:0.50, label:'Desayuno',       color:'#d0a060'},
+    box_lunch:{factor:0.50, banq:0.50, coc:0.50, label:'Box Lunch',      color:'#60c090'},
+  };
+
+  let RATIOS = JSON.parse(JSON.stringify(RATIOS_DEF));
+  let cYear = activeYear;
+  let cMonth = activeMonth;
+  let cWeek = null;  // null = show monthly summary, number = show week detail
+  let chartWkBanq=null, chartWkCoc=null, chartMensual=null, chartHistorico=null;
+  let paxOverrides = {};
+
+  function evKey(ev){ return ev.days+'|'+ev.time+'|'+ev.name; }
+
+  function parseTime(t){
+    if(!t||!t.includes('-'))return{dur:2};
+    const[s,e]=t.split('-');
+    const[sh,sm]=s.split(':').map(Number);
+    const[eh,em]=e.split(':').map(Number);
+    let dur=(eh*60+em)-(sh*60+sm);
+    if(dur<=0)dur=120;
+    return{dur:dur/60};
+  }
+
+  function fmtHoursShort(h){
+    if(h<=0)return'—';
+    const totalMin=Math.round(h*60);
+    const hh=Math.floor(totalMin/60);
+    const mm=totalMin%60;
+    return hh+'h'+(mm>0?' '+mm+'min':'');
+  }
+
+  // extrasOverrides: { [dayNum]: { prod: bool, limp: bool } }
+  let extrasOverrides = {};
+
+  function calcEvent(ev){
+    const r=RATIOS[ev.type];
+    if(!r)return{banq:0,coc:0,hours:0,banqH:0,cocH:0};
+    const pax=paxOverrides[evKey(ev)]??ev.pax??50;
+    const{dur}=parseTime(ev.time);
+    if(pax<50) return{banq:0,coc:0,hours:dur,banqH:0,cocH:0};
+    // Pax scaling: full factor up to 200, then sqrt reduction above 200
+    let effectivePax;
+    if(pax<=200){
+      effectivePax=pax;
+    } else {
+      effectivePax=200+Math.sqrt((pax-200)*100);
+    }
+    const base=(effectivePax/100)*r.factor;
+    const banqFrac=base*r.banq;
+    const cocFrac=base*r.coc;
+    // Convert to hours and apply 32h cap per event
+    const rawBanqH=banqFrac*8;
+    const rawCocH=cocFrac*8;
+    const rawTotH=rawBanqH+rawCocH;
+    let banqH=rawBanqH, cocH=rawCocH;
+    if(rawTotH>32){
+      const scale=32/rawTotH;
+      banqH=rawBanqH*scale;
+      cocH=rawCocH*scale;
+    }
+    return{banq:banqFrac,coc:cocFrac,hours:dur,banqH,cocH,totH:banqH+cocH};
+  }
+
+  // Returns extra hours for a day (Producción + Limpieza) if any event has cocina ≥50pax
+  function calcDayExtras(dayEvs, dayNum){
+    const hasCocina=dayEvs.some(ev=>{
+      const pax=paxOverrides[evKey(ev)]??ev.pax??50;
+      const r=RATIOS[ev.type];
+      return r && r.coc>0 && ev.type!=='cafe' && pax>=50;
+    });
+    if(!hasCocina) return[];
+    const ov=extrasOverrides[dayNum]||{prod:false,limp:false};
+    const extras=[];
+    if(ov.prod) extras.push({label:'Producción',key:'prod',h:8});
+    if(ov.limp) extras.push({label:'Limpieza',key:'limp',h:8});
+    return extras;
+  }
+
+  function getEvs(year,month){
+    return(byYearMonth[year]?.[month]||[]).filter(e=>e.type!=='reunion');
+  }
+
+  function calcPeriod(evList){
+    let banqH=0,cocH=0;
+    // Group by day to calc extras once per day
+    const dayMap={};
+    evList.forEach(ev=>{if(!dayMap[ev.days])dayMap[ev.days]=[];dayMap[ev.days].push(ev);});
+    Object.entries(dayMap).forEach(([dayNum,evs])=>{
+      evs.forEach(ev=>{const c=calcEvent(ev);banqH+=c.banqH;cocH+=c.cocH;});
+      const extras=calcDayExtras(evs,parseInt(dayNum));
+      extras.forEach(x=>cocH+=x.h);
+    });
+    return{banqH,cocH,totH:banqH+cocH};
+  }
+
+  function getWeeksForMonth(year,month){
+    const evs=getEvs(year,month);
+    const wkMap={};
+    evs.forEach(ev=>{
+      const k=mondayDays(ev.days);
+      if(!wkMap[k])wkMap[k]=[];
+      wkMap[k].push(ev);
+    });
+    return Object.keys(wkMap).map(Number).sort((a,b)=>a-b).map(mon=>({mon,evs:wkMap[mon]}));
+  }
+
+  // ── RENDER ──
+  function renderCoste(){
+    const container=document.getElementById('coste-content');
+    let h='<div class="coste-wrap">';
+
+    // Header
+    h+=`<div class="coste-header">
+      <div>
+        <div class="coste-title">Coste Social <span>/ Fregadores</span></div>
+        <div style="font-size:0.62rem;color:var(--muted);margin-top:0.3rem;letter-spacing:0.08em;text-transform:uppercase">Horas Banquetes vs Cocina · ${cWeek!==null?MONTHS_FULL[cMonth]+' '+cYear:cYear===0?'Histórico Completo':MONTHS_FULL[cMonth]+' '+cYear}</div>
+      </div>
+    </div>`;
+
+    // ── NAV: AÑOS ──
+    h+='<p class="coste-section">Año</p><div class="coste-week-nav">';
+    // "Todo" option
+    h+=`<button class="coste-week-btn${cYear===0?' active':''}" onclick="window._costeNav(0,0,null)">Todo</button>`;
+    YEARS.forEach(y=>{
+      h+=`<button class="coste-week-btn${cYear===y&&cMonth===-1?' active':''}" onclick="window._costeNav(${y},-1,null)">${y}</button>`;
+    });
+    h+='</div>';
+
+    // ── NAV: MESES (si hay año seleccionado) ──
+    if(cYear>0){
+      h+='<p class="coste-section">Mes</p><div class="coste-week-nav">';
+      // All months for the year
+      h+=`<button class="coste-week-btn${cMonth===-1?' active':''}" onclick="window._costeNav(${cYear},-1,null)">Todo ${cYear}</button>`;
+      const ALL_MONTHS_ES=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+      for(let m=0;m<12;m++){
+        const hasEvs=(byYearMonth[cYear]?.[m]||[]).filter(e=>e.type!=='reunion').length>0;
+        if(!hasEvs)continue;
+        h+=`<button class="coste-week-btn${cMonth===m?' active':''}" onclick="window._costeNav(${cYear},${m},null)">${ALL_MONTHS_ES[m]}</button>`;
+      }
+      h+='</div>';
+    }
+
+    // ── NAV: SEMANAS (si hay mes seleccionado) ──
+    if(cYear>0 && cMonth>=0){
+      const weeks=getWeeksForMonth(cYear,cMonth);
+      if(weeks.length){
+        h+='<p class="coste-section">Semana</p><div class="coste-week-nav">';
+        h+=`<button class="coste-week-btn${cWeek===null?' active':''}" onclick="window._costeNav(${cYear},${cMonth},null)">Todo ${MONTHS_FULL[cMonth]}</button>`;
+        weeks.forEach((w,wi)=>{
+          const monD=daysToUTC(w.mon);const sunD=daysToUTC(w.mon+6);
+          h+=`<button class="coste-week-btn${cWeek===w.mon?' active':''}" onclick="window._costeNav(${cYear},${cMonth},${w.mon})">S${wi+1} · ${monD.getUTCDate()}–${sunD.getUTCDate()} ${MONTHS_ES[sunD.getUTCMonth()]}</button>`;
+        });
+        h+='</div>';
+      }
+    }
+
+    // ── CONTENIDO SEGÚN NIVEL ──
+    if(cYear===0){
+      // HISTÓRICO COMPLETO
+      h+=renderHistorico();
+    } else if(cMonth===-1){
+      // AÑO COMPLETO
+      h+=renderAnio(cYear);
+    } else if(cWeek===null){
+      // MES COMPLETO
+      h+=renderMes(cYear,cMonth);
+    } else {
+      // SEMANA
+      h+=renderSemana(cYear,cMonth,cWeek);
+    }
+
+    // ── RATIOS AL FINAL ──
+    h+=`<p class="coste-section" style="margin-top:2rem">Ratios por servicio — editables</p>
+    <div class="ratios-grid">`;
+    Object.entries(RATIOS).forEach(([key,r])=>{
+      h+=`<div class="ratio-card">
+        <div class="ratio-card-title"><span class="ratio-dot" style="background:${r.color}"></span>${r.label}</div>
+        <div class="ratio-row">
+          <span class="ratio-label">Factor</span>
+          <input class="ratio-input" type="number" min="0" max="10" step="0.05" value="${r.factor}" data-key="${key}" data-field="factor" oninput="window._costeRatioChange(this)">
+          <span class="ratio-unit">/ 100pax·8h</span>
+        </div>
+        <div class="ratio-row">
+          <span class="ratio-label" style="color:#5b8fa8">% Banq.</span>
+          <input class="ratio-input" type="number" min="0" max="1" step="0.05" value="${r.banq}" data-key="${key}" data-field="banq" oninput="window._costeRatioChange(this)" style="border-color:#5b8fa840;color:#5b8fa8">
+          <span class="ratio-unit">0–1</span>
+        </div>
+        <div class="ratio-row">
+          <span class="ratio-label" style="color:#7db88e">% Cocina</span>
+          <input class="ratio-input" type="number" min="0" max="1" step="0.05" value="${r.coc}" data-key="${key}" data-field="coc" oninput="window._costeRatioChange(this)" style="border-color:#7db88e40;color:#7db88e">
+          <span class="ratio-unit">0–1</span>
+        </div>
+      </div>`;
+    });
+    h+=`</div>
+    <div style="font-size:0.58rem;color:var(--muted);letter-spacing:0.06em;padding:0.8rem 0 2rem;line-height:1.8">
+      <span style="color:var(--accent)">Fórmula:</span> (Pax÷100) × Factor × %Dpto × 8 = Horas &nbsp;·&nbsp; Jornada=8h &nbsp;·&nbsp; &lt;50 pax = sin personal &nbsp;·&nbsp; Producción+Limpieza: +16h cocina si pax≥50
+    </div></div>`;
+
+    container.innerHTML=h;
+    requestAnimationFrame(()=>renderCharts());
+  }
+
+  // ── KPI ROW ──
+  function kpiRow(banqH,cocH){
+    return`<div class="coste-summary">
+      <div class="coste-kpi banq"><div class="coste-kpi-label">Horas Banquetes</div><div class="coste-kpi-value">${fmtHoursShort(banqH)}</div><div class="coste-kpi-sub">${(banqH/8).toFixed(1)} jornadas</div></div>
+      <div class="coste-kpi coc"><div class="coste-kpi-label">Horas Cocina</div><div class="coste-kpi-value">${fmtHoursShort(cocH)}</div><div class="coste-kpi-sub">${(cocH/8).toFixed(1)} jornadas</div></div>
+      <div class="coste-kpi tot"><div class="coste-kpi-label">Total Horas</div><div class="coste-kpi-value">${fmtHoursShort(banqH+cocH)}</div><div class="coste-kpi-sub">${((banqH+cocH)/8).toFixed(1)} jornadas</div></div>
+    </div>`;
+  }
+
+  // ── HISTÓRICO ──
+  function renderHistorico(){
+    let h='<p class="coste-section">Resumen por año</p>';
+    const labels=[],bData=[],cData=[];
+    YEARS.forEach(y=>{
+      let banqH=0,cocH=0;
+      for(let m=0;m<12;m++){
+        const r=calcPeriod(getEvs(y,m));
+        banqH+=r.banqH;cocH+=r.cocH;
+      }
+      labels.push(y);bData.push(parseFloat(banqH.toFixed(1)));cData.push(parseFloat(cocH.toFixed(1)));
+    });
+    const totBanq=bData.reduce((a,b)=>a+b,0);
+    const totCoc=cData.reduce((a,b)=>a+b,0);
+    h+=kpiRow(totBanq,totCoc);
+    h+=`<div style="background:var(--surface);border:1px solid var(--border);padding:1.25rem;margin-bottom:1.5rem">
+      <div style="font-size:0.6rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1rem">Horas por año · Banquetes vs Cocina</div>
+      <div style="position:relative;height:220px"><canvas id="chartCosteHistorico"></canvas></div>
+    </div>`;
+    // Table por año
+    h+=`<div class="coste-table-wrap"><div class="coste-table-header"><div class="coste-table-title">Detalle por año</div></div>
+    <table class="coste-table"><thead><tr>
+      <th>Año</th>
+      <th class="num" style="color:#5b8fa8">H. Banquetes</th>
+      <th class="num" style="color:#7db88e">H. Cocina</th>
+      <th class="num">H. Total</th>
+      <th class="num">Jornadas</th>
+    </tr></thead><tbody>`;
+    YEARS.forEach((y,i)=>{
+      const tot=bData[i]+cData[i];
+      h+=`<tr><td class="day-label" onclick="window._costeNav(${y},-1,null)" style="cursor:pointer;color:var(--accent)">${y} ↗</td>
+        <td class="num" style="color:#5b8fa8">${fmtHoursShort(bData[i])}</td>
+        <td class="num" style="color:#7db88e">${fmtHoursShort(cData[i])}</td>
+        <td class="num" style="color:var(--text);font-weight:700">${fmtHoursShort(tot)}</td>
+        <td class="num" style="color:var(--muted)">${(tot/8).toFixed(1)}</td>
+      </tr>`;
+    });
+    h+=`<tr style="background:#0a0c10;border-top:2px solid var(--accent)">
+      <td style="color:var(--accent);font-family:'Syne',sans-serif;font-weight:700;font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.6rem 0.8rem">TOTAL HISTÓRICO</td>
+      <td class="num" style="color:#5b8fa8;font-weight:700">${fmtHoursShort(totBanq)}</td>
+      <td class="num" style="color:#7db88e;font-weight:700">${fmtHoursShort(totCoc)}</td>
+      <td class="num" style="color:var(--accent);font-weight:700">${fmtHoursShort(totBanq+totCoc)}</td>
+      <td class="num" style="color:var(--muted);font-weight:700">${((totBanq+totCoc)/8).toFixed(1)}</td>
+    </tr></tbody></table></div>`;
+    return h;
+  }
+
+  // ── AÑO ──
+  function renderAnio(year){
+    let h=`<p class="coste-section">Resumen ${year}</p>`;
+    const labels=[],bData=[],cData=[];
+    let totB=0,totC=0;
+    for(let m=0;m<12;m++){
+      const evs=getEvs(year,m);
+      if(!evs.length)continue;
+      const r=calcPeriod(evs);
+      labels.push(MONTHS_ES[m]);bData.push(parseFloat(r.banqH.toFixed(1)));cData.push(parseFloat(r.cocH.toFixed(1)));
+      totB+=r.banqH;totC+=r.cocH;
+    }
+    h+=kpiRow(totB,totC);
+    h+=`<div style="background:var(--surface);border:1px solid var(--border);padding:1.25rem;margin-bottom:1.5rem">
+      <div style="font-size:0.6rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1rem">Horas por mes · ${year}</div>
+      <div style="position:relative;height:200px"><canvas id="chartCosteAnio"></canvas></div>
+    </div>
+    <div class="coste-table-wrap"><div class="coste-table-header"><div class="coste-table-title">Detalle por mes</div></div>
+    <table class="coste-table"><thead><tr>
+      <th>Mes</th>
+      <th class="num" style="color:#5b8fa8">H. Banquetes</th>
+      <th class="num" style="color:#7db88e">H. Cocina</th>
+      <th class="num">H. Total</th>
+      <th class="num">Jornadas</th>
+    </tr></thead><tbody>`;
+    labels.forEach((lbl,i)=>{
+      const tot=bData[i]+cData[i];
+      // find month index
+      const mi=MONTHS_ES.indexOf(lbl);
+      h+=`<tr><td class="day-label" onclick="window._costeNav(${year},${mi},null)" style="cursor:pointer;color:var(--accent)">${lbl} ↗</td>
+        <td class="num" style="color:#5b8fa8">${fmtHoursShort(bData[i])}</td>
+        <td class="num" style="color:#7db88e">${fmtHoursShort(cData[i])}</td>
+        <td class="num" style="color:var(--text);font-weight:700">${fmtHoursShort(tot)}</td>
+        <td class="num" style="color:var(--muted)">${(tot/8).toFixed(1)}</td>
+      </tr>`;
+    });
+    h+=`<tr style="background:#0a0c10;border-top:2px solid var(--accent)">
+      <td style="color:var(--accent);font-family:'Syne',sans-serif;font-weight:700;font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.6rem 0.8rem">TOTAL ${year}</td>
+      <td class="num" style="color:#5b8fa8;font-weight:700">${fmtHoursShort(totB)}</td>
+      <td class="num" style="color:#7db88e;font-weight:700">${fmtHoursShort(totC)}</td>
+      <td class="num" style="color:var(--accent);font-weight:700">${fmtHoursShort(totB+totC)}</td>
+      <td class="num" style="color:var(--muted);font-weight:700">${((totB+totC)/8).toFixed(1)}</td>
+    </tr></tbody></table></div>`;
+    return h;
+  }
+
+  // ── MES ──
+  function renderMes(year,month){
+    const weeks=getWeeksForMonth(year,month);
+    let h=`<p class="coste-section">Resumen ${MONTHS_FULL[month]} ${year}</p>`;
+    const{banqH,cocH}=calcPeriod(getEvs(year,month));
+    h+=kpiRow(banqH,cocH);
+    // Chart por semana
+    const wkLabels=[],wkB=[],wkC=[];
+    weeks.forEach((w,wi)=>{
+      const monD=daysToUTC(w.mon);const sunD=daysToUTC(w.mon+6);
+      wkLabels.push('S'+(wi+1)+' '+monD.getUTCDate()+'-'+sunD.getUTCDate());
+      const r=calcPeriod(w.evs);
+      wkB.push(parseFloat(r.banqH.toFixed(1)));wkC.push(parseFloat(r.cocH.toFixed(1)));
+    });
+    h+=`<div style="background:var(--surface);border:1px solid var(--border);padding:1.25rem;margin-bottom:1.5rem">
+      <div style="font-size:0.6rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1rem">Horas por semana · ${MONTHS_FULL[month]} ${year}</div>
+      <div style="position:relative;height:200px"><canvas id="chartCosteMes"></canvas></div>
+    </div>
+    <div class="coste-table-wrap"><div class="coste-table-header"><div class="coste-table-title">Detalle por semana</div></div>
+    <table class="coste-table"><thead><tr>
+      <th>Semana</th>
+      <th class="num" style="color:#5b8fa8">H. Banquetes</th>
+      <th class="num" style="color:#7db88e">H. Cocina</th>
+      <th class="num">H. Total</th>
+      <th class="num">Jornadas</th>
+    </tr></thead><tbody>`;
+    weeks.forEach((w,wi)=>{
+      const monD=daysToUTC(w.mon);const sunD=daysToUTC(w.mon+6);
+      const lbl='S'+(wi+1)+' '+monD.getUTCDate()+'–'+sunD.getUTCDate()+' '+MONTHS_ES[sunD.getUTCMonth()];
+      const tot=wkB[wi]+wkC[wi];
+      h+=`<tr><td class="day-label" onclick="window._costeNav(${year},${month},${w.mon})" style="cursor:pointer;color:var(--accent)">${lbl} ↗</td>
+        <td class="num" style="color:#5b8fa8">${fmtHoursShort(wkB[wi])}</td>
+        <td class="num" style="color:#7db88e">${fmtHoursShort(wkC[wi])}</td>
+        <td class="num" style="color:var(--text);font-weight:700">${fmtHoursShort(tot)}</td>
+        <td class="num" style="color:var(--muted)">${(tot/8).toFixed(1)}</td>
+      </tr>`;
+    });
+    h+=`<tr style="background:#0a0c10;border-top:2px solid var(--accent)">
+      <td style="color:var(--accent);font-family:'Syne',sans-serif;font-weight:700;font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.6rem 0.8rem">TOTAL MES</td>
+      <td class="num" style="color:#5b8fa8;font-weight:700">${fmtHoursShort(banqH)}</td>
+      <td class="num" style="color:#7db88e;font-weight:700">${fmtHoursShort(cocH)}</td>
+      <td class="num" style="color:var(--accent);font-weight:700">${fmtHoursShort(banqH+cocH)}</td>
+      <td class="num" style="color:var(--muted);font-weight:700">${((banqH+cocH)/8).toFixed(1)}</td>
+    </tr></tbody></table></div>`;
+    return h;
+  }
+
+  // ── SEMANA (detalle completo) ──
+  function renderSemana(year,month,weekMon){
+    const weeks=getWeeksForMonth(year,month);
+    const wk=weeks.find(w=>w.mon===weekMon)||weeks[0];
+    if(!wk)return'<div class="coste-empty">Sin eventos esta semana</div>';
+
+    let wkBanqH=0,wkCocH=0;
+    const wkDayMap2={};
+    wk.evs.forEach(ev=>{if(!wkDayMap2[ev.days])wkDayMap2[ev.days]=[];wkDayMap2[ev.days].push(ev);});
+    Object.entries(wkDayMap2).forEach(([dn,devs])=>{
+      devs.forEach(ev=>{const c=calcEvent(ev);wkBanqH+=c.banqH;wkCocH+=c.cocH;});
+      calcDayExtras(devs,parseInt(dn)).forEach(x=>wkCocH+=x.h);
+    });
+
+    let h=`<p class="coste-section">Semana ${fmtHoursShort(0)?'':''} detalle</p>`;
+    h+=kpiRow(wkBanqH,wkCocH);
+
+    // Day map
+    const dayMap={};
+    wk.evs.forEach(ev=>{if(!dayMap[ev.days])dayMap[ev.days]=[];dayMap[ev.days].push(ev);});
+
+    // Chart por día
+    const dayLabels=[],dayB=[],dayC=[];
+    Object.keys(dayMap).map(Number).sort((a,b)=>a-b).forEach(d=>{
+      const dt=daysToUTC(d);
+      dayLabels.push(DAYS_FULL[isoDow(d)].slice(0,3)+' '+dt.getUTCDate());
+      let db=0,dc=0;
+      dayMap[d].forEach(ev=>{const c=calcEvent(ev);db+=c.banqH;dc+=c.cocH+(c.extras||[]).reduce((s,x)=>s+x.h,0);});
+      dayB.push(parseFloat(db.toFixed(1)));dayC.push(parseFloat(dc.toFixed(1)));
+    });
+
+    h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:1.5rem">
+      <div style="background:var(--surface);border:1px solid var(--border);padding:1.25rem">
+        <div style="font-size:0.6rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1rem">H. Banquetes por día</div>
+        <div style="position:relative;height:160px"><canvas id="chartCosteWkBanq"></canvas></div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);padding:1.25rem">
+        <div style="font-size:0.6rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1rem">H. Cocina por día</div>
+        <div style="position:relative;height:160px"><canvas id="chartCosteWkCoc"></canvas></div>
+      </div>
+    </div>`;
+
+    // Table
+    h+=`<div class="coste-table-wrap">
+      <div class="coste-table-header"><div class="coste-table-title">Desglose por evento</div></div>
+      <div style="overflow-x:auto"><table class="coste-table">
+        <thead><tr>
+          <th>Día</th><th>Evento</th><th>Hora</th>
+          <th class="num">Pax</th><th class="num">Dur.</th>
+          <th class="num" style="color:#5b8fa8">H. Banquetes</th>
+          <th class="num" style="color:#7db88e">H. Cocina</th>
+          <th class="num">H. Total</th>
+        </tr></thead><tbody>`;
+
+    Object.keys(dayMap).map(Number).sort((a,b)=>a-b).forEach(dayNum=>{
+      const evs=dayMap[dayNum].sort((a,b)=>a.time.localeCompare(b.time));
+      const d=daysToUTC(dayNum);
+      const dayLabel=DAYS_FULL[isoDow(dayNum)]+' '+d.getUTCDate();
+      let dbH=0,dcH=0;
+      evs.forEach((ev,i)=>{
+        const c=calcEvent(ev);
+        const extraCocH=(c.extras||[]).reduce((s,x)=>s+x.h,0);
+        dbH+=c.banqH;dcH+=c.cocH+extraCocH;
+        const r=RATIOS[ev.type];
+        const key=evKey(ev);
+        const curPax=paxOverrides[key]??ev.pax??50;
+        const isLow=curPax<50;
+        h+=`<tr${isLow?' style="opacity:0.4"':''}>
+          <td class="day-label">${i===0?dayLabel:''}</td>
+          <td class="ev-name"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${r?r.color:'#555'};margin-right:6px;vertical-align:middle"></span>${ev.name}${isLow?'<span style="font-size:0.52rem;color:var(--muted);margin-left:6px">(&lt;50 pax)</span>':''}</td>
+          <td style="white-space:nowrap">${ev.time}</td>
+          <td class="num"><input type="number" min="1" max="9999" value="${curPax}" data-evkey="${key.replace(/"/g,'&quot;')}" oninput="window._costePaxChange(this)" style="width:56px;text-align:right;background:#0d0f14;border:1px solid ${isLow?'#333':'var(--border)'};color:${isLow?'var(--muted)':'var(--text)'};font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.2rem 0.4rem;outline:none"></td>
+          <td class="num" style="color:var(--muted)">${c.hours.toFixed(1)}h</td>
+          <td class="num" style="color:#5b8fa8">${c.banqH>0?fmtHoursShort(c.banqH):'—'}</td>
+          <td class="num" style="color:#7db88e">${c.cocH>0?fmtHoursShort(c.cocH):'—'}</td>
+          <td class="num" style="color:var(--text);font-weight:700">${(c.banqH+c.cocH)>0?fmtHoursShort(c.banqH+c.cocH):'—'}</td>
+        </tr>`;
+        // (extras rendered once per day, after last event of day)
+      });
+      // Day extras — once per day
+      const dayExtras=calcDayExtras(evs,dayNum);
+      // Always show both toggles if day has kitchen events
+      const hasDayCocina=evs.some(ev=>{const pax=paxOverrides[evKey(ev)]??ev.pax??50;const r=RATIOS[ev.type];return r&&r.coc>0&&ev.type!=='cafe'&&pax>=50;});
+      if(hasDayCocina){
+        const ov=extrasOverrides[dayNum]||{prod:false,limp:false};
+        ['prod','limp'].forEach(xkey=>{
+          const xLabel=xkey==='prod'?'Producción':'Limpieza';
+          const active=ov[xkey];
+          dcH+=active?8:0;
+          h+=`<tr style="background:#0a0f1a">
+            <td></td>
+            <td class="ev-name" style="padding-left:1.5rem">
+              <button onclick="window._costeToggleExtra(${dayNum},'${xkey}')"
+                style="background:${active?'#7db88e22':'#1a1a20'};border:1px solid ${active?'#7db88e':'#2a2a35'};color:${active?'#7db88e':'#444'};font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;padding:0.15rem 0.55rem;cursor:pointer;transition:all 0.2s;margin-right:8px">${active?'✓':'✗'}</button>
+              <span style="color:${active?'var(--muted)':'#333'}">${xLabel}</span>
+              <span style="font-size:0.52rem;color:#444;margin-left:6px">· por día</span>
+            </td>
+            <td colspan="3" style="color:#333;font-size:0.55rem;letter-spacing:0.06em">extra cocina</td>
+            <td class="num" style="color:#5b8fa8">—</td>
+            <td class="num" style="color:${active?'#7db88e':'#333'}">${active?fmtHoursShort(8):'—'}</td>
+            <td class="num" style="color:${active?'#7db88e':'#333'};font-weight:700">${active?fmtHoursShort(8):'—'}</td>
+          </tr>`;
+        });
+      }
+      h+=`<tr style="background:#0d0f14;border-top:1px solid var(--border)">
+        <td colspan="5" style="color:var(--muted);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.4rem 0.8rem">Subtotal ${dayLabel}</td>
+        <td class="num" style="color:#5b8fa8;font-weight:700">${dbH>0?fmtHoursShort(dbH):'—'}</td>
+        <td class="num" style="color:#7db88e;font-weight:700">${dcH>0?fmtHoursShort(dcH):'—'}</td>
+        <td class="num" style="color:var(--accent);font-weight:700">${(dbH+dcH)>0?fmtHoursShort(dbH+dcH):'—'}</td>
+      </tr>`;
+    });
+
+    h+=`<tr style="background:#0a0c10;border-top:2px solid var(--accent)">
+      <td colspan="5" style="color:var(--accent);font-family:'Syne',sans-serif;font-weight:700;font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.6rem 0.8rem">TOTAL SEMANA</td>
+      <td class="num" style="color:#5b8fa8;font-weight:700;font-size:0.8rem">${fmtHoursShort(wkBanqH)}</td>
+      <td class="num" style="color:#7db88e;font-weight:700;font-size:0.8rem">${fmtHoursShort(wkCocH)}</td>
+      <td class="num" style="color:var(--accent);font-weight:700;font-size:0.8rem">${fmtHoursShort(wkBanqH+wkCocH)}</td>
+    </tr></tbody></table></div></div>`;
+    return h;
+  }
+
+  // ── CHARTS ──
+  function renderCharts(){
+    const tooltipCb={callbacks:{label:ctx=>{const v=ctx.parsed.y;const hh=Math.floor(v);const mm=Math.round((v-hh)*60);return' '+ctx.dataset.label+': '+hh+'h'+(mm>0?' '+mm+'min':'');}}};
+    const baseOpts=(labels,datasets)=>({
+      type:'bar',
+      data:{labels,datasets},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:datasets.length>1,labels:{color:'#ffffff',font:{size:11},boxWidth:10}},
+          tooltip:{backgroundColor:'#162032',borderColor:'rgba(100,160,255,0.2)',borderWidth:1,titleColor:'#fff',bodyColor:'#94a3b8',...tooltipCb}},
+        scales:{x:{grid:{color:'rgba(100,160,255,0.06)'},ticks:{color:'#64748b',font:{size:10}}},
+          y:{grid:{color:'rgba(100,160,255,0.06)'},ticks:{color:'#64748b',font:{size:10},callback:v=>{const h=Math.floor(v);const m=Math.round((v-h)*60);return h+'h'+(m>0?' '+m+'m':'');}}}}}
+    });
+
+    function mkChart(id,labels,bData,cData){
+      const el=document.getElementById(id);
+      if(!el)return null;
+      return new Chart(el,baseOpts(labels,[
+        {label:'Banquetes',data:bData,backgroundColor:'#5b8fa899',borderColor:'#5b8fa8',borderWidth:1,borderRadius:3},
+        {label:'Cocina',data:cData,backgroundColor:'#7db88e99',borderColor:'#7db88e',borderWidth:1,borderRadius:3}
+      ]));
+    }
+
+    // Histórico
+    if(document.getElementById('chartCosteHistorico')){
+      const labels=[],bData=[],cData=[];
+      YEARS.forEach(y=>{let b=0,c=0;for(let m=0;m<12;m++){const r=calcPeriod(getEvs(y,m));b+=r.banqH;c+=r.cocH;}labels.push(y);bData.push(parseFloat(b.toFixed(1)));cData.push(parseFloat(c.toFixed(1)));});
+      mkChart('chartCosteHistorico',labels,bData,cData);
+    }
+    // Año
+    if(document.getElementById('chartCosteAnio')){
+      const labels=[],bData=[],cData=[];
+      for(let m=0;m<12;m++){const evs=getEvs(cYear,m);if(!evs.length)continue;const r=calcPeriod(evs);labels.push(MONTHS_ES[m]);bData.push(parseFloat(r.banqH.toFixed(1)));cData.push(parseFloat(r.cocH.toFixed(1)));}
+      mkChart('chartCosteAnio',labels,bData,cData);
+    }
+    // Mes
+    if(document.getElementById('chartCosteMes')){
+      const weeks=getWeeksForMonth(cYear,cMonth);
+      const labels=[],bData=[],cData=[];
+      weeks.forEach((w,wi)=>{const monD=daysToUTC(w.mon);const sunD=daysToUTC(w.mon+6);labels.push('S'+(wi+1)+' '+monD.getUTCDate()+'-'+sunD.getUTCDate());const r=calcPeriod(w.evs);bData.push(parseFloat(r.banqH.toFixed(1)));cData.push(parseFloat(r.cocH.toFixed(1)));});
+      mkChart('chartCosteMes',labels,bData,cData);
+    }
+    // Semana días
+    if(document.getElementById('chartCosteWkBanq')||document.getElementById('chartCosteWkCoc')){
+      const weeks=getWeeksForMonth(cYear,cMonth);
+      const wk=weeks.find(w=>w.mon===cWeek)||weeks[0];
+      if(wk){
+        const dayMap={};
+        wk.evs.forEach(ev=>{if(!dayMap[ev.days])dayMap[ev.days]=[];dayMap[ev.days].push(ev);});
+        const dayLabels=[],dayB=[],dayC=[];
+        Object.keys(dayMap).map(Number).sort((a,b)=>a-b).forEach(d=>{
+          const dt=daysToUTC(d);dayLabels.push(DAYS_FULL[isoDow(d)].slice(0,3)+' '+dt.getUTCDate());
+          let db=0,dc=0;
+          dayMap[d].forEach(ev=>{const c=calcEvent(ev);db+=c.banqH;dc+=c.cocH;});
+          calcDayExtras(dayMap[d],d).forEach(x=>dc+=x.h);
+          dayB.push(parseFloat(db.toFixed(1)));dayC.push(parseFloat(dc.toFixed(1)));
+        });
+        const elB=document.getElementById('chartCosteWkBanq');
+        const elC=document.getElementById('chartCosteWkCoc');
+        if(elB)new Chart(elB,baseOpts(dayLabels,[{label:'Banquetes',data:dayB,backgroundColor:'#5b8fa899',borderColor:'#5b8fa8',borderWidth:1,borderRadius:3}]));
+        if(elC)new Chart(elC,baseOpts(dayLabels,[{label:'Cocina',data:dayC,backgroundColor:'#7db88e99',borderColor:'#7db88e',borderWidth:1,borderRadius:3}]));
+      }
+    }
+  }
+
+  window._costeToggleExtra=function(dayNum,xkey){
+    if(!extrasOverrides[dayNum]) extrasOverrides[dayNum]={prod:false,limp:false};
+    extrasOverrides[dayNum][xkey]=!extrasOverrides[dayNum][xkey];
+    renderCoste();
+  };
+  window._costeNav=function(year,month,week){cYear=year;cMonth=month;cWeek=week;renderCoste();};
+  window._costePaxChange=function(inp){const key=inp.dataset.evkey;const v=parseInt(inp.value);if(!isNaN(v)&&v>0)paxOverrides[key]=v;else delete paxOverrides[key];renderCoste();};
+  window._costeRatioChange=function(inp){const v=parseFloat(inp.value);if(!isNaN(v)&&v>=0)RATIOS[inp.dataset.key][inp.dataset.field]=v;renderCoste();};
+
+  const _origRenderAll=window.renderAll;
+  window.renderAll=function(){
+    _origRenderAll();
+    if(window._costeInited&&document.getElementById('page-coste').classList.contains('active')){
+      cYear=activeYear;cMonth=activeMonth;cWeek=null;renderCoste();
+    }
+  };
+
+  // Init to current month
+  cYear=activeYear;cMonth=activeMonth;cWeek=null;
+  renderCoste();
+}
+
 
 // ── LOGIN ──
 const USERS={fran:'1234'};
@@ -6639,7 +7292,13 @@ document.addEventListener('keydown',e=>{
 
 </script>
 
+
   </div><!-- /page-home -->
+
+  <!-- PAGE: COSTE SOCIAL -->
+  <div class="page" id="page-coste">
+    <div id="coste-content"><!-- loaded lazily --></div>
+  </div>
 
   <!-- PAGE: PROPUESTA -->
   <div class="page" id="page-propuesta">
@@ -6694,13 +7353,31 @@ document.addEventListener('keydown',e=>{
   </div>
   <div class="bottom-row">
     <div class="chart-card">
-      <div class="chart-title"><span class="chart-title-dot" style="background:#f59e0b"></span>Ratio Camareros / Evento — Editable</div>
-      <div style="font-size:11px;color:#64748b;margin-bottom:14px;line-height:1.5">Camareros necesarios por cada evento de esa categoría. Modifica el valor y el coste se recalcula en tiempo real.</div>
+      <div class="chart-title"><span class="chart-title-dot" style="background:#f59e0b"></span>Ahorro en Fregadores · Ratio editable</div>
+      <div style="font-size:11px;color:#64748b;margin-bottom:14px;line-height:1.5">Fregadores evitados gracias a la ósmosis por cada 100 unidades de servicio. El coste evitado = <strong style="color:#e8f0fe">ahorro real</strong> generado por la inversión.</div>
       <div id="ratio-editor"></div>
-      <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(100,160,255,0.12);display:flex;flex-direction:column;gap:6px">
-        <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.08em">Coste total camareros (período)</span><span style="font-size:20px;font-family:'DM Serif Display',serif;color:#ef4444" id="kpi-coste-cam">—</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.08em">Margen neto sobre camareros</span><span style="font-size:20px;font-family:'DM Serif Display',serif;color:#34d399" id="kpi-margen-cam">—</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.08em">Coste/hora camarero (€)</span><div style="display:flex;align-items:center;gap:6px"><input type="number" id="coste-hora" value="12" min="1" max="100" step="0.5" style="width:70px;text-align:right;background:#141e30;border:1px solid rgba(100,160,255,0.22);border-radius:6px;color:#e8f0fe;font-size:13px;padding:4px 8px;outline:none"><span style="font-size:12px;color:#64748b">€/h</span></div></div>
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(100,160,255,0.12);display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.08em">Ahorro en personal (período)</div>
+            <div style="font-size:11px;color:#64748b;margin-top:2px">fregadores × horas × coste/hora</div>
+          </div>
+          <span style="font-size:24px;font-family:'DM Serif Display',serif;color:#34d399" id="kpi-coste-cam">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.08em">Ahorro acumulado sobre inversión</div>
+            <div style="font-size:11px;color:#64748b;margin-top:2px">ahorro personal + ahorro agua</div>
+          </div>
+          <span style="font-size:24px;font-family:'DM Serif Display',serif;color:#fbbf24" id="kpi-margen-cam">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid rgba(100,160,255,0.08)">
+          <span style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.08em">Coste/hora fregador (€)</span>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="number" id="coste-hora" value="12" min="1" max="100" step="0.5" style="width:70px;text-align:right;background:#141e30;border:1px solid rgba(100,160,255,0.22);border-radius:6px;color:#e8f0fe;font-size:13px;padding:4px 8px;outline:none">
+            <span style="font-size:12px;color:#64748b">€/h</span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="chart-card"><div class="chart-title"><span class="chart-title-dot" style="background:#10b981"></span>Distribución Ingresos por Servicio</div><div style="position:relative;height:200px"><canvas id="chartDonut"></canvas></div></div>
