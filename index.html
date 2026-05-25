@@ -7154,7 +7154,7 @@ function costeInit(){
       <div class="coste-table-header"><div class="coste-table-title">Desglose por evento</div></div>
       <div style="overflow-x:auto"><table class="coste-table">
         <thead><tr>
-          <th>Día</th><th>Evento</th><th>Hora</th>
+          <th>Día</th><th>Evento</th><th>Hora</th><th>Sala</th>
           <th class="num">Pax</th><th class="num">Dur.</th>
           <th class="num" style="color:#5b8fa8">H. Banquetes</th>
           <th class="num" style="color:#7db88e">H. Cocina</th>
@@ -7184,6 +7184,7 @@ function costeInit(){
             <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${r?r.color:'#555'};margin-right:6px;vertical-align:middle"></span>${ev.name}${isLow&&!isDis?'<span style="font-size:0.52rem;color:var(--muted);margin-left:6px">(&lt;50 pax)</span>':''}
           </td>
           <td style="white-space:nowrap">${ev.time}</td>
+          <td style="color:var(--muted);font-size:0.6rem;max-width:140px">${ev.room||'—'}</td>
           <td class="num"><input type="text" inputmode="numeric" pattern="[0-9]*" value="${curPax}" data-evkey="${key.replace(/"/g,'&quot;')}" onchange="window._costePaxChange(this)" style="width:56px;text-align:right;background:#0d0f14;border:1px solid ${isLow?'#333':'var(--border)'};color:${isLow?'var(--muted)':'var(--text)'};font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.2rem 0.4rem;outline:none"></td>
           <td class="num" style="color:var(--muted)">${c.hours.toFixed(1)}h</td>
           <td class="num" style="color:#5b8fa8">${c.banqH>0?fmtHoursShort(c.banqH):'—'}</td>
@@ -7207,7 +7208,7 @@ function costeInit(){
               <span style="color:${active?'var(--muted)':'#333'}">${xLabel}</span>
               <span style="font-size:0.52rem;color:#444;margin-left:6px">· por día</span>
             </td>
-            <td colspan="3" style="color:#333;font-size:0.55rem;letter-spacing:0.06em">extra cocina</td>
+            <td colspan="4" style="color:#333;font-size:0.55rem;letter-spacing:0.06em">extra cocina</td>
             <td class="num" style="color:#5b8fa8">—</td>
             <td class="num" style="color:${active?'#7db88e':'#333'}">${active?fmtHoursShort(8):'—'}</td>
             <td class="num" style="color:${active?'#7db88e':'#333'};font-weight:700">${active?fmtHoursShort(8):'—'}</td>
@@ -7215,7 +7216,7 @@ function costeInit(){
         });
       }
       h+=`<tr style="background:#0d0f14;border-top:1px solid var(--border)">
-        <td colspan="5" style="color:var(--muted);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.4rem 0.8rem">Subtotal ${dayLabel}</td>
+        <td colspan="6" style="color:var(--muted);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.4rem 0.8rem">Subtotal ${dayLabel}</td>
         <td class="num" style="color:#5b8fa8;font-weight:700">${dbH>0?fmtHoursShort(dbH):'—'}</td>
         <td class="num" style="color:#7db88e;font-weight:700">${dcH>0?fmtHoursShort(dcH):'—'}</td>
         <td class="num" style="color:var(--accent);font-weight:700">${(dbH+dcH)>0?fmtHoursShort(dbH+dcH):'—'}</td>
@@ -7223,7 +7224,7 @@ function costeInit(){
     });
 
     h+=`<tr style="background:#0a0c10;border-top:2px solid var(--accent)">
-      <td colspan="5" style="color:var(--accent);font-family:'Syne',sans-serif;font-weight:700;font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.6rem 0.8rem">TOTAL SEMANA</td>
+      <td colspan="6" style="color:var(--accent);font-family:'Syne',sans-serif;font-weight:700;font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.6rem 0.8rem">TOTAL SEMANA</td>
       <td class="num" style="color:#5b8fa8;font-weight:700;font-size:0.8rem">${fmtHoursShort(wkBanqH)}</td>
       <td class="num" style="color:#7db88e;font-weight:700;font-size:0.8rem">${fmtHoursShort(wkCocH)}</td>
       <td class="num" style="color:var(--accent);font-weight:700;font-size:0.8rem">${fmtHoursShort(wkBanqH+wkCocH)}</td>
