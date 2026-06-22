@@ -351,7 +351,7 @@
 </div>
 <div class="breadcrumb" id="breadcrumb"></div>
 <div style="margin-bottom:1rem;">
-  <button id="icsBtn" onclick="exportarICS()" style="background:var(--accent);color:#fff;border:none;padding:0.55rem 1.1rem;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:0.45rem;">📅 Exportar a Outlook (hoy → 9 jul)</button>
+  <button id="icsBtn" onclick="exportarICS()" style="background:var(--accent);color:#fff;border:none;padding:0.55rem 1.1rem;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:0.45rem;">📅 Exportar a Outlook (esta semana y la siguiente)</button>
 </div>
 <div id="content"></div>
 
@@ -6609,8 +6609,9 @@ function icsEscape(s){return String(s||'').replace(/\\/g,'\\\\').replace(/;/g,'\
 function exportarICS(){
   const hoy=new Date();
   const desde=toDays(hoy.getFullYear(),hoy.getMonth(),hoy.getDate());
-  const hasta=toDays(2026,5,9)+30; // 9-jul-26 inclusive
-  const lim=toDays(2026,6,9);
+  // hasta el domingo de la semana siguiente (semana actual + siguiente, lun-dom)
+  const lunesEstaSemana=mondayDays(desde);
+  const lim=lunesEstaSemana+13; // domingo de la semana que viene
   const evs=allEvents.filter(e=>e.type!=='reunion'&&e.days>=desde&&e.days<=lim);
   evs.sort((a,b)=>a.days-b.days||a.time.localeCompare(b.time));
   let ics='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Palau Congressos//Eventos FB//ES\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\n';
