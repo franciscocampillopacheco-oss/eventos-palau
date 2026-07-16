@@ -41,10 +41,13 @@
   .chip.on[data-z="BANQUETES"]{background:var(--banquetes);border-color:var(--banquetes);color:#fff}
   .chip.on[data-z="COCINA HOTEL"]{background:var(--hotel);border-color:var(--hotel);color:#fff}
   .chip.on[data-z="COCINA PALAU"]{background:var(--palau);border-color:var(--palau);color:#fff}
+  .chips + .chips{margin-top:6px}
+  .name-chip{border-style:dashed;text-transform:none;letter-spacing:.02em;font-size:.9rem}
+  .name-chip.on{border-style:solid}
 
   main{max-width:640px;margin:0 auto;padding:14px 12px 60px}
 
-  .day{margin-bottom:22px}
+  .day{margin-bottom:22px;scroll-margin-top:150px}
   .day-head{display:flex;align-items:center;gap:10px;padding:6px 4px;margin-bottom:8px;border-bottom:1px dashed var(--steel)}
   .day-head h2{font-family:'Barlow Condensed';font-weight:600;font-size:1.15rem;letter-spacing:.05em;text-transform:uppercase;color:#cfd6df}
   .tag-hoy{font-family:'Barlow Condensed';font-weight:700;font-size:.75rem;letter-spacing:.1em;background:var(--hoy);color:#fff;border-radius:4px;padding:2px 8px;text-transform:uppercase}
@@ -81,6 +84,7 @@
     <button class="btn" id="reload" title="Actualizar" aria-label="Actualizar">⟳</button>
   </div>
   <div class="chips" id="chips"></div>
+  <div class="chips" id="namechips"></div>
 </header>
 
 <main id="app">
@@ -93,7 +97,7 @@ const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmMytMNWbZy0Q1
 const MESES = {enero:0,febrero:1,marzo:2,abril:3,mayo:4,junio:5,julio:6,agosto:7,septiembre:8,setiembre:8,octubre:9,noviembre:10,diciembre:11};
 const app = document.getElementById('app');
 const chipsEl = document.getElementById('chips');
-let rows = [], zones = [], activeZone = null;
+let rows = [], zones = [], names = [], activeZone = null, activeName = null;
 
 function parseCSV(text){
   const out=[]; let row=[], cur='', inQ=false;
@@ -152,9 +156,11 @@ function load(){
           salida: r[4].trim()
         }));
       zones = [...new Set(rows.map(r=>r.zona).filter(Boolean))].sort();
+      names = [...new Set(rows.map(r=>r.nombre).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
       document.getElementById('updated').textContent =
         'Actualizado ' + new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
       renderChips();
+      renderNameChips();
       render();
     })
     .catch(() => {
@@ -178,12 +184,37 @@ function renderChips(){
   });
 }
 
+function renderNameChips(){
+  const el = document.getElementById('namechips');
+  el.innerHTML='';
+  const all=document.createElement('button');
+  all.className='chip name-chip'+(activeName===null?' on':'');
+  all.textContent='Todo el equipo';
+  all.onclick=()=>{activeName=null;renderNameChips();render();};
+  el.appendChild(all);
+  names.forEach(n=>{
+    const b=document.createElement('button');
+    b.className='chip name-chip'+(activeName===n?' on':'');
+    b.textContent=shortName(n);
+    b.title=n;
+    b.onclick=()=>{activeName=(activeName===n?null:n);renderNameChips();render();};
+    el.appendChild(b);
+  });
+}
+
+function shortName(n){
+  // "CHAMI, DJAHID" → "Chami" | "BADARA (DIOSSY)" → "Badara" | "EVELIN HERRERA" → "Evelin"
+  let s = n.split(/[,(]/)[0].trim().split(/\s+/)[0].toLowerCase();
+  return s.charAt(0).toUpperCase()+s.slice(1);
+}
+
 function render(){
   const q = document.getElementById('q').value.trim().toLowerCase();
   const today = new Date(); today.setHours(0,0,0,0);
 
   let list = rows.filter(r =>
     (!activeZone || r.zona===activeZone) &&
+    (!activeName || r.nombre===activeName) &&
     (!q || r.nombre.toLowerCase().includes(q))
   );
 
@@ -200,7 +231,7 @@ function render(){
   });
 
   app.innerHTML='';
-  let todayEl=null;
+  let todayEl=null, nextEl=null;
   groups.forEach(g=>{
     const esHoy = g.date && g.date.getTime()===today.getTime();
     const day=document.createElement('section'); day.className='day';
@@ -220,9 +251,11 @@ function render(){
     });
     app.appendChild(day);
     if(esHoy && !todayEl) todayEl=day;
+    if(!nextEl && g.date && g.date.getTime()>today.getTime()) nextEl=day;
   });
 
-  if(todayEl && !q && !activeZone) todayEl.scrollIntoView({block:'start'});
+  const target = todayEl || nextEl;
+  if(target) target.scrollIntoView({block:'start'});
 }
 
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
