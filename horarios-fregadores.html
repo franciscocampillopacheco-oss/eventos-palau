@@ -50,7 +50,7 @@
   .name-chip{text-transform:none;letter-spacing:.01em;font-family:'Barlow';font-weight:500;font-size:.85rem}
 
   .viewtabs{display:flex;gap:6px;margin-top:10px}
-  .tab{flex:1;font-family:'Barlow Condensed';font-weight:600;font-size:.86rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 0;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--soft);cursor:pointer}
+  .tab{flex:1;font-family:'Barlow Condensed';font-weight:600;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;padding:8px 0;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--soft);cursor:pointer}
   .tab.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 
   main{max-width:680px;margin:0 auto;padding:16px 12px 70px}
@@ -74,6 +74,26 @@
   .t-hours{font-size:1rem;font-weight:500;white-space:nowrap;font-variant-numeric:tabular-nums}
   .t-night{font-size:.66rem;color:var(--hoy);letter-spacing:.05em;text-transform:uppercase;margin-top:1px}
 
+
+  /* ---------- vista cuadrante (una fila por persona) ---------- */
+  .cwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px 12px}
+  table.cua{border-collapse:separate;border-spacing:0;width:100%;min-width:740px}
+  table.cua th,table.cua td{padding:6px 4px;vertical-align:top;text-align:left;border-bottom:1px solid var(--line)}
+  table.cua thead th{font-family:'Barlow Condensed';font-weight:600;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);white-space:nowrap;padding-bottom:8px}
+  table.cua thead th.d-hoy{color:var(--hoy)}
+  table.cua tbody tr:last-child td{border-bottom:none}
+  .pn{position:sticky;left:0;z-index:2;background:var(--card);min-width:86px;width:86px;font-weight:500;font-size:.92rem;padding-right:8px!important;border-right:1px solid var(--line)}
+  td.col-hoy{background:var(--hoy-bg)}
+  td.vacia{color:var(--faint);text-align:center!important;font-size:.9rem}
+  .cel{border-left:2px solid var(--faint);background:#2f2a27;border-radius:0 4px 4px 0;padding:4px 6px;margin-bottom:4px;min-width:96px}
+  .cel:last-child{margin-bottom:0}
+  .cel[data-z="BANQUETES"]{border-left-color:var(--banq)}
+  .cel[data-z="COCINA HOTEL"]{border-left-color:var(--hotel)}
+  .cel[data-z="COCINA PALAU"]{border-left-color:var(--palau)}
+  .cel-h{font-size:.85rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .cel-t{font-family:'Barlow Condensed';font-weight:500;font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-top:1px;line-height:1.2}
+  .cel[data-z="BANQUETES"] .cel-t{color:var(--banq)}
+  .cel[data-z="COCINA PALAU"] .cel-t{color:var(--palau)}
   /* ---------- vista semana ---------- */
   .week-nav{display:flex;align-items:center;gap:8px;margin-bottom:12px}
   .week-nav h2{flex:1;text-align:center;font-family:'EB Garamond',Georgia,serif;font-weight:500;font-size:1.25rem}
@@ -126,7 +146,8 @@
   <div class="chips" id="chips"></div>
   <div class="chips" id="namechips"></div>
   <div class="viewtabs">
-    <button class="tab on" id="tab-semana">Semana</button>
+    <button class="tab on" id="tab-cuadrante">Cuadrante</button>
+    <button class="tab" id="tab-semana">Semana</button>
     <button class="tab" id="tab-lista">Lista</button>
   </div>
 </header>
@@ -143,7 +164,7 @@ const DIAS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
 const app = document.getElementById('app');
 
 let rows = [], zones = [], names = [], activeZone = null, activeName = null;
-let view = 'semana', weekStart = null;
+let view = 'cuadrante', weekStart = null;
 
 // Nombres de turno: solo se aplican a COCINA HOTEL
 const TURNOS = {};
@@ -286,7 +307,9 @@ function render(){
            (!activeName || r.nombre===activeName) &&
            (!q || r.nombre.toLowerCase().includes(q));
   });
-  if(view==='semana') renderSemana(list); else renderLista(list);
+  if(view==='cuadrante') renderCuadrante(list);
+  else if(view==='semana') renderSemana(list);
+  else renderLista(list);
 }
 
 function renderLista(list){
@@ -339,27 +362,97 @@ function salidaAjustada(r){
   return b<=a ? b+1440 : b;
 }
 
-function renderSemana(list){
-  const today = new Date(); today.setHours(0,0,0,0);
+function prepararSemana(){
   const dated = rows.filter(function(r){ return r.fecha; });
-  if(!dated.length){ app.innerHTML='<div class="state">No hay fechas legibles en la hoja.</div>'; return; }
-
+  if(!dated.length) return null;
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
   const minW = startOfWeek(new Date(Math.min.apply(null, dated.map(function(r){return r.fecha.getTime();}))));
   const maxW = startOfWeek(new Date(Math.max.apply(null, dated.map(function(r){return r.fecha.getTime();}))));
-  if(!weekStart) weekStart = startOfWeek(today);
+  if(!weekStart) weekStart = startOfWeek(hoy);
   if(weekStart < minW) weekStart = new Date(minW);
   if(weekStart > maxW) weekStart = new Date(maxW);
-
   const fin = addDays(weekStart,6);
   const dias = []; for(let i=0;i<7;i++) dias.push(addDays(weekStart,i));
+  return {minW:minW, maxW:maxW, fin:fin, dias:dias, hoy:hoy};
+}
+
+function navHTML(ctx){
+  return '<div class="week-nav">'+
+    '<button class="navbtn" id="w-prev"'+(weekStart<=ctx.minW?' disabled':'')+' aria-label="Semana anterior">&lsaquo;</button>'+
+    '<h2>'+esc(fmtDia(weekStart))+' &ndash; '+esc(fmtDia(ctx.fin))+'</h2>'+
+    '<button class="navbtn" id="w-next"'+(weekStart>=ctx.maxW?' disabled':'')+' aria-label="Semana siguiente">&rsaquo;</button>'+
+    '</div>';
+}
+
+function leyendaHTML(){
+  return '<div class="legend">'+
+    '<span><span class="dot" style="background:var(--banq)"></span>Banquetes</span>'+
+    '<span><span class="dot" style="background:var(--hotel)"></span>Cocina hotel</span>'+
+    '<span><span class="dot" style="background:var(--palau)"></span>Cocina Palau</span>'+
+    '</div>';
+}
+
+// ---------- vista cuadrante: una fila por persona ----------
+function renderCuadrante(list){
+  const ctx = prepararSemana();
+  if(!ctx){ app.innerHTML='<div class="state">No hay fechas legibles en la hoja.</div>'; return; }
+  const enSemana = list.filter(function(r){ return r.fecha && r.fecha>=weekStart && r.fecha<=ctx.fin; });
+
+  let html = navHTML(ctx);
+  if(!enSemana.length){
+    html += '<div class="state">Sin turnos esta semana.<br>Usa las flechas para cambiar de semana o quita los filtros.</div>';
+    app.innerHTML = html; enlazarNav(); return;
+  }
+
+  const personas = [...new Set(enSemana.map(function(r){return r.nombre;}))]
+    .sort(function(a,b){ return a.localeCompare(b,'es'); });
+
+  html += '<div class="cwrap"><table class="cua"><thead><tr><th class="pn">Equipo</th>';
+  ctx.dias.forEach(function(d,i){
+    const esHoy = d.getTime()===ctx.hoy.getTime();
+    html += '<th'+(esHoy?' class="d-hoy"':'')+'>'+DIAS[i]+' '+d.getDate()+'</th>';
+  });
+  html += '</tr></thead><tbody>';
+
+  personas.forEach(function(pnom){
+    html += '<tr><td class="pn">'+esc(shortName(pnom))+'</td>';
+    ctx.dias.forEach(function(d){
+      const its = enSemana.filter(function(r){ return r.nombre===pnom && r.fecha.getTime()===d.getTime(); })
+        .sort(function(a,b){ return (toMin(a.entrada)||0)-(toMin(b.entrada)||0); });
+      const esHoy = d.getTime()===ctx.hoy.getTime();
+      if(!its.length){
+        html += '<td class="'+(esHoy?'col-hoy ':'')+'vacia">·</td>';
+      }else{
+        html += '<td class="'+(esHoy?'col-hoy':'')+'">'+its.map(function(r){
+          return '<div class="cel" data-z="'+esc(r.zona)+'" title="'+esc(r.nombre+' · '+r.zona.toLowerCase())+'">'+
+                 '<div class="cel-h">'+esc(fmtH(r.entrada))+'&ndash;'+esc(fmtH(r.salida))+'</div>'+
+                 '<div class="cel-t">'+esc(etiquetaDe(r))+'</div></div>';
+        }).join('')+'</td>';
+      }
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>' + leyendaHTML();
+
+  app.innerHTML = html;
+  enlazarNav();
+  const wrap = app.querySelector('.cwrap');
+  if(wrap){
+    const i = ctx.dias.findIndex(function(d){ return d.getTime()===ctx.hoy.getTime(); });
+    if(i > 2){
+      const th = wrap.querySelectorAll('thead th')[i+1];
+      if(th) wrap.scrollLeft = Math.max(0, th.offsetLeft - 150);
+    }
+  }
+}
+
+function renderSemana(list){
+  const ctx = prepararSemana();
+  if(!ctx){ app.innerHTML='<div class="state">No hay fechas legibles en la hoja.</div>'; return; }
+  const today = ctx.hoy, dias = ctx.dias, fin = ctx.fin;
   const enSemana = list.filter(function(r){ return r.fecha && r.fecha>=weekStart && r.fecha<=fin; });
 
-  let html =
-    '<div class="week-nav">'+
-    '<button class="navbtn" id="w-prev"'+(weekStart<=minW?' disabled':'')+' aria-label="Semana anterior">&lsaquo;</button>'+
-    '<h2>'+esc(fmtDia(weekStart))+' &ndash; '+esc(fmtDia(fin))+'</h2>'+
-    '<button class="navbtn" id="w-next"'+(weekStart>=maxW?' disabled':'')+' aria-label="Semana siguiente">&rsaquo;</button>'+
-    '</div>';
+  let html = navHTML(ctx);
 
   if(!enSemana.length){
     html += '<div class="state">Sin turnos esta semana.<br>Usa las flechas para cambiar de semana o quita los filtros.</div>';
@@ -418,12 +511,7 @@ function renderSemana(list){
     html += '</div></div>';
   });
 
-  html += '</div></div>'+
-    '<div class="legend">'+
-    '<span><span class="dot" style="background:var(--banq)"></span>Banquetes</span>'+
-    '<span><span class="dot" style="background:var(--hotel)"></span>Cocina hotel</span>'+
-    '<span><span class="dot" style="background:var(--palau)"></span>Cocina Palau</span>'+
-    '</div>';
+  html += '</div></div>' + leyendaHTML();
 
   app.innerHTML = html;
 
@@ -446,13 +534,15 @@ function enlazarNav(){
 
 function setView(v){
   view = v;
-  document.getElementById('tab-lista').classList.toggle('on', v==='lista');
+  document.getElementById('tab-cuadrante').classList.toggle('on', v==='cuadrante');
   document.getElementById('tab-semana').classList.toggle('on', v==='semana');
+  document.getElementById('tab-lista').classList.toggle('on', v==='lista');
   render();
 }
 
 document.getElementById('q').addEventListener('input', render);
 document.getElementById('reload').addEventListener('click', load);
+document.getElementById('tab-cuadrante').addEventListener('click', function(){ setView('cuadrante'); });
 document.getElementById('tab-lista').addEventListener('click', function(){ setView('lista'); });
 document.getElementById('tab-semana').addEventListener('click', function(){ setView('semana'); });
 load();
