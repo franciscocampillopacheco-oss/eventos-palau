@@ -45,7 +45,33 @@
   .name-chip{border-style:dashed;text-transform:none;letter-spacing:.02em;font-size:.9rem}
   .name-chip.on{border-style:solid}
 
+  .viewtabs{display:flex;gap:6px;margin-top:10px}
+  .tab{flex:1;font-family:'Barlow Condensed';font-weight:600;font-size:.9rem;letter-spacing:.06em;text-transform:uppercase;padding:7px 0;border-radius:8px;border:1.5px solid var(--steel);background:none;color:var(--muted);cursor:pointer}
+  .tab.on{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+  .tab:focus-visible,.navbtn:focus-visible{outline:2px solid var(--banquetes);outline-offset:2px}
+
   main{max-width:640px;margin:0 auto;padding:14px 12px 60px}
+
+  .week-nav{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .week-nav h2{flex:1;text-align:center;font-family:'Barlow Condensed';font-weight:600;font-size:1.05rem;letter-spacing:.04em;text-transform:uppercase;color:#cfd6df}
+  .navbtn{background:var(--steel);border:none;color:var(--paper);border-radius:8px;padding:7px 15px;font:inherit;font-size:1rem;cursor:pointer}
+  .navbtn[disabled]{opacity:.3;cursor:default}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;font-size:.75rem;color:var(--muted)}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:2px}
+
+  .gridwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table.grid{border-collapse:separate;border-spacing:0;width:100%;min-width:580px}
+  table.grid th,table.grid td{border-bottom:1px solid var(--steel);padding:7px 4px;vertical-align:top;text-align:center}
+  table.grid thead th{font-family:'Barlow Condensed';font-weight:600;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+  table.grid thead th.d-hoy{color:var(--hoy)}
+  .slot{position:sticky;left:0;z-index:2;background:var(--ink);text-align:left!important;min-width:120px;width:120px;border-right:1px solid var(--steel)}
+  .slot-name{font-weight:600;font-size:.85rem;line-height:1.2}
+  .slot-h{font-family:'Barlow Condensed';font-size:.8rem;color:var(--muted);letter-spacing:.03em;font-variant-numeric:tabular-nums}
+  .cell{background:var(--steel);color:var(--paper);border-radius:5px;padding:4px 5px;font-size:.82rem;line-height:1.2;margin-bottom:4px}
+  .cell:last-child{margin-bottom:0}
+  .cell[data-z="BANQUETES"]{background:var(--banquetes);color:#241703}
+  .cell[data-z="COCINA HOTEL"]{background:var(--hotel);color:#04241d}
+  .cell[data-z="COCINA PALAU"]{background:var(--palau);color:#fff}
 
   .day{margin-bottom:22px;scroll-margin-top:150px}
   .day-head{display:flex;align-items:center;gap:10px;padding:6px 4px;margin-bottom:8px;border-bottom:1px dashed var(--steel)}
@@ -85,6 +111,10 @@
   </div>
   <div class="chips" id="chips"></div>
   <div class="chips" id="namechips"></div>
+  <div class="viewtabs">
+    <button class="tab on" id="tab-lista">Lista</button>
+    <button class="tab" id="tab-semana">Semana</button>
+  </div>
 </header>
 
 <main id="app">
@@ -98,6 +128,30 @@ const MESES = {enero:0,febrero:1,marzo:2,abril:3,mayo:4,junio:5,julio:6,agosto:7
 const app = document.getElementById('app');
 const chipsEl = document.getElementById('chips');
 let rows = [], zones = [], names = [], activeZone = null, activeName = null;
+let view = 'lista', weekStart = null;
+
+const DIAS_CORTO = ['L','M','X','J','V','S','D'];
+
+// Nombres de turno: solo se aplican cuando el turno es de COCINA HOTEL
+const TURNOS = {};
+[['8:00','16:00','Trasluz y -1'],
+ ['9:00','15:30','Level y cocina hotel'],
+ ['15:30','23:30','Fregador tarde'],
+ ['18:00','0:00','Apoyo fregador tarde']].forEach(t=>{ TURNOS[slotKey(t[0],t[1])] = t[2]; });
+
+function toMin(t){
+  const m = String(t).match(/(\d{1,2}):(\d{2})/);
+  return m ? (+m[1])*60 + (+m[2]) : null;
+}
+function slotKey(a,b){ return toMin(a)+'|'+toMin(b); }
+
+function startOfWeek(d){
+  const x = new Date(d); x.setHours(0,0,0,0);
+  x.setDate(x.getDate() - ((x.getDay()+6)%7));
+  return x;
+}
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function fmtDia(d){ return d.toLocaleDateString('es-ES',{day:'numeric',month:'short'}).replace('.',''); }
 
 function parseCSV(text){
   const out=[]; let row=[], cur='', inQ=false;
@@ -210,13 +264,102 @@ function shortName(n){
 
 function render(){
   const q = document.getElementById('q').value.trim().toLowerCase();
-  const today = new Date(); today.setHours(0,0,0,0);
-
-  let list = rows.filter(r =>
+  const list = rows.filter(r =>
     (!activeZone || r.zona===activeZone) &&
     (!activeName || r.nombre===activeName) &&
     (!q || r.nombre.toLowerCase().includes(q))
   );
+  if(view==='semana') renderSemana(list); else renderLista(list);
+}
+
+function renderSemana(list){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const dated = rows.filter(r=>r.fecha);
+  if(!dated.length){
+    app.innerHTML='<div class="state">No hay fechas legibles en la hoja.</div>';
+    return;
+  }
+  const minW = startOfWeek(new Date(Math.min.apply(null, dated.map(r=>r.fecha.getTime()))));
+  const maxW = startOfWeek(new Date(Math.max.apply(null, dated.map(r=>r.fecha.getTime()))));
+  if(!weekStart) weekStart = startOfWeek(today);
+  if(weekStart < minW) weekStart = new Date(minW);
+  if(weekStart > maxW) weekStart = new Date(maxW);
+
+  const dias = [];
+  for(let i=0;i<7;i++) dias.push(addDays(weekStart,i));
+  const fin = addDays(weekStart,6);
+
+  const enSemana = list.filter(r => r.fecha && r.fecha>=weekStart && r.fecha<=fin);
+
+  const slotMap = new Map();
+  enSemana.forEach(r=>{
+    const k = slotKey(r.entrada,r.salida);
+    if(!slotMap.has(k)) slotMap.set(k,{k:k,entrada:r.entrada,salida:r.salida,start:toMin(r.entrada),items:[]});
+    slotMap.get(k).items.push(r);
+  });
+  const slots = [...slotMap.values()].sort((a,b)=>{
+    const x = (a.start===null?1e9:a.start) - (b.start===null?1e9:b.start);
+    return x || ((toMin(a.salida)||0) - (toMin(b.salida)||0));
+  });
+
+  let html =
+    '<div class="week-nav">'+
+    '<button class="navbtn" id="w-prev"'+(weekStart<=minW?' disabled':'')+' aria-label="Semana anterior">‹</button>'+
+    '<h2>'+esc(fmtDia(weekStart))+' – '+esc(fmtDia(fin))+'</h2>'+
+    '<button class="navbtn" id="w-next"'+(weekStart>=maxW?' disabled':'')+' aria-label="Semana siguiente">›</button>'+
+    '</div>'+
+    '<div class="legend">'+
+    '<span><span class="dot" style="background:var(--banquetes)"></span> Banquetes</span>'+
+    '<span><span class="dot" style="background:var(--hotel)"></span> Cocina hotel</span>'+
+    '<span><span class="dot" style="background:var(--palau)"></span> Cocina Palau</span>'+
+    '</div>';
+
+  if(!slots.length){
+    html += '<div class="state">Sin turnos esta semana.<br>Usa ‹ › para cambiar de semana o quita los filtros.</div>';
+  }else{
+    html += '<div class="gridwrap" id="gridwrap"><table class="grid"><thead><tr><th class="slot">Turno</th>';
+    dias.forEach((d,i)=>{
+      const hoy = d.getTime()===today.getTime();
+      html += '<th class="'+(hoy?'d-hoy':'')+'" data-col="'+i+'">'+DIAS_CORTO[i]+' '+d.getDate()+(hoy?' •':'')+'</th>';
+    });
+    html += '</tr></thead><tbody>';
+
+    slots.forEach(s=>{
+      const hayHotel = s.items.some(r=>r.zona==='COCINA HOTEL');
+      const nombre = hayHotel ? TURNOS[s.k] : null;
+      const horas = esc(s.entrada)+'–'+esc(s.salida);
+      html += '<tr><td class="slot">'+
+        (nombre ? '<div class="slot-name">'+esc(nombre)+'</div><div class="slot-h">'+horas+'</div>'
+                : '<div class="slot-name">'+horas+'</div>')+
+        '</td>';
+      dias.forEach(d=>{
+        const items = s.items.filter(r=>r.fecha.getTime()===d.getTime());
+        html += '<td>'+items.map(r=>'<div class="cell" data-z="'+esc(r.zona)+'" title="'+esc(r.nombre)+' · '+esc(r.zona.toLowerCase())+'">'+esc(shortName(r.nombre))+'</div>').join('')+'</td>';
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+  }
+
+  app.innerHTML = html;
+
+  const prev = document.getElementById('w-prev'), next = document.getElementById('w-next');
+  if(prev) prev.onclick = ()=>{ weekStart = addDays(weekStart,-7); render(); };
+  if(next) next.onclick = ()=>{ weekStart = addDays(weekStart,7); render(); };
+
+  const wrap = document.getElementById('gridwrap');
+  if(wrap){
+    const iHoy = dias.findIndex(d=>d.getTime()===today.getTime());
+    if(iHoy > 2){
+      const th = wrap.querySelector('th[data-col="'+iHoy+'"]');
+      if(th) wrap.scrollLeft = Math.max(0, th.offsetLeft - 160);
+    }
+  }
+}
+
+function renderLista(list){
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  const today = new Date(); today.setHours(0,0,0,0);
 
   if(!list.length){
     app.innerHTML='<div class="state">Sin turnos que coincidan.<br>Prueba con otro nombre o quita el filtro de zona.</div>';
@@ -260,8 +403,17 @@ function render(){
 
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 
+function setView(v){
+  view = v;
+  document.getElementById('tab-lista').classList.toggle('on', v==='lista');
+  document.getElementById('tab-semana').classList.toggle('on', v==='semana');
+  render();
+}
+
 document.getElementById('q').addEventListener('input', render);
 document.getElementById('reload').addEventListener('click', load);
+document.getElementById('tab-lista').addEventListener('click', ()=>setView('lista'));
+document.getElementById('tab-semana').addEventListener('click', ()=>setView('semana'));
 load();
 </script>
 </body>
