@@ -81,7 +81,7 @@
   .navbtn[disabled]{opacity:.35;cursor:default}
 
   .tlwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 12px 10px}
-  .tlinner{min-width:600px}
+  .tlinner{min-width:820px}
   .tl-axis{display:flex;gap:8px;margin-bottom:4px}
   .tl-axis .sp{flex:0 0 54px}
   .tl-axis .ax{flex:1;position:relative;height:13px;font-size:9.5px;color:var(--faint);font-variant-numeric:tabular-nums}
@@ -100,6 +100,7 @@
   .bar[data-z="BANQUETES"]{background:var(--banq);color:var(--banq-ink)}
   .bar[data-z="COCINA HOTEL"]{background:var(--hotel);color:var(--hotel-ink)}
   .bar[data-z="COCINA PALAU"]{background:var(--palau);color:var(--palau-ink)}
+  .bar .sep{opacity:.45;padding:0 1px}
   .tl-empty{font-size:.8rem;color:var(--faint);padding-top:4px}
 
   .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-family:'Barlow Condensed';font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
@@ -206,6 +207,13 @@ function turnoDe(r){
   return r.zona==='COCINA HOTEL' ? (TURNOS[slotKey(r.entrada,r.salida)] || null) : null;
 }
 
+// etiqueta que se muestra tras la barra vertical: nombre del turno en cocina hotel, zona en el resto
+const ZONA_TXT = {'BANQUETES':'Banquetes','COCINA PALAU':'Cocina Palau','COCINA HOTEL':'Cocina hotel'};
+function etiquetaDe(r){
+  if(r.zona==='COCINA HOTEL') return TURNOS[slotKey(r.entrada,r.salida)] || 'Cocina hotel';
+  return ZONA_TXT[r.zona] || r.zona.charAt(0)+r.zona.slice(1).toLowerCase();
+}
+
 function load(){
   app.innerHTML = '<div class="state"><div class="spinner"></div>Cargando horarios…</div>';
   fetch(CSV_URL + "&t=" + Date.now())
@@ -308,7 +316,7 @@ function renderLista(list){
       t.innerHTML =
         '<div class="stripe"></div>'+
         '<div class="t-main"><div class="t-name">'+esc(r.nombre)+'</div>'+
-        '<div class="t-sub">'+esc(tn ? tn+' · '+r.zona.toLowerCase() : r.zona.toLowerCase())+'</div></div>'+
+        '<div class="t-sub">'+esc(etiquetaDe(r))+'</div></div>'+
         '<div class="t-time"><div class="t-hours">'+esc(fmtH(r.entrada))+'–'+esc(fmtH(r.salida))+'</div>'+
         (cruzaMedianoche(r)?'<div class="t-night">acaba de madrugada</div>':'')+'</div>';
       day.appendChild(t);
@@ -398,12 +406,12 @@ function renderSemana(list){
         const a=toMin(r.entrada), b=salidaAjustada(r);
         const horas = fmtH(r.entrada)+'–'+fmtH(r.salida);
         const tn = turnoDe(r);
-        const tip = r.nombre+' · '+r.zona.toLowerCase()+(tn?' · '+tn:'')+' · '+horas;
+        const tip = r.nombre+' · '+horas+' | '+etiquetaDe(r)+' · '+r.zona.toLowerCase();
         if(a===null||b===null){
-          html += '<div class="tl-lane"><div class="bar" data-z="'+esc(r.zona)+'" style="left:0;width:100%" title="'+esc(tip)+'">'+esc(shortName(r.nombre))+' · '+esc(horas)+'</div></div>';
+          html += '<div class="tl-lane"><div class="bar" data-z="'+esc(r.zona)+'" style="left:0;width:100%" title="'+esc(tip)+'">'+esc(shortName(r.nombre))+' · '+esc(horas)+' <span class="sep">|</span> '+esc(etiquetaDe(r))+'</div></div>';
         }else{
           const l = pos(a), w = Math.max(pos(b)-pos(a), 4);
-          html += '<div class="tl-lane"><div class="bar" data-z="'+esc(r.zona)+'" style="left:'+l.toFixed(2)+'%;width:'+w.toFixed(2)+'%" title="'+esc(tip)+'">'+esc(shortName(r.nombre))+' · '+esc(horas)+'</div></div>';
+          html += '<div class="tl-lane"><div class="bar" data-z="'+esc(r.zona)+'" style="left:'+l.toFixed(2)+'%;width:'+w.toFixed(2)+'%" title="'+esc(tip)+'">'+esc(shortName(r.nombre))+' · '+esc(horas)+' <span class="sep">|</span> '+esc(etiquetaDe(r))+'</div></div>';
         }
       });
     }
