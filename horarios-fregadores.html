@@ -5,95 +5,109 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Horarios Fregadores</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#1d232b;        /* pizarra de cocina */
-    --steel:#2e3742;      /* acero oscuro */
-    --paper:#f7f5f0;      /* ticket de comanda */
-    --line:#dcd7cc;
-    --muted:#7a8290;
-    --banquetes:#c98a2d;  /* ámbar */
-    --hotel:#2e7d6f;      /* verde cocina */
-    --palau:#7059a8;      /* violeta */
-    --hoy:#d94f30;        /* rojo comanda urgente */
+    --paper:#1c1a17;
+    --card:#262220;
+    --ink:#f2e9da;
+    --soft:#bdb1a3;
+    --faint:#a1968a;
+    --line:#393330;
+    --banq:#e3a63f;
+    --banq-ink:#2b1c05;
+    --hotel:#3f9b7f;
+    --hotel-ink:#04241d;
+    --palau:#8b7cd8;
+    --palau-ink:#16102e;
+    --hoy:#e0603b;
+    --hoy-bg:#332723;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{background:var(--ink);color:var(--paper);font-family:'Barlow',system-ui,sans-serif;min-height:100vh}
+  body{background:var(--paper);color:var(--ink);font-family:'Barlow',system-ui,sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
 
-  header{position:sticky;top:0;z-index:10;background:var(--ink);border-bottom:2px solid var(--steel);padding:14px 16px 12px}
-  .brand{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-  h1{font-family:'Barlow Condensed';font-weight:700;font-size:1.55rem;letter-spacing:.04em;text-transform:uppercase}
-  h1 span{color:var(--banquetes)}
-  .updated{font-size:.72rem;color:var(--muted);white-space:nowrap}
+  header{position:sticky;top:0;z-index:10;background:var(--paper);border-bottom:1px solid var(--line);padding:16px 16px 12px}
+  .kicker{font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+  h1{font-family:'EB Garamond',Georgia,serif;font-weight:500;font-size:1.7rem;letter-spacing:.01em;line-height:1.1;margin-top:3px}
+  .updated{font-size:.72rem;color:var(--faint);margin-top:2px}
 
-  .controls{display:flex;gap:8px;margin-top:10px}
-  .search{flex:1;display:flex;align-items:center;background:var(--steel);border-radius:8px;padding:0 10px}
-  .search input{flex:1;background:none;border:none;outline:none;color:var(--paper);font:inherit;font-size:1rem;padding:10px 6px}
-  .search input::placeholder{color:var(--muted)}
-  .btn{background:var(--steel);border:none;color:var(--paper);border-radius:8px;padding:0 14px;font:inherit;font-size:1.2rem;cursor:pointer}
-  .btn:active{transform:scale(.95)}
-  .btn:focus-visible,.chip:focus-visible,.search input:focus-visible{outline:2px solid var(--banquetes);outline-offset:2px}
+  .controls{display:flex;gap:8px;margin-top:12px}
+  .search{flex:1;display:flex;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:0 10px}
+  .search input{flex:1;background:none;border:none;outline:none;color:var(--ink);font:inherit;font-size:.95rem;padding:9px 6px}
+  .search input::placeholder{color:var(--faint)}
+  .btn{background:var(--card);border:1px solid var(--line);color:var(--soft);border-radius:8px;padding:0 13px;font:inherit;font-size:1.1rem;cursor:pointer}
+  .btn:active{transform:scale(.96)}
+  .btn:focus-visible,.chip:focus-visible,.tab:focus-visible,.navbtn:focus-visible,.search input:focus-visible{outline:2px solid var(--hotel);outline-offset:2px}
 
-  .chips{display:flex;gap:6px;margin-top:10px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch}
-  .chip{flex:0 0 auto;font-family:'Barlow Condensed';font-weight:600;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;border-radius:999px;border:1.5px solid var(--steel);background:none;color:var(--muted);cursor:pointer}
-  .chip.on{color:var(--ink);background:var(--paper);border-color:var(--paper)}
-  .chip.on[data-z="BANQUETES"]{background:var(--banquetes);border-color:var(--banquetes);color:#fff}
-  .chip.on[data-z="COCINA HOTEL"]{background:var(--hotel);border-color:var(--hotel);color:#fff}
-  .chip.on[data-z="COCINA PALAU"]{background:var(--palau);border-color:var(--palau);color:#fff}
-  .chips + .chips{margin-top:6px}
-  .name-chip{border-style:dashed;text-transform:none;letter-spacing:.02em;font-size:.9rem}
-  .name-chip.on{border-style:solid}
+  .chips{display:flex;gap:6px;margin-top:9px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:0 0 auto;font-family:'Barlow Condensed';font-weight:600;font-size:.84rem;letter-spacing:.07em;text-transform:uppercase;padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--soft);cursor:pointer;white-space:nowrap}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  .chip.on[data-z="BANQUETES"]{background:var(--banq);border-color:var(--banq);color:var(--banq-ink)}
+  .chip.on[data-z="COCINA HOTEL"]{background:var(--hotel);border-color:var(--hotel);color:var(--hotel-ink)}
+  .chip.on[data-z="COCINA PALAU"]{background:var(--palau);border-color:var(--palau);color:var(--palau-ink)}
+  .name-chip{text-transform:none;letter-spacing:.01em;font-family:'Barlow';font-weight:500;font-size:.85rem}
 
   .viewtabs{display:flex;gap:6px;margin-top:10px}
-  .tab{flex:1;font-family:'Barlow Condensed';font-weight:600;font-size:.9rem;letter-spacing:.06em;text-transform:uppercase;padding:7px 0;border-radius:8px;border:1.5px solid var(--steel);background:none;color:var(--muted);cursor:pointer}
-  .tab.on{background:var(--paper);color:var(--ink);border-color:var(--paper)}
-  .tab:focus-visible,.navbtn:focus-visible{outline:2px solid var(--banquetes);outline-offset:2px}
+  .tab{flex:1;font-family:'Barlow Condensed';font-weight:600;font-size:.86rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 0;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--soft);cursor:pointer}
+  .tab.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 
-  main{max-width:640px;margin:0 auto;padding:14px 12px 60px}
+  main{max-width:680px;margin:0 auto;padding:16px 12px 70px}
 
-  .week-nav{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-  .week-nav h2{flex:1;text-align:center;font-family:'Barlow Condensed';font-weight:600;font-size:1.05rem;letter-spacing:.04em;text-transform:uppercase;color:#cfd6df}
-  .navbtn{background:var(--steel);border:none;color:var(--paper);border-radius:8px;padding:7px 15px;font:inherit;font-size:1rem;cursor:pointer}
-  .navbtn[disabled]{opacity:.3;cursor:default}
-  .legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;font-size:.75rem;color:var(--muted)}
-  .dot{display:inline-block;width:9px;height:9px;border-radius:2px}
+  /* ---------- vista lista ---------- */
+  .day{margin-bottom:20px;scroll-margin-top:190px}
+  .day-head{display:flex;align-items:baseline;gap:10px;padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+  .day-head h2{font-family:'EB Garamond',Georgia,serif;font-weight:500;font-size:1.2rem;letter-spacing:.01em}
+  .tag-hoy{font-family:'Barlow Condensed';font-weight:600;font-size:.72rem;letter-spacing:.14em;background:var(--hoy);color:#1c1a17;border-radius:3px;padding:2px 7px;text-transform:uppercase}
+  .day-count{margin-left:auto;font-size:.74rem;color:var(--faint)}
 
-  .gridwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  table.grid{border-collapse:separate;border-spacing:0;width:100%;min-width:580px}
-  table.grid th,table.grid td{border-bottom:1px solid var(--steel);padding:7px 4px;vertical-align:top;text-align:center}
-  table.grid thead th{font-family:'Barlow Condensed';font-weight:600;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
-  table.grid thead th.d-hoy{color:var(--hoy)}
-  .slot{position:sticky;left:0;z-index:2;background:var(--ink);text-align:left!important;min-width:120px;width:120px;border-right:1px solid var(--steel)}
-  .slot-name{font-weight:600;font-size:.85rem;line-height:1.2}
-  .slot-h{font-family:'Barlow Condensed';font-size:.8rem;color:var(--muted);letter-spacing:.03em;font-variant-numeric:tabular-nums}
-  .cell{background:var(--steel);color:var(--paper);border-radius:5px;padding:4px 5px;font-size:.82rem;line-height:1.2;margin-bottom:4px}
-  .cell:last-child{margin-bottom:0}
-  .cell[data-z="BANQUETES"]{background:var(--banquetes);color:#241703}
-  .cell[data-z="COCINA HOTEL"]{background:var(--hotel);color:#04241d}
-  .cell[data-z="COCINA PALAU"]{background:var(--palau);color:#fff}
-
-  .day{margin-bottom:22px;scroll-margin-top:150px}
-  .day-head{display:flex;align-items:center;gap:10px;padding:6px 4px;margin-bottom:8px;border-bottom:1px dashed var(--steel)}
-  .day-head h2{font-family:'Barlow Condensed';font-weight:600;font-size:1.15rem;letter-spacing:.05em;text-transform:uppercase;color:#cfd6df}
-  .tag-hoy{font-family:'Barlow Condensed';font-weight:700;font-size:.75rem;letter-spacing:.1em;background:var(--hoy);color:#fff;border-radius:4px;padding:2px 8px;text-transform:uppercase}
-  .day-count{margin-left:auto;font-size:.75rem;color:var(--muted)}
-
-  .ticket{display:grid;grid-template-columns:5px 1fr auto;background:var(--paper);color:var(--ink);border-radius:8px;overflow:hidden;margin-bottom:8px;box-shadow:0 1px 0 rgba(0,0,0,.35)}
-  .ticket .stripe{background:var(--muted)}
-  .ticket[data-z="BANQUETES"] .stripe{background:var(--banquetes)}
+  .ticket{display:grid;grid-template-columns:3px 1fr auto;background:var(--card);border:1px solid var(--line);border-radius:7px;overflow:hidden;margin-bottom:7px}
+  .ticket .stripe{background:var(--faint)}
+  .ticket[data-z="BANQUETES"] .stripe{background:var(--banq)}
   .ticket[data-z="COCINA HOTEL"] .stripe{background:var(--hotel)}
   .ticket[data-z="COCINA PALAU"] .stripe{background:var(--palau)}
-  .t-main{padding:10px 12px;min-width:0}
-  .t-name{font-weight:600;font-size:1rem;line-height:1.25}
-  .t-zone{font-family:'Barlow Condensed';font-weight:600;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:2px}
-  .t-time{display:flex;flex-direction:column;justify-content:center;align-items:flex-end;padding:10px 14px;border-left:1px dashed var(--line)}
-  .t-hours{font-family:'Barlow Condensed';font-weight:700;font-size:1.25rem;letter-spacing:.02em;white-space:nowrap;font-variant-numeric:tabular-nums}
-  .t-night{font-size:.68rem;color:var(--hoy);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+  .t-main{padding:9px 12px;min-width:0}
+  .t-name{font-weight:500;font-size:.98rem;line-height:1.25}
+  .t-sub{font-family:'Barlow Condensed';font-weight:500;font-size:.76rem;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-top:1px}
+  .t-time{display:flex;flex-direction:column;justify-content:center;align-items:flex-end;padding:9px 13px;border-left:1px solid var(--line)}
+  .t-hours{font-size:1rem;font-weight:500;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .t-night{font-size:.66rem;color:var(--hoy);letter-spacing:.05em;text-transform:uppercase;margin-top:1px}
 
-  .state{text-align:center;color:var(--muted);padding:50px 20px;font-size:.95rem;line-height:1.5}
-  .state b{color:var(--paper)}
-  .spinner{width:26px;height:26px;border:3px solid var(--steel);border-top-color:var(--banquetes);border-radius:50%;margin:0 auto 14px;animation:spin .8s linear infinite}
+  /* ---------- vista semana ---------- */
+  .week-nav{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+  .week-nav h2{flex:1;text-align:center;font-family:'EB Garamond',Georgia,serif;font-weight:500;font-size:1.25rem}
+  .navbtn{background:var(--card);border:1px solid var(--line);color:var(--soft);border-radius:8px;padding:6px 14px;font:inherit;font-size:1rem;cursor:pointer}
+  .navbtn[disabled]{opacity:.35;cursor:default}
+
+  .tlwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 12px 10px}
+  .tlinner{min-width:600px}
+  .tl-axis{display:flex;gap:8px;margin-bottom:4px}
+  .tl-axis .sp{flex:0 0 54px}
+  .tl-axis .ax{flex:1;position:relative;height:13px;font-size:9.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+  .tl-axis .ax span{position:absolute;transform:translateX(-50%)}
+  .tl-axis .ax span:first-child{transform:none}
+
+  .tl-day{display:flex;gap:8px;padding:7px 0;border-top:1px solid var(--line)}
+  .tl-day:last-child{border-bottom:1px solid var(--line)}
+  .tl-day.hoy{background:var(--hoy-bg);border-radius:6px}
+  .tl-label{flex:0 0 54px;font-family:'Barlow Condensed';font-weight:600;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);padding-top:3px;padding-left:2px}
+  .tl-day.hoy .tl-label{color:var(--hoy)}
+  .tl-track{flex:1;min-width:0}
+  .tl-lane{position:relative;height:20px;margin-bottom:3px}
+  .tl-lane:last-child{margin-bottom:0}
+  .bar{position:absolute;height:20px;border-radius:3px;font-size:10.5px;line-height:20px;padding:0 6px;overflow:hidden;white-space:nowrap;font-variant-numeric:tabular-nums;background:#4a423d;color:var(--ink)}
+  .bar[data-z="BANQUETES"]{background:var(--banq);color:var(--banq-ink)}
+  .bar[data-z="COCINA HOTEL"]{background:var(--hotel);color:var(--hotel-ink)}
+  .bar[data-z="COCINA PALAU"]{background:var(--palau);color:var(--palau-ink)}
+  .tl-empty{font-size:.8rem;color:var(--faint);padding-top:4px}
+
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-family:'Barlow Condensed';font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+  .dot{display:inline-block;width:14px;height:8px;border-radius:2px;vertical-align:middle;margin-right:5px}
+
+  .state{text-align:center;color:var(--soft);padding:50px 20px;font-size:.93rem;line-height:1.5}
+  .state b{color:var(--ink)}
+  .spinner{width:24px;height:24px;border:2.5px solid var(--line);border-top-color:var(--hotel);border-radius:50%;margin:0 auto 14px;animation:spin .8s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
   @media (prefers-reduced-motion:reduce){.spinner{animation-duration:2s}}
 </style>
@@ -101,19 +115,18 @@
 <body>
 
 <header>
-  <div class="brand">
-    <h1>Horarios <span>Fregadores</span></h1>
-    <div class="updated" id="updated"></div>
-  </div>
+  <div class="kicker">Meliá Palma Bay y Palau de Congressos de Palma</div>
+  <h1>Horarios fregadores</h1>
+  <div class="updated" id="updated"></div>
   <div class="controls">
     <div class="search"><input id="q" type="search" placeholder="Busca tu nombre…" autocomplete="off"></div>
-    <button class="btn" id="reload" title="Actualizar" aria-label="Actualizar">⟳</button>
+    <button class="btn" id="reload" title="Actualizar" aria-label="Actualizar">&#10227;</button>
   </div>
   <div class="chips" id="chips"></div>
   <div class="chips" id="namechips"></div>
   <div class="viewtabs">
-    <button class="tab on" id="tab-lista">Lista</button>
-    <button class="tab" id="tab-semana">Semana</button>
+    <button class="tab on" id="tab-semana">Semana</button>
+    <button class="tab" id="tab-lista">Lista</button>
   </div>
 </header>
 
@@ -125,33 +138,32 @@
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmMytMNWbZy0Q17VSSFg70LFvkeUmkFu6lKEEYe4Qsxfj7pR8llIUKL1kJ_b5PC47zkH6g4jOCvKRC/pub?gid=678979776&single=true&output=csv";
 
 const MESES = {enero:0,febrero:1,marzo:2,abril:3,mayo:4,junio:5,julio:6,agosto:7,septiembre:8,setiembre:8,octubre:9,noviembre:10,diciembre:11};
+const DIAS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
 const app = document.getElementById('app');
-const chipsEl = document.getElementById('chips');
+
 let rows = [], zones = [], names = [], activeZone = null, activeName = null;
-let view = 'lista', weekStart = null;
+let view = 'semana', weekStart = null;
 
-const DIAS_CORTO = ['L','M','X','J','V','S','D'];
-
-// Nombres de turno: solo se aplican cuando el turno es de COCINA HOTEL
+// Nombres de turno: solo se aplican a COCINA HOTEL
 const TURNOS = {};
 [['8:00','16:00','Trasluz y -1'],
  ['9:00','15:30','Level y cocina hotel'],
  ['15:30','23:30','Fregador tarde'],
- ['18:00','0:00','Apoyo fregador tarde']].forEach(t=>{ TURNOS[slotKey(t[0],t[1])] = t[2]; });
+ ['18:00','0:00','Apoyo fregador tarde']].forEach(function(t){ TURNOS[slotKey(t[0],t[1])] = t[2]; });
 
 function toMin(t){
   const m = String(t).match(/(\d{1,2}):(\d{2})/);
   return m ? (+m[1])*60 + (+m[2]) : null;
 }
-function slotKey(a,b){ return toMin(a)+'|'+toMin(b); }
-
-function startOfWeek(d){
-  const x = new Date(d); x.setHours(0,0,0,0);
-  x.setDate(x.getDate() - ((x.getDay()+6)%7));
-  return x;
+function fmtH(t){
+  const m = String(t).match(/(\d{1,2}):(\d{2})/);
+  return m ? (m[1].length<2?'0':'')+m[1]+':'+m[2] : String(t).trim();
 }
+function slotKey(a,b){ return toMin(a)+'|'+toMin(b); }
+function startOfWeek(d){ const x=new Date(d); x.setHours(0,0,0,0); x.setDate(x.getDate()-((x.getDay()+6)%7)); return x; }
 function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
-function fmtDia(d){ return d.toLocaleDateString('es-ES',{day:'numeric',month:'short'}).replace('.',''); }
+function fmtDia(d){ return d.toLocaleDateString('es-ES',{day:'numeric',month:'long'}); }
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
 
 function parseCSV(text){
   const out=[]; let row=[], cur='', inQ=false;
@@ -172,13 +184,12 @@ function parseCSV(text){
 }
 
 function parseDate(s){
-  // "miércoles, 1 de julio" → Date (año actual, ajuste fin de año)
   const m = s.toLowerCase().match(/(\d{1,2})\s+de\s+([a-záéíóúñ]+)(?:\s+de\s+(\d{4}))?/);
   if(!m || !(m[2] in MESES)) return null;
-  const now=new Date();
-  let y = m[3] ? +m[3] : now.getFullYear();
-  let d = new Date(y, MESES[m[2]], +m[1]);
-  if(!m[3]){ // sin año: si queda a >6 meses de distancia, ajusta al año más cercano
+  const now = new Date();
+  const y = m[3] ? +m[3] : now.getFullYear();
+  const d = new Date(y, MESES[m[2]], +m[1]);
+  if(!m[3]){
     const diff = d - now;
     if(diff > 183*864e5) d.setFullYear(y-1);
     if(diff < -183*864e5) d.setFullYear(y+1);
@@ -186,55 +197,60 @@ function parseDate(s){
   return d;
 }
 
-function isNight(inH,outH){
-  const a=parseInt(inH), b=parseInt(outH);
-  return !isNaN(a)&&!isNaN(b)&&b<a; // salida "menor" que entrada = pasa de medianoche
+function shortName(n){
+  const s = n.split(/[,(]/)[0].trim().split(/\s+/)[0].toLowerCase();
+  return s.charAt(0).toUpperCase()+s.slice(1);
+}
+
+function turnoDe(r){
+  return r.zona==='COCINA HOTEL' ? (TURNOS[slotKey(r.entrada,r.salida)] || null) : null;
 }
 
 function load(){
   app.innerHTML = '<div class="state"><div class="spinner"></div>Cargando horarios…</div>';
   fetch(CSV_URL + "&t=" + Date.now())
-    .then(r => { if(!r.ok) throw new Error(r.status); return r.text(); })
-    .then(text => {
+    .then(function(r){ if(!r.ok) throw new Error(r.status); return r.text(); })
+    .then(function(text){
       const data = parseCSV(text);
-      const hi = data.findIndex(r => r.some(c => c.trim().toUpperCase()==='FECHA'));
+      const hi = data.findIndex(function(r){ return r.some(function(c){ return c.trim().toUpperCase()==='FECHA'; }); });
       if(hi < 0) throw new Error('cabecera');
       rows = data.slice(hi+1)
-        .filter(r => r.length>=5 && r[0].trim() && r[1].trim())
-        .map(r => ({
-          fechaTxt: r[0].trim(),
-          fecha: parseDate(r[0]),
-          nombre: r[1].trim(),
-          zona: r[2].trim().toUpperCase(),
-          entrada: r[3].trim(),
-          salida: r[4].trim()
-        }));
-      zones = [...new Set(rows.map(r=>r.zona).filter(Boolean))].sort();
-      names = [...new Set(rows.map(r=>r.nombre).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+        .filter(function(r){ return r.length>=5 && r[0].trim() && r[1].trim(); })
+        .map(function(r){
+          return {
+            fechaTxt: r[0].trim(),
+            fecha: parseDate(r[0]),
+            nombre: r[1].trim(),
+            zona: r[2].trim().toUpperCase(),
+            entrada: r[3].trim(),
+            salida: r[4].trim()
+          };
+        });
+      zones = [...new Set(rows.map(function(r){return r.zona;}).filter(Boolean))].sort();
+      names = [...new Set(rows.map(function(r){return r.nombre;}).filter(Boolean))].sort(function(a,b){ return a.localeCompare(b,'es'); });
       document.getElementById('updated').textContent =
-        'Actualizado ' + new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
-      renderChips();
-      renderNameChips();
-      render();
+        'Actualizado a las ' + new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+      renderChips(); renderNameChips(); render();
     })
-    .catch(() => {
-      app.innerHTML = '<div class="state"><b>No se han podido cargar los horarios.</b><br>Comprueba la conexión y pulsa ⟳ para reintentar.</div>';
+    .catch(function(){
+      app.innerHTML = '<div class="state"><b>No se han podido cargar los horarios.</b><br>Comprueba la conexión y pulsa el botón de actualizar.</div>';
     });
 }
 
 function renderChips(){
-  chipsEl.innerHTML='';
+  const el = document.getElementById('chips');
+  el.innerHTML='';
   const all=document.createElement('button');
   all.className='chip'+(activeZone===null?' on':'');
-  all.textContent='Todas';
-  all.onclick=()=>{activeZone=null;renderChips();render();};
-  chipsEl.appendChild(all);
-  zones.forEach(z=>{
+  all.textContent='Todas las zonas';
+  all.onclick=function(){ activeZone=null; renderChips(); render(); };
+  el.appendChild(all);
+  zones.forEach(function(z){
     const b=document.createElement('button');
     b.className='chip'+(activeZone===z?' on':'');
     b.dataset.z=z; b.textContent=z.toLowerCase();
-    b.onclick=()=>{activeZone=(activeZone===z?null:z);renderChips();render();};
-    chipsEl.appendChild(b);
+    b.onclick=function(){ activeZone=(activeZone===z?null:z); renderChips(); render(); };
+    el.appendChild(b);
   });
 }
 
@@ -244,164 +260,181 @@ function renderNameChips(){
   const all=document.createElement('button');
   all.className='chip name-chip'+(activeName===null?' on':'');
   all.textContent='Todo el equipo';
-  all.onclick=()=>{activeName=null;renderNameChips();render();};
+  all.onclick=function(){ activeName=null; renderNameChips(); render(); };
   el.appendChild(all);
-  names.forEach(n=>{
+  names.forEach(function(n){
     const b=document.createElement('button');
     b.className='chip name-chip'+(activeName===n?' on':'');
-    b.textContent=shortName(n);
-    b.title=n;
-    b.onclick=()=>{activeName=(activeName===n?null:n);renderNameChips();render();};
+    b.textContent=shortName(n); b.title=n;
+    b.onclick=function(){ activeName=(activeName===n?null:n); renderNameChips(); render(); };
     el.appendChild(b);
   });
 }
 
-function shortName(n){
-  // "CHAMI, DJAHID" → "Chami" | "BADARA (DIOSSY)" → "Badara" | "EVELIN HERRERA" → "Evelin"
-  let s = n.split(/[,(]/)[0].trim().split(/\s+/)[0].toLowerCase();
-  return s.charAt(0).toUpperCase()+s.slice(1);
-}
-
 function render(){
   const q = document.getElementById('q').value.trim().toLowerCase();
-  const list = rows.filter(r =>
-    (!activeZone || r.zona===activeZone) &&
-    (!activeName || r.nombre===activeName) &&
-    (!q || r.nombre.toLowerCase().includes(q))
-  );
+  const list = rows.filter(function(r){
+    return (!activeZone || r.zona===activeZone) &&
+           (!activeName || r.nombre===activeName) &&
+           (!q || r.nombre.toLowerCase().includes(q));
+  });
   if(view==='semana') renderSemana(list); else renderLista(list);
 }
 
-function renderSemana(list){
-  const today = new Date(); today.setHours(0,0,0,0);
-  const dated = rows.filter(r=>r.fecha);
-  if(!dated.length){
-    app.innerHTML='<div class="state">No hay fechas legibles en la hoja.</div>';
-    return;
-  }
-  const minW = startOfWeek(new Date(Math.min.apply(null, dated.map(r=>r.fecha.getTime()))));
-  const maxW = startOfWeek(new Date(Math.max.apply(null, dated.map(r=>r.fecha.getTime()))));
-  if(!weekStart) weekStart = startOfWeek(today);
-  if(weekStart < minW) weekStart = new Date(minW);
-  if(weekStart > maxW) weekStart = new Date(maxW);
-
-  const dias = [];
-  for(let i=0;i<7;i++) dias.push(addDays(weekStart,i));
-  const fin = addDays(weekStart,6);
-
-  const enSemana = list.filter(r => r.fecha && r.fecha>=weekStart && r.fecha<=fin);
-
-  const slotMap = new Map();
-  enSemana.forEach(r=>{
-    const k = slotKey(r.entrada,r.salida);
-    if(!slotMap.has(k)) slotMap.set(k,{k:k,entrada:r.entrada,salida:r.salida,start:toMin(r.entrada),items:[]});
-    slotMap.get(k).items.push(r);
-  });
-  const slots = [...slotMap.values()].sort((a,b)=>{
-    const x = (a.start===null?1e9:a.start) - (b.start===null?1e9:b.start);
-    return x || ((toMin(a.salida)||0) - (toMin(b.salida)||0));
-  });
-
-  let html =
-    '<div class="week-nav">'+
-    '<button class="navbtn" id="w-prev"'+(weekStart<=minW?' disabled':'')+' aria-label="Semana anterior">‹</button>'+
-    '<h2>'+esc(fmtDia(weekStart))+' – '+esc(fmtDia(fin))+'</h2>'+
-    '<button class="navbtn" id="w-next"'+(weekStart>=maxW?' disabled':'')+' aria-label="Semana siguiente">›</button>'+
-    '</div>'+
-    '<div class="legend">'+
-    '<span><span class="dot" style="background:var(--banquetes)"></span> Banquetes</span>'+
-    '<span><span class="dot" style="background:var(--hotel)"></span> Cocina hotel</span>'+
-    '<span><span class="dot" style="background:var(--palau)"></span> Cocina Palau</span>'+
-    '</div>';
-
-  if(!slots.length){
-    html += '<div class="state">Sin turnos esta semana.<br>Usa ‹ › para cambiar de semana o quita los filtros.</div>';
-  }else{
-    html += '<div class="gridwrap" id="gridwrap"><table class="grid"><thead><tr><th class="slot">Turno</th>';
-    dias.forEach((d,i)=>{
-      const hoy = d.getTime()===today.getTime();
-      html += '<th class="'+(hoy?'d-hoy':'')+'" data-col="'+i+'">'+DIAS_CORTO[i]+' '+d.getDate()+(hoy?' •':'')+'</th>';
-    });
-    html += '</tr></thead><tbody>';
-
-    slots.forEach(s=>{
-      const hayHotel = s.items.some(r=>r.zona==='COCINA HOTEL');
-      const nombre = hayHotel ? TURNOS[s.k] : null;
-      const horas = esc(s.entrada)+'–'+esc(s.salida);
-      html += '<tr><td class="slot">'+
-        (nombre ? '<div class="slot-name">'+esc(nombre)+'</div><div class="slot-h">'+horas+'</div>'
-                : '<div class="slot-name">'+horas+'</div>')+
-        '</td>';
-      dias.forEach(d=>{
-        const items = s.items.filter(r=>r.fecha.getTime()===d.getTime());
-        html += '<td>'+items.map(r=>'<div class="cell" data-z="'+esc(r.zona)+'" title="'+esc(r.nombre)+' · '+esc(r.zona.toLowerCase())+'">'+esc(shortName(r.nombre))+'</div>').join('')+'</td>';
-      });
-      html += '</tr>';
-    });
-    html += '</tbody></table></div>';
-  }
-
-  app.innerHTML = html;
-
-  const prev = document.getElementById('w-prev'), next = document.getElementById('w-next');
-  if(prev) prev.onclick = ()=>{ weekStart = addDays(weekStart,-7); render(); };
-  if(next) next.onclick = ()=>{ weekStart = addDays(weekStart,7); render(); };
-
-  const wrap = document.getElementById('gridwrap');
-  if(wrap){
-    const iHoy = dias.findIndex(d=>d.getTime()===today.getTime());
-    if(iHoy > 2){
-      const th = wrap.querySelector('th[data-col="'+iHoy+'"]');
-      if(th) wrap.scrollLeft = Math.max(0, th.offsetLeft - 160);
-    }
-  }
-}
-
 function renderLista(list){
-  const q = document.getElementById('q').value.trim().toLowerCase();
   const today = new Date(); today.setHours(0,0,0,0);
-
   if(!list.length){
     app.innerHTML='<div class="state">Sin turnos que coincidan.<br>Prueba con otro nombre o quita el filtro de zona.</div>';
     return;
   }
-
-  // agrupar por fecha manteniendo orden del documento
   const groups=[]; const idx={};
-  list.forEach(r=>{
+  list.forEach(function(r){
     if(!(r.fechaTxt in idx)){ idx[r.fechaTxt]=groups.length; groups.push({txt:r.fechaTxt,date:r.fecha,items:[]}); }
     groups[idx[r.fechaTxt]].items.push(r);
   });
 
   app.innerHTML='';
   let todayEl=null, nextEl=null;
-  groups.forEach(g=>{
+  groups.forEach(function(g){
     const esHoy = g.date && g.date.getTime()===today.getTime();
     const day=document.createElement('section'); day.className='day';
     day.innerHTML =
       '<div class="day-head"><h2>'+esc(g.txt)+'</h2>'+
       (esHoy?'<span class="tag-hoy">Hoy</span>':'')+
       '<span class="day-count">'+g.items.length+(g.items.length===1?' turno':' turnos')+'</span></div>';
-    g.items.forEach(r=>{
+    g.items.forEach(function(r){
       const t=document.createElement('div'); t.className='ticket'; t.dataset.z=r.zona;
+      const tn = turnoDe(r);
       t.innerHTML =
         '<div class="stripe"></div>'+
         '<div class="t-main"><div class="t-name">'+esc(r.nombre)+'</div>'+
-        '<div class="t-zone">'+esc(r.zona.toLowerCase())+'</div></div>'+
-        '<div class="t-time"><div class="t-hours">'+esc(r.entrada)+' – '+esc(r.salida)+'</div>'+
-        (isNight(r.entrada,r.salida)?'<div class="t-night">acaba de madrugada</div>':'')+'</div>';
+        '<div class="t-sub">'+esc(tn ? tn+' · '+r.zona.toLowerCase() : r.zona.toLowerCase())+'</div></div>'+
+        '<div class="t-time"><div class="t-hours">'+esc(fmtH(r.entrada))+'–'+esc(fmtH(r.salida))+'</div>'+
+        (cruzaMedianoche(r)?'<div class="t-night">acaba de madrugada</div>':'')+'</div>';
       day.appendChild(t);
     });
     app.appendChild(day);
     if(esHoy && !todayEl) todayEl=day;
     if(!nextEl && g.date && g.date.getTime()>today.getTime()) nextEl=day;
   });
-
   const target = todayEl || nextEl;
   if(target) target.scrollIntoView({block:'start'});
 }
 
-function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function cruzaMedianoche(r){
+  const a=toMin(r.entrada), b=toMin(r.salida);
+  return a!==null && b!==null && b<=a;
+}
+function salidaAjustada(r){
+  const a=toMin(r.entrada), b=toMin(r.salida);
+  if(a===null||b===null) return null;
+  return b<=a ? b+1440 : b;
+}
+
+function renderSemana(list){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const dated = rows.filter(function(r){ return r.fecha; });
+  if(!dated.length){ app.innerHTML='<div class="state">No hay fechas legibles en la hoja.</div>'; return; }
+
+  const minW = startOfWeek(new Date(Math.min.apply(null, dated.map(function(r){return r.fecha.getTime();}))));
+  const maxW = startOfWeek(new Date(Math.max.apply(null, dated.map(function(r){return r.fecha.getTime();}))));
+  if(!weekStart) weekStart = startOfWeek(today);
+  if(weekStart < minW) weekStart = new Date(minW);
+  if(weekStart > maxW) weekStart = new Date(maxW);
+
+  const fin = addDays(weekStart,6);
+  const dias = []; for(let i=0;i<7;i++) dias.push(addDays(weekStart,i));
+  const enSemana = list.filter(function(r){ return r.fecha && r.fecha>=weekStart && r.fecha<=fin; });
+
+  let html =
+    '<div class="week-nav">'+
+    '<button class="navbtn" id="w-prev"'+(weekStart<=minW?' disabled':'')+' aria-label="Semana anterior">&lsaquo;</button>'+
+    '<h2>'+esc(fmtDia(weekStart))+' &ndash; '+esc(fmtDia(fin))+'</h2>'+
+    '<button class="navbtn" id="w-next"'+(weekStart>=maxW?' disabled':'')+' aria-label="Semana siguiente">&rsaquo;</button>'+
+    '</div>';
+
+  if(!enSemana.length){
+    html += '<div class="state">Sin turnos esta semana.<br>Usa las flechas para cambiar de semana o quita los filtros.</div>';
+    app.innerHTML = html; enlazarNav(); return;
+  }
+
+  // escala horaria de la semana
+  let ini = 1e9, fin2 = -1e9;
+  enSemana.forEach(function(r){
+    const a=toMin(r.entrada), b=salidaAjustada(r);
+    if(a!==null) ini=Math.min(ini,a);
+    if(b!==null) fin2=Math.max(fin2,b);
+  });
+  if(ini===1e9){ ini=480; fin2=1440; }
+  ini = Math.floor(ini/60)*60;
+  fin2 = Math.ceil(fin2/60)*60;
+  if(fin2-ini < 240) fin2 = ini+240;
+  const span = fin2-ini;
+  const pos = function(m){ return ((m-ini)/span)*100; };
+  const paso = span>900 ? 120 : 60;
+
+  let ejes='';
+  for(let h=ini; h<=fin2; h+=paso){
+    const et = ((h/60)%24);
+    ejes += '<span style="left:'+pos(h).toFixed(2)+'%">'+(et<10?'0':'')+et+'</span>';
+  }
+  const gradPaso = (paso/span*100).toFixed(3);
+
+  html += '<div class="tlwrap"><div class="tlinner">'+
+    '<div class="tl-axis"><div class="sp"></div><div class="ax">'+ejes+'</div></div>';
+
+  dias.forEach(function(d,i){
+    const esHoy = d.getTime()===today.getTime();
+    const items = enSemana.filter(function(r){ return r.fecha.getTime()===d.getTime(); })
+      .sort(function(a,b){ return (toMin(a.entrada)||0)-(toMin(b.entrada)||0); });
+
+    html += '<div class="tl-day'+(esHoy?' hoy':'')+'"'+(esHoy?' data-hoy="1"':'')+'>'+
+      '<div class="tl-label">'+DIAS[i]+' '+d.getDate()+'</div><div class="tl-track">';
+
+    if(!items.length){
+      html += '<div class="tl-empty">Sin turnos</div>';
+    }else{
+      items.forEach(function(r){
+        const a=toMin(r.entrada), b=salidaAjustada(r);
+        const horas = fmtH(r.entrada)+'–'+fmtH(r.salida);
+        const tn = turnoDe(r);
+        const tip = r.nombre+' · '+r.zona.toLowerCase()+(tn?' · '+tn:'')+' · '+horas;
+        if(a===null||b===null){
+          html += '<div class="tl-lane"><div class="bar" data-z="'+esc(r.zona)+'" style="left:0;width:100%" title="'+esc(tip)+'">'+esc(shortName(r.nombre))+' · '+esc(horas)+'</div></div>';
+        }else{
+          const l = pos(a), w = Math.max(pos(b)-pos(a), 4);
+          html += '<div class="tl-lane"><div class="bar" data-z="'+esc(r.zona)+'" style="left:'+l.toFixed(2)+'%;width:'+w.toFixed(2)+'%" title="'+esc(tip)+'">'+esc(shortName(r.nombre))+' · '+esc(horas)+'</div></div>';
+        }
+      });
+    }
+    html += '</div></div>';
+  });
+
+  html += '</div></div>'+
+    '<div class="legend">'+
+    '<span><span class="dot" style="background:var(--banq)"></span>Banquetes</span>'+
+    '<span><span class="dot" style="background:var(--hotel)"></span>Cocina hotel</span>'+
+    '<span><span class="dot" style="background:var(--palau)"></span>Cocina Palau</span>'+
+    '</div>';
+
+  app.innerHTML = html;
+
+  // rejilla de fondo con el paso calculado
+  const tracks = app.querySelectorAll('.tl-track');
+  for(let i=0;i<tracks.length;i++){
+    tracks[i].style.background = 'repeating-linear-gradient(to right, var(--line) 0 1px, transparent 1px '+gradPaso+'%)';
+  }
+
+  enlazarNav();
+  const hoyEl = app.querySelector('.tl-day[data-hoy="1"]');
+  if(hoyEl) hoyEl.scrollIntoView({block:'center'});
+}
+
+function enlazarNav(){
+  const p = document.getElementById('w-prev'), n = document.getElementById('w-next');
+  if(p) p.onclick = function(){ weekStart = addDays(weekStart,-7); render(); };
+  if(n) n.onclick = function(){ weekStart = addDays(weekStart,7); render(); };
+}
 
 function setView(v){
   view = v;
@@ -412,8 +445,8 @@ function setView(v){
 
 document.getElementById('q').addEventListener('input', render);
 document.getElementById('reload').addEventListener('click', load);
-document.getElementById('tab-lista').addEventListener('click', ()=>setView('lista'));
-document.getElementById('tab-semana').addEventListener('click', ()=>setView('semana'));
+document.getElementById('tab-lista').addEventListener('click', function(){ setView('lista'); });
+document.getElementById('tab-semana').addEventListener('click', function(){ setView('semana'); });
 load();
 </script>
 </body>
