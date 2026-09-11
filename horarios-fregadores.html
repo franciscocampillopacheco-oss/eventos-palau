@@ -163,7 +163,8 @@ const MESES = {enero:0,febrero:1,marzo:2,abril:3,mayo:4,junio:5,julio:6,agosto:7
 const DIAS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
 const app = document.getElementById('app');
 
-let rows = [], zones = [], names = [], activeZone = null, activeName = null;
+// activeZones: conjunto de zonas seleccionadas (vacío = todas las zonas)
+let rows = [], zones = [], names = [], activeZones = new Set(), activeName = null;
 let view = 'cuadrante', weekStart = null;
 
 // Nombres de turno: solo se aplican a COCINA HOTEL
@@ -257,6 +258,8 @@ function load(){
         });
       zones = [...new Set(rows.map(function(r){return r.zona;}).filter(Boolean))].sort();
       names = [...new Set(rows.map(function(r){return r.nombre;}).filter(Boolean))].sort(function(a,b){ return a.localeCompare(b,'es'); });
+      // si al recargar desaparece alguna zona de la hoja, se quita del filtro
+      activeZones.forEach(function(z){ if(zones.indexOf(z)<0) activeZones.delete(z); });
       document.getElementById('updated').textContent =
         'Actualizado a las ' + new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
       renderChips(); renderNameChips(); render();
@@ -266,19 +269,30 @@ function load(){
     });
 }
 
+// Filtro de zonas multiselección:
+// - "Todas las zonas" limpia la selección
+// - cada zona se activa/desactiva de forma independiente
+// - si se marcan todas, vuelve automáticamente a "Todas las zonas"
 function renderChips(){
   const el = document.getElementById('chips');
   el.innerHTML='';
   const all=document.createElement('button');
-  all.className='chip'+(activeZone===null?' on':'');
+  all.className='chip'+(activeZones.size===0?' on':'');
+  all.setAttribute('aria-pressed', activeZones.size===0);
   all.textContent='Todas las zonas';
-  all.onclick=function(){ activeZone=null; renderChips(); render(); };
+  all.onclick=function(){ activeZones.clear(); renderChips(); render(); };
   el.appendChild(all);
   zones.forEach(function(z){
+    const on = activeZones.has(z);
     const b=document.createElement('button');
-    b.className='chip'+(activeZone===z?' on':'');
+    b.className='chip'+(on?' on':'');
+    b.setAttribute('aria-pressed', on);
     b.dataset.z=z; b.textContent=z.toLowerCase();
-    b.onclick=function(){ activeZone=(activeZone===z?null:z); renderChips(); render(); };
+    b.onclick=function(){
+      if(activeZones.has(z)) activeZones.delete(z); else activeZones.add(z);
+      if(activeZones.size===zones.length) activeZones.clear();
+      renderChips(); render();
+    };
     el.appendChild(b);
   });
 }
@@ -303,7 +317,7 @@ function renderNameChips(){
 function render(){
   const q = document.getElementById('q').value.trim().toLowerCase();
   const list = rows.filter(function(r){
-    return (!activeZone || r.zona===activeZone) &&
+    return (activeZones.size===0 || activeZones.has(r.zona)) &&
            (!activeName || r.nombre===activeName) &&
            (!q || r.nombre.toLowerCase().includes(q));
   });
