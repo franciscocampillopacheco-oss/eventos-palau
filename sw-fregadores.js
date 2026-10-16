@@ -15,3 +15,19 @@ self.addEventListener('notificationclick', function (e) {
     })
   );
 });
+
+// Avisos de turno: el script de Google los manda por Firebase Cloud Messaging.
+self.addEventListener('push', function (e) {
+  var d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (x) { d = { body: e.data ? e.data.text() : '' }; }
+  var m = d.data || d.notification || d;
+  e.waitUntil(self.registration.showNotification(m.title || 'Fregadores', {
+    body: m.body || '',
+    icon: 'icono-fregadores-192.png',
+    badge: 'icono-fregadores-192.png',
+    tag: 'turno-fregadores',
+    renotify: true,
+    vibrate: [200, 100, 200],
+    data: { url: m.url || '' }
+  }));
+});

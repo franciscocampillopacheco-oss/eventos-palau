@@ -191,6 +191,10 @@
   .minfo.aviso{border-color:var(--banq);color:var(--banq)}
   .mbtn{display:block;width:100%;margin-top:16px;min-height:58px;border:none;border-radius:14px;background:var(--ink);color:var(--paper);font-family:'Barlow Condensed';font-weight:600;font-size:1.35rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
   .mbtn.sec{background:var(--card);color:var(--ink);border:1px solid var(--line);font-size:1.05rem;min-height:50px;margin-top:10px}
+  .btn-av{font-size:.9rem;font-weight:600;white-space:nowrap;padding:0 11px;flex:0 0 auto}
+  .search{min-width:0}
+  .search input{min-width:0;width:100%}
+  .btn-av.on{color:var(--hotel);border-color:var(--hotel)}
   .spin-big{width:44px;height:44px;border:4px solid var(--line);border-top-color:var(--hotel);border-radius:50%;margin:22px auto;animation:spin .8s linear infinite}
 </style>
 </head>
@@ -210,6 +214,7 @@
   <div id="turno" hidden></div>
   <div class="controls">
     <div class="search"><input id="q" type="search" placeholder="Busca tu nombre…" autocomplete="off"></div>
+    <button class="btn btn-av" id="avisos" title="Avisos de turno" aria-label="Activar avisos de turno"><span aria-hidden="true">&#128276;</span> <span id="avisos-t">Avisos</span></button>
     <button class="btn" id="reload" title="Actualizar" aria-label="Actualizar">&#10227;</button>
   </div>
   <div class="chips" id="chips"></div>
@@ -644,6 +649,7 @@ const FICHAR_API = "https://script.google.com/macros/s/AKfycbx_u2vKeTj_BH8TZa9PQ
 const LS_KEY = 'fichajeFregadores';
 const HORAS_MAX_TURNO = 20; // igual que en el script de Google
 const modal = document.getElementById('modal'), mbox = document.getElementById('mbox');
+let modoPin = 'fichar', avisoToken = null;
 let pin = '', pos = null, posErr = null, enviando = false, watchId = null, swReg = null, avisoTimer = null;
 
 function leerEstado(){ try{ return JSON.parse(localStorage.getItem(LS_KEY) || 'null'); }catch(e){ return null; } }
@@ -701,6 +707,7 @@ function empezarFichaje(){
     boton('m-ok', cerrarModal); return;
   }
   pedirPermisoAvisos();
+  modoPin = 'fichar';
   pin = ''; enviando = false;
   pantallaPin();
   iniciarGPS();
@@ -711,9 +718,9 @@ function pantallaPin(error){
   for(let n=1; n<=9; n++) teclas += '<button data-k="'+n+'">'+n+'</button>';
   teclas += '<button class="k-aux" data-k="c">Borrar</button><button data-k="0">0</button><button class="k-aux" data-k="x">Cancelar</button>';
   abrirModal(
-    '<div class="mtit" id="mtit">Escribe tu PIN</div>'+
-    '<div class="msub">Tu número de 4 cifras</div>'+
-    '<div class="gps" id="gps"><span class="pt"></span><span id="gps-t"></span></div>'+
+    '<div class="mtit" id="mtit">'+(modoPin === 'avisos' ? 'Activar avisos' : 'Escribe tu PIN')+'</div>'+
+    '<div class="msub">'+(modoPin === 'avisos' ? 'Escribe tu PIN de 4 cifras para saber quién eres' : 'Tu número de 4 cifras')+'</div>'+
+    (modoPin === 'avisos' ? '' : '<div class="gps" id="gps"><span class="pt"></span><span id="gps-t"></span></div>')+
     '<div class="dots" id="dots"><i></i><i></i><i></i><i></i></div>'+
     '<div class="merr" id="merr" role="alert">'+(error ? esc(error) : '')+'</div>'+
     '<div class="pad" id="pad">'+teclas+'</div>'
@@ -752,7 +759,7 @@ function iniciarGPS(){
   watchId = navigator.geolocation.watchPosition(function(p){
     pos = {lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy};
     posErr = null; pintarGPS();
-    if(pin.length === 4) intentarEnviar();
+    if(pin.length === 4 && modoPin === 'fichar') intentarEnviar();
   }, function(e){
     posErr = e;
     if(e.code === 1){ pararGPS(); pantallaSinUbicacion(); return; }
@@ -783,6 +790,7 @@ function pantallaSinUbicacion(){
 // ---------- envío ----------
 function intentarEnviar(){
   if(enviando || pin.length !== 4) return;
+  if(modoPin === 'avisos'){ enviarAltaAvisos(); return; }
   if(!pos){
     const m = document.getElementById('merr');
     if(m) m.textContent = posErr ? 'No encuentro tu ubicación. Espera un momento…' : 'Esperando la ubicación…';
@@ -885,6 +893,105 @@ function lanzarAviso(){
     boton('m-luego', cerrarModal);
   }
 }
+
+// =====================================================================
+// AVISOS DE TURNO (Firebase Cloud Messaging)
+// La persona pulsa "Avisos", acepta las notificaciones y pone su PIN.
+// El script de Google le manda cada día su turno de mañana.
+// =====================================================================
+const FIREBASE_CONFIG = { // configuración pública de la app web (proyecto fregadores-avisos)
+  apiKey: "AIzaSyAJoLVIMWSn_x-IV76teBXmlmLfEIf0iz8",
+  authDomain: "fregadores-avisos.firebaseapp.com",
+  projectId: "fregadores-avisos",
+  storageBucket: "fregadores-avisos.firebasestorage.app",
+  messagingSenderId: "1067809256296",
+  appId: "1:1067809256296:web:18dd698e5108be021d9cdd"
+};
+const FIREBASE_VAPID = "BCH_L0GNwbn0CXJrTJxrCXKDkWJFrDo-39WF5MlmJK2yOxfCbgbYvmHz9xmQcmapaNuN9ktpUJwQUjcUBdrd2Ls";
+const LS_AVISOS = 'avisosFregadores';
+const FB_VER = '10.12.2';
+
+function esIOS(){ return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
+function instalada(){ return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; }
+function avisosGuardados(){ try{ return JSON.parse(localStorage.getItem(LS_AVISOS) || 'null'); }catch(e){ return null; } }
+function pintarBotonAvisos(){
+  const a = avisosGuardados(), b = document.getElementById('avisos'), t = document.getElementById('avisos-t');
+  const on = !!a && 'Notification' in window && Notification.permission === 'granted';
+  b.classList.toggle('on', on); t.textContent = on ? 'Avisos ✓' : 'Avisos';
+}
+
+function infoModal(titulo, html){
+  abrirModal('<div class="mtit" id="mtit">'+titulo+'</div><div class="minfo">'+html+'</div><button class="mbtn" id="m-ok">Vale</button>');
+  boton('m-ok', cerrarModal);
+}
+
+async function activarAvisos(){
+  const a = avisosGuardados();
+  if(a && 'Notification' in window && Notification.permission === 'granted'){
+    abrirModal('<div class="mtit" id="mtit">🔔 Avisos activados</div>'+
+      '<div class="minfo">Este móvil recibe los avisos de turno de <b>'+esc(fullName(a.nombre))+'</b> cada día a las <b>'+a.hora+':00</b>.</div>'+
+      '<button class="mbtn" id="m-ok">Vale</button><button class="mbtn sec" id="m-re">Activar para otra persona</button>');
+    boton('m-ok', cerrarModal);
+    boton('m-re', function(){ try{ localStorage.removeItem(LS_AVISOS); }catch(e){} activarAvisos(); });
+    return;
+  }
+  if(!FICHAR_API || !FIREBASE_CONFIG){ infoModal('Avisos en preparación', 'Muy pronto podrás activar los avisos de turno desde aquí.'); return; }
+  if(esIOS() && !instalada()){
+    infoModal('Primero instala la app', 'En iPhone los avisos solo funcionan si la página está en la pantalla de inicio:<br><br>'+
+      '1. Pulsa el botón <b>Compartir</b> (el cuadrado con la flecha).<br>2. Elige <b>Añadir a pantalla de inicio</b>.<br>'+
+      '3. Abre la app desde el icono nuevo y vuelve a pulsar <b>🔔 Avisos</b>.');
+    return;
+  }
+  if(!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)){
+    infoModal('No es posible en este navegador', 'Prueba a abrir la página con <b>Chrome</b> (Android) o desde el icono de la pantalla de inicio (iPhone).');
+    return;
+  }
+  let perm = Notification.permission;
+  if(perm === 'default') perm = await Notification.requestPermission();
+  if(perm !== 'granted'){
+    infoModal('Notificaciones bloqueadas', 'Para recibir los avisos tienes que permitir las notificaciones.<br><br>'+
+      '<b>Android:</b> toca el icono a la izquierda de la dirección → <b>Permisos</b> → <b>Notificaciones</b> → <b>Permitir</b>.<br><br>'+
+      '<b>iPhone:</b> Ajustes → <b>Notificaciones</b> → busca la app → <b>Permitir notificaciones</b>.');
+    return;
+  }
+  abrirModal('<div class="mtit" id="mtit">Preparando avisos…</div><div class="spin-big"></div>');
+  try{
+    const reg = await navigator.serviceWorker.ready;
+    const app = await import('https://www.gstatic.com/firebasejs/'+FB_VER+'/firebase-app.js');
+    const msg = await import('https://www.gstatic.com/firebasejs/'+FB_VER+'/firebase-messaging.js');
+    const fb = app.getApps().length ? app.getApp() : app.initializeApp(FIREBASE_CONFIG);
+    avisoToken = await msg.getToken(msg.getMessaging(fb), {vapidKey: FIREBASE_VAPID, serviceWorkerRegistration: reg});
+    if(!avisoToken) throw new Error('sin token');
+  }catch(e){
+    console.error(e);
+    infoModal('No se han podido activar', 'Ha habido un problema al preparar los avisos en este móvil. Inténtalo otra vez en un momento.');
+    return;
+  }
+  modoPin = 'avisos'; pin = ''; enviando = false;
+  pantallaPin();
+}
+
+function enviarAltaAvisos(){
+  enviando = true;
+  abrirModal('<div class="mtit" id="mtit">Activando…</div><div class="spin-big"></div>');
+  fetch(FICHAR_API, {method: 'POST', body: JSON.stringify({accion: 'avisos', pin: pin, token: avisoToken, dispositivo: navigator.userAgent})})
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      enviando = false;
+      if(!res.ok){ pin = ''; pantallaPin(res.error || 'No se ha podido activar.'); return; }
+      try{ localStorage.setItem(LS_AVISOS, JSON.stringify({nombre: res.nombre, hora: res.hora})); }catch(e){}
+      pintarBotonAvisos();
+      abrirModal('<div class="big-ok ent" id="mtit">✓ AVISOS</div>'+
+        '<div class="msub" style="font-size:1.1rem;color:var(--ink)">'+esc(fullName(res.nombre))+'</div>'+
+        '<div class="minfo">Cada día a las <b>'+res.hora+':00</b> te llegará un aviso con tu turno de mañana. No hace falta tener la app abierta.</div>'+
+        '<button class="mbtn" id="m-ok">Hecho</button>');
+      boton('m-ok', cerrarModal);
+    })
+    .catch(function(){ enviando = false; pin = ''; pantallaPin('Sin conexión. Inténtalo otra vez.'); });
+}
+
+document.getElementById('avisos').addEventListener('click', activarAvisos);
+pintarBotonAvisos();
 
 document.getElementById('fichar').addEventListener('click', empezarFichaje);
 document.addEventListener('keydown', function(e){
