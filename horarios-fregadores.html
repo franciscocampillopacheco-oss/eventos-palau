@@ -83,12 +83,12 @@
 
   /* ---------- vista cuadrante (una fila por persona) ---------- */
   .cwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px 12px}
-  table.cua{border-collapse:separate;border-spacing:0;width:100%;min-width:740px}
+  table.cua{border-collapse:separate;border-spacing:0;width:100%;min-width:780px}
   table.cua th,table.cua td{padding:6px 4px;vertical-align:top;text-align:left;border-bottom:1px solid var(--line)}
   table.cua thead th{font-family:'Barlow Condensed';font-weight:600;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);white-space:nowrap;padding-bottom:8px}
   table.cua thead th.d-hoy{color:var(--hoy)}
   table.cua tbody tr:last-child td{border-bottom:none}
-  .pn{position:sticky;left:0;z-index:2;background:var(--card);min-width:86px;width:86px;font-weight:500;font-size:.92rem;padding-right:8px!important;border-right:1px solid var(--line)}
+  .pn{position:sticky;left:0;z-index:2;background:var(--card);min-width:118px;width:118px;font-weight:500;font-size:.88rem;line-height:1.2;padding-right:8px!important;border-right:1px solid var(--line)}
   td.col-hoy{background:var(--hoy-bg)}
   td.vacia{color:var(--faint);text-align:center!important;font-size:.9rem}
   .cel{border-left:2px solid var(--faint);background:#2f2a27;border-radius:0 4px 4px 0;padding:4px 6px;margin-bottom:4px;min-width:96px}
@@ -293,6 +293,13 @@ function parseDate(s){
   return d;
 }
 
+// Nombre completo con apellido: "CHAMI, DJAHID" -> "Djahid Chami", "EVELIN HERRERA" -> "Evelin Herrera"
+function fullName(n){
+  let t = String(n).trim();
+  const m = t.match(/^([^,(]+),\s*([^(]+)(.*)$/);
+  if(m) t = m[2].trim()+' '+m[1].trim()+(m[3]?' '+m[3].trim():'');
+  return t.toLowerCase().replace(/(^|[\s(-])(\p{L})/gu, function(x,a,b){ return a+b.toUpperCase(); });
+}
 function shortName(n){
   const s = n.split(/[,(]/)[0].trim().split(/\s+/)[0].toLowerCase();
   return s.charAt(0).toUpperCase()+s.slice(1);
@@ -382,7 +389,7 @@ function renderNameChips(){
   names.forEach(function(n){
     const b=document.createElement('button');
     b.className='chip name-chip'+(activeName===n?' on':'');
-    b.textContent=shortName(n); b.title=n;
+    b.textContent=fullName(n); b.title=n;
     b.onclick=function(){ activeName=(activeName===n?null:n); renderNameChips(); render(); };
     el.appendChild(b);
   });
@@ -503,7 +510,7 @@ function renderCuadrante(list){
   html += '</tr></thead><tbody>';
 
   personas.forEach(function(pnom){
-    html += '<tr><td class="pn">'+esc(shortName(pnom))+'</td>';
+    html += '<tr><td class="pn">'+esc(fullName(pnom))+'</td>';
     ctx.dias.forEach(function(d){
       const its = enSemana.filter(function(r){ return r.nombre===pnom && r.fecha.getTime()===d.getTime(); })
         .sort(function(a,b){ return (toMin(a.entrada)||0)-(toMin(b.entrada)||0); });
@@ -589,10 +596,10 @@ function renderSemana(list){
         const tn = turnoDe(r);
         const tip = r.nombre+' · '+horas+' | '+etiquetaDe(r)+' · '+r.zona.toLowerCase();
         if(a===null||b===null){
-          html += '<div class="tl-lane"><div class="bar" data-z="'+esc(r.zona)+'" style="left:0;width:100%" title="'+esc(tip)+'">'+esc(shortName(r.nombre))+' · '+esc(horas)+' <span class="sep">|</span> '+esc(etiquetaDe(r))+'</div></div>';
+          html += '<div class="tl-lane"><div class="bar" data-z="'+esc(r.zona)+'" style="left:0;width:100%" title="'+esc(tip)+'">'+esc(fullName(r.nombre))+' · '+esc(horas)+' <span class="sep">|</span> '+esc(etiquetaDe(r))+'</div></div>';
         }else{
           const l = pos(a), w = Math.max(pos(b)-pos(a), 4);
-          html += '<div class="tl-lane"><div class="bar" data-z="'+esc(r.zona)+'" style="left:'+l.toFixed(2)+'%;width:'+w.toFixed(2)+'%" title="'+esc(tip)+'">'+esc(shortName(r.nombre))+' · '+esc(horas)+' <span class="sep">|</span> '+esc(etiquetaDe(r))+'</div></div>';
+          html += '<div class="tl-lane"><div class="bar" data-z="'+esc(r.zona)+'" style="left:'+l.toFixed(2)+'%;width:'+w.toFixed(2)+'%" title="'+esc(tip)+'">'+esc(fullName(r.nombre))+' · '+esc(horas)+' <span class="sep">|</span> '+esc(etiquetaDe(r))+'</div></div>';
         }
       });
     }
@@ -836,7 +843,7 @@ function actualizarTurno(){
   el.className = 'turno' + (tarde ? ' tarde' : '');
   el.hidden = false;
   el.innerHTML =
-    '<div class="turno-l1"><span class="turno-nom">'+esc(shortName(est.nombre))+'</span>'+
+    '<div class="turno-l1"><span class="turno-nom">'+esc(fullName(est.nombre))+'</span>'+
     '<span class="turno-ent">dentro desde las '+hhmm(ent)+'</span>'+
     '<span class="turno-cont" aria-label="Tiempo trabajado">'+dur(ahora - ent, true)+'</span></div>'+
     '<div class="turno-l2">'+esc(l2)+'</div>'+
