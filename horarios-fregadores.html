@@ -929,7 +929,7 @@ async function activarAvisos(){
   const a = avisosGuardados();
   if(a && 'Notification' in window && Notification.permission === 'granted'){
     abrirModal('<div class="mtit" id="mtit">🔔 Avisos activados</div>'+
-      '<div class="minfo">Este móvil recibe los avisos de turno de <b>'+esc(fullName(a.nombre))+'</b> cada día a las <b>'+a.hora+':00</b>.</div>'+
+      '<div class="minfo">Este móvil recibe los avisos de turno de <b>'+esc(fullName(a.nombre))+'</b>. ¡Gracias por activarlos! 🙌</div>'+
       '<button class="mbtn" id="m-ok">Vale</button><button class="mbtn sec" id="m-re">Activar para otra persona</button>');
     boton('m-ok', cerrarModal);
     boton('m-re', function(){ try{ localStorage.removeItem(LS_AVISOS); }catch(e){} activarAvisos(); });
@@ -983,7 +983,7 @@ function enviarAltaAvisos(){
       pintarBotonAvisos();
       abrirModal('<div class="big-ok ent" id="mtit">✓ AVISOS</div>'+
         '<div class="msub" style="font-size:1.1rem;color:var(--ink)">'+esc(fullName(res.nombre))+'</div>'+
-        '<div class="minfo">Cada día a las <b>'+res.hora+':00</b> te llegará un aviso con tu turno de mañana. No hace falta tener la app abierta.</div>'+
+        '<div class="minfo">¡Gracias, '+esc(fullName(res.nombre).split(' ')[0])+'! 🙌 Ya tienes los avisos activados. Te avisaremos de tus turnos para que siempre sepas cuándo y dónde te toca.</div>'+
         '<button class="mbtn" id="m-ok">Hecho</button>');
       boton('m-ok', cerrarModal);
     })
