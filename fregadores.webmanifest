@@ -1,0 +1,15 @@
+{
+  "name": "Horarios Fregadores",
+  "short_name": "Fregadores",
+  "description": "Horarios y fichaje de fregadores · Meliá Palma Bay y Palau de Congressos de Palma",
+  "start_url": "horarios-fregadores.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1c1a17",
+  "theme_color": "#1c1a17",
+  "lang": "es",
+  "icons": [
+    { "src": "icono-fregadores-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icono-fregadores-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Horarios Fregadores</title>
+<meta name="theme-color" content="#1c1a17">
+<link rel="manifest" href="fregadores.webmanifest">
+<link rel="icon" href="icono-fregadores-192.png">
+<link rel="apple-touch-icon" href="icono-fregadores-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fregadores">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&display=swap" rel="stylesheet">
@@ -131,14 +137,77 @@
   .spinner{width:24px;height:24px;border:2.5px solid var(--line);border-top-color:var(--hotel);border-radius:50%;margin:0 auto 14px;animation:spin .8s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
   @media (prefers-reduced-motion:reduce){.spinner{animation-duration:2s}}
+
+  /* ---------- fichar ---------- */
+  .top{display:flex;align-items:center;gap:12px}
+  .top-txt{flex:1;min-width:0}
+  .fichar{flex:0 0 auto;font-family:'Barlow Condensed',system-ui,sans-serif;font-weight:600;font-size:1.75rem;letter-spacing:.08em;
+    background:var(--hotel);color:var(--hotel-ink);border:none;border-radius:14px;padding:0 22px;min-height:66px;cursor:pointer;
+    box-shadow:0 0 0 3px rgba(63,155,127,.25);display:flex;align-items:center;gap:8px}
+  .fichar svg{width:26px;height:26px;flex:0 0 auto}
+  .fichar.dentro{background:var(--hoy);color:#1c1a17;box-shadow:0 0 0 3px rgba(224,96,59,.3)}
+  .fichar:active{transform:scale(.96)}
+  .fichar:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+  @media (max-width:370px){.fichar{font-size:1.45rem;padding:0 15px;min-height:58px}.fichar svg{display:none}}
+
+  .turno{margin-top:11px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--hotel);border-radius:10px;padding:9px 12px}
+  .turno.tarde{border-left-color:var(--hoy);background:var(--hoy-bg)}
+  .turno-l1{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .turno-nom{font-weight:600;font-size:1rem}
+  .turno-ent{font-size:.82rem;color:var(--soft)}
+  .turno-cont{margin-left:auto;font-size:1.5rem;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+  .turno-l2{font-size:.86rem;color:var(--soft);margin-top:2px}
+  .turno.tarde .turno-l2{color:var(--hoy);font-weight:600}
+  .prog{height:5px;background:var(--line);border-radius:3px;margin-top:7px;overflow:hidden}
+  .prog i{display:block;height:100%;background:var(--hotel);border-radius:3px}
+  .turno.tarde .prog i{background:var(--hoy)}
+
+  .modal{position:fixed;inset:0;z-index:50;background:rgba(10,9,8,.86);display:flex;align-items:center;justify-content:center;padding:16px}
+  .modal[hidden]{display:none}
+  .mbox{width:100%;max-width:380px;max-height:100%;overflow-y:auto;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px 18px 18px;text-align:center;position:relative}
+  .mclose{position:absolute;top:8px;right:8px;width:44px;height:44px;background:none;border:none;color:var(--soft);font-size:1.6rem;cursor:pointer;border-radius:10px}
+  .mtit{font-family:'EB Garamond',Georgia,serif;font-weight:500;font-size:1.6rem;line-height:1.15;padding:0 30px}
+  .msub{font-size:.92rem;color:var(--soft);margin-top:6px;line-height:1.45}
+  .gps{display:inline-flex;align-items:center;gap:7px;font-size:.85rem;color:var(--soft);margin-top:10px;padding:5px 12px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+  .gps .pt{width:9px;height:9px;border-radius:50%;background:var(--faint)}
+  .gps.ok .pt{background:var(--hotel)}
+  .gps.buscando .pt{background:var(--banq);animation:parp 1s ease-in-out infinite}
+  @keyframes parp{50%{opacity:.25}}
+  .dots{display:flex;justify-content:center;gap:16px;margin:20px 0 6px}
+  .dots i{width:20px;height:20px;border-radius:50%;border:2.5px solid var(--soft)}
+  .dots i.f{background:var(--ink);border-color:var(--ink)}
+  .dots.mal{animation:sacude .4s}
+  @keyframes sacude{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+  .merr{min-height:1.4em;color:var(--hoy);font-weight:600;font-size:.95rem}
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+  .pad button{height:66px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:1.9rem;font-weight:500;cursor:pointer;font-variant-numeric:tabular-nums}
+  .pad button:active{background:var(--line)}
+  .pad .k-aux{font-size:1rem;color:var(--soft)}
+  .big-ok{font-family:'Barlow Condensed';font-weight:600;font-size:2.6rem;letter-spacing:.06em;margin-top:6px}
+  .big-ok.ent{color:var(--hotel)}
+  .big-ok.sal{color:var(--hoy)}
+  .mhora{font-size:3rem;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1;margin-top:2px}
+  .minfo{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:14px;font-size:.95rem;line-height:1.5;text-align:left}
+  .minfo.aviso{border-color:var(--banq);color:var(--banq)}
+  .mbtn{display:block;width:100%;margin-top:16px;min-height:58px;border:none;border-radius:14px;background:var(--ink);color:var(--paper);font-family:'Barlow Condensed';font-weight:600;font-size:1.35rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+  .mbtn.sec{background:var(--card);color:var(--ink);border:1px solid var(--line);font-size:1.05rem;min-height:50px;margin-top:10px}
+  .spin-big{width:44px;height:44px;border:4px solid var(--line);border-top-color:var(--hotel);border-radius:50%;margin:22px auto;animation:spin .8s linear infinite}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="kicker">Meliá Palma Bay y Palau de Congressos de Palma</div>
-  <h1>Horarios fregadores</h1>
-  <div class="updated" id="updated"></div>
+  <div class="top">
+    <div class="top-txt">
+      <div class="kicker">Meliá Palma Bay y Palau de Congressos de Palma</div>
+      <h1>Horarios fregadores</h1>
+      <div class="updated" id="updated"></div>
+    </div>
+    <button class="fichar" id="fichar" aria-label="Fichar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2.2"/></svg>FICHAR
+    </button>
+  </div>
+  <div id="turno" hidden></div>
   <div class="controls">
     <div class="search"><input id="q" type="search" placeholder="Busca tu nombre…" autocomplete="off"></div>
     <button class="btn" id="reload" title="Actualizar" aria-label="Actualizar">&#10227;</button>
@@ -155,6 +224,10 @@
 <main id="app">
   <div class="state"><div class="spinner"></div>Cargando horarios…</div>
 </main>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mtit">
+  <div class="mbox" id="mbox"></div>
+</div>
 
 <script>
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTmMytMNWbZy0Q17VSSFg70LFvkeUmkFu6lKEEYe4Qsxfj7pR8llIUKL1kJ_b5PC47zkH6g4jOCvKRC/pub?gid=678979776&single=true&output=csv";
@@ -263,6 +336,7 @@ function load(){
       document.getElementById('updated').textContent =
         'Actualizado a las ' + new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
       renderChips(); renderNameChips(); render();
+      completarSalidaPrevista();
     })
     .catch(function(){
       app.innerHTML = '<div class="state"><b>No se han podido cargar los horarios.</b><br>Comprueba la conexión y pulsa el botón de actualizar.</div>';
@@ -553,6 +627,272 @@ function setView(v){
   document.getElementById('tab-lista').classList.toggle('on', v==='lista');
   render();
 }
+
+// =====================================================================
+// FICHAR
+// El fichaje lo valida y lo guarda el script de Google (hoja "Fichajes Fregadores").
+// La página solo pide el PIN y la ubicación, enseña el contador y avisa a la hora de salida.
+// =====================================================================
+const FICHAR_API = "https://script.google.com/macros/s/AKfycbx_u2vKeTj_BH8TZa9PQugUcXZ3Fa7sO1H9h5t4IhTGHZdTaJpxagdpDmeKse6qSTee/exec"; // URL de la aplicación web de Google Apps Script (termina en /exec)
+const LS_KEY = 'fichajeFregadores';
+const HORAS_MAX_TURNO = 20; // igual que en el script de Google
+const modal = document.getElementById('modal'), mbox = document.getElementById('mbox');
+let pin = '', pos = null, posErr = null, enviando = false, watchId = null, swReg = null, avisoTimer = null;
+
+function leerEstado(){ try{ return JSON.parse(localStorage.getItem(LS_KEY) || 'null'); }catch(e){ return null; } }
+function guardarEstado(s){ try{ if(s) localStorage.setItem(LS_KEY, JSON.stringify(s)); else localStorage.removeItem(LS_KEY); }catch(e){} }
+function hhmm(d){ return d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); }
+function dur(ms, conSeg){
+  ms = Math.max(0, ms);
+  const t = Math.floor(ms/1000), h = Math.floor(t/3600), m = Math.floor(t%3600/60), s = t%60;
+  if(conSeg) return h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  return h ? h+' h '+String(m).padStart(2,'0')+' min' : m+' min';
+}
+
+// Busca en el cuadrante el turno de esa persona que corresponde a la hora de entrada
+function turnoPrevisto(nombre, entrada){
+  const n = nombre.trim().toUpperCase();
+  let mejor = null;
+  rows.forEach(function(r){
+    if(!r.fecha || r.nombre.trim().toUpperCase() !== n) return;
+    const a = toMin(r.entrada), b = salidaAjustada(r);
+    if(a === null || b === null) return;
+    const ini = new Date(r.fecha); ini.setMinutes(a);
+    const fin = new Date(r.fecha); fin.setMinutes(b);
+    if(entrada >= fin) return;
+    const dif = Math.abs(entrada - ini);
+    if(dif > 12*3600e3) return;
+    if(!mejor || dif < mejor.dif) mejor = {dif: dif, ini: ini, fin: fin};
+  });
+  return mejor;
+}
+
+// Si se fichó antes de que cargara el cuadrante, se busca ahora la hora de salida
+function completarSalidaPrevista(){
+  const est = leerEstado();
+  if(!est || est.salida) return;
+  const t = turnoPrevisto(est.nombre, new Date(est.entrada));
+  if(t){ est.salida = t.fin.toISOString(); guardarEstado(est); actualizarTurno(); programarAviso(); }
+}
+
+// ---------- ventana ----------
+function abrirModal(html){
+  mbox.innerHTML = '<button class="mclose" id="mclose" aria-label="Cerrar">&times;</button>' + html;
+  modal.hidden = false;
+  document.getElementById('mclose').onclick = cerrarModal;
+}
+function cerrarModal(){ modal.hidden = true; pin = ''; enviando = false; pararGPS(); }
+function boton(id, fn){ const b = document.getElementById(id); if(b) b.onclick = fn; }
+
+function empezarFichaje(){
+  if(!FICHAR_API){
+    abrirModal('<div class="mtit" id="mtit">Fichaje en preparación</div><div class="msub">Muy pronto podrás fichar desde aquí.</div><button class="mbtn" id="m-ok">Vale</button>');
+    boton('m-ok', cerrarModal); return;
+  }
+  if(!('geolocation' in navigator)){
+    abrirModal('<div class="mtit" id="mtit">No se puede fichar</div><div class="msub">Este navegador no permite compartir la ubicación. Prueba con Chrome o Safari.</div><button class="mbtn" id="m-ok">Vale</button>');
+    boton('m-ok', cerrarModal); return;
+  }
+  pedirPermisoAvisos();
+  pin = ''; enviando = false;
+  pantallaPin();
+  iniciarGPS();
+}
+
+function pantallaPin(error){
+  let teclas = '';
+  for(let n=1; n<=9; n++) teclas += '<button data-k="'+n+'">'+n+'</button>';
+  teclas += '<button class="k-aux" data-k="c">Borrar</button><button data-k="0">0</button><button class="k-aux" data-k="x">Cancelar</button>';
+  abrirModal(
+    '<div class="mtit" id="mtit">Escribe tu PIN</div>'+
+    '<div class="msub">Tu número de 4 cifras</div>'+
+    '<div class="gps" id="gps"><span class="pt"></span><span id="gps-t"></span></div>'+
+    '<div class="dots" id="dots"><i></i><i></i><i></i><i></i></div>'+
+    '<div class="merr" id="merr" role="alert">'+(error ? esc(error) : '')+'</div>'+
+    '<div class="pad" id="pad">'+teclas+'</div>'
+  );
+  pintarGPS(); pintarDots();
+  if(error) sacudir();
+  document.getElementById('pad').onclick = function(e){
+    const b = e.target.closest('button'); if(!b) return;
+    pulsar(b.dataset.k);
+  };
+}
+
+function pulsar(k){
+  if(enviando || !document.getElementById('pad')) return;
+  if(k === 'x'){ cerrarModal(); return; }
+  if(k === 'c') pin = pin.slice(0, -1);
+  else if(pin.length < 4) pin += k;
+  document.getElementById('merr').textContent = '';
+  pintarDots();
+  if(pin.length === 4) intentarEnviar();
+}
+
+function pintarDots(){
+  const d = document.querySelectorAll('#dots i');
+  for(let i=0; i<d.length; i++) d[i].classList.toggle('f', i < pin.length);
+}
+function sacudir(){
+  const d = document.getElementById('dots'); if(!d) return;
+  d.classList.remove('mal'); void d.offsetWidth; d.classList.add('mal');
+  if(navigator.vibrate) navigator.vibrate(200);
+}
+
+// ---------- ubicación (obligatoria) ----------
+function iniciarGPS(){
+  pararGPS(); pos = null; posErr = null;
+  watchId = navigator.geolocation.watchPosition(function(p){
+    pos = {lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy};
+    posErr = null; pintarGPS();
+    if(pin.length === 4) intentarEnviar();
+  }, function(e){
+    posErr = e;
+    if(e.code === 1){ pararGPS(); pantallaSinUbicacion(); return; }
+    pintarGPS();
+  }, {enableHighAccuracy: true, timeout: 20000, maximumAge: 30000});
+}
+function pararGPS(){ if(watchId !== null){ navigator.geolocation.clearWatch(watchId); watchId = null; } }
+
+function pintarGPS(){
+  const g = document.getElementById('gps'), t = document.getElementById('gps-t'); if(!g) return;
+  if(pos){ g.className = 'gps ok'; t.textContent = 'Ubicación lista'; }
+  else if(posErr){ g.className = 'gps'; t.textContent = 'No encuentro tu ubicación…'; }
+  else { g.className = 'gps buscando'; t.textContent = 'Buscando tu ubicación…'; }
+}
+
+function pantallaSinUbicacion(){
+  abrirModal(
+    '<div class="mtit" id="mtit">Activa la ubicación</div>'+
+    '<div class="msub">Para fichar es obligatorio compartir la ubicación.</div>'+
+    '<div class="minfo"><b>Android:</b> toca el icono que hay a la izquierda de la dirección de la página → <b>Permisos</b> → <b>Ubicación</b> → <b>Permitir</b>.<br><br>'+
+    '<b>iPhone:</b> Ajustes → Privacidad y seguridad → <b>Localización</b> → actívala y, en Safari (o Chrome), elige <b>Al usar la app</b>.<br><br>'+
+    'Comprueba también que la ubicación del móvil está encendida.</div>'+
+    '<button class="mbtn" id="m-re">Volver a intentar</button>'
+  );
+  boton('m-re', function(){ pin = ''; pantallaPin(); iniciarGPS(); });
+}
+
+// ---------- envío ----------
+function intentarEnviar(){
+  if(enviando || pin.length !== 4) return;
+  if(!pos){
+    const m = document.getElementById('merr');
+    if(m) m.textContent = posErr ? 'No encuentro tu ubicación. Espera un momento…' : 'Esperando la ubicación…';
+    return;
+  }
+  enviando = true;
+  const cuerpo = JSON.stringify({pin: pin, lat: pos.lat, lng: pos.lng, acc: pos.acc});
+  abrirModal('<div class="mtit" id="mtit">Fichando…</div><div class="spin-big"></div>');
+  fetch(FICHAR_API, {method: 'POST', body: cuerpo})
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      enviando = false;
+      if(!res.ok){ pin = ''; pantallaPin(res.error || 'No se ha podido fichar.'); return; }
+      pararGPS(); fichado(res);
+    })
+    .catch(function(){ enviando = false; pin = ''; pantallaPin('Sin conexión. Inténtalo otra vez.'); });
+}
+
+function fichado(res){
+  const hora = new Date(res.hora);
+  let html;
+  if(res.tipo === 'ENTRADA'){
+    const t = turnoPrevisto(res.nombre, hora);
+    guardarEstado({nombre: res.nombre, entrada: res.hora, salida: t ? t.fin.toISOString() : null, avisado: false});
+    html = '<div class="big-ok ent" id="mtit">✓ ENTRADA</div>';
+    html += '<div class="mhora">'+hhmm(hora)+'</div><div class="msub" style="font-size:1.1rem;color:var(--ink)">'+esc(res.nombre)+'</div>';
+    html += t
+      ? '<div class="minfo">Tu salida es a las <b>'+hhmm(t.fin)+'</b>. '+(avisosOK() ? 'Te llegará un aviso a esa hora.' : 'Deja esta página abierta y te avisaré a esa hora.')+'</div>'
+      : '<div class="minfo">No encuentro tu turno de hoy en el cuadrante, así que no puedo avisarte de la hora de salida.</div>';
+  }else{
+    const est = leerEstado();
+    if(!est || est.nombre.toUpperCase() === res.nombre.toUpperCase()) guardarEstado(null);
+    html = '<div class="big-ok sal" id="mtit">✓ SALIDA</div>';
+    html += '<div class="mhora">'+hhmm(hora)+'</div><div class="msub" style="font-size:1.1rem;color:var(--ink)">'+esc(res.nombre)+'</div>';
+    html += '<div class="minfo">Has trabajado <b>'+dur(res.minutos*60000)+'</b>. ¡Buen trabajo!</div>';
+  }
+  if(!res.enZona) html += '<div class="minfo aviso">⚠️ Estás fuera del hotel y del Palau (a '+res.distancia+' m). El fichaje se ha guardado con un aviso.</div>';
+  html += '<button class="mbtn" id="m-ok">Hecho</button>';
+  abrirModal(html);
+  boton('m-ok', cerrarModal);
+  actualizarTurno(); programarAviso();
+}
+
+// ---------- contador ----------
+function actualizarTurno(){
+  const el = document.getElementById('turno'), btn = document.getElementById('fichar');
+  let est = leerEstado();
+  if(est && (Date.now() - new Date(est.entrada)) > HORAS_MAX_TURNO*3600e3){ guardarEstado(null); est = null; }
+  if(!est){ el.hidden = true; btn.classList.remove('dentro'); return; }
+  const ent = new Date(est.entrada), ahora = new Date();
+  const sal = est.salida ? new Date(est.salida) : null;
+  const tarde = !!sal && ahora >= sal;
+  const l2 = !sal ? 'Sin hora de salida en el cuadrante'
+           : tarde ? '⏰ Hora de salir: '+hhmm(sal)+'. No olvides FICHAR.'
+           : 'Salida a las '+hhmm(sal)+' · faltan '+dur(sal - ahora);
+  const pct = sal ? Math.min(100, Math.max(0, (ahora - ent) / (sal - ent) * 100)) : 0;
+  btn.classList.add('dentro');
+  el.className = 'turno' + (tarde ? ' tarde' : '');
+  el.hidden = false;
+  el.innerHTML =
+    '<div class="turno-l1"><span class="turno-nom">'+esc(shortName(est.nombre))+'</span>'+
+    '<span class="turno-ent">dentro desde las '+hhmm(ent)+'</span>'+
+    '<span class="turno-cont" aria-label="Tiempo trabajado">'+dur(ahora - ent, true)+'</span></div>'+
+    '<div class="turno-l2">'+esc(l2)+'</div>'+
+    (sal ? '<div class="prog"><i style="width:'+pct.toFixed(1)+'%"></i></div>' : '');
+}
+
+// ---------- aviso a la hora de salida ----------
+function avisosOK(){ return 'Notification' in window && Notification.permission === 'granted'; }
+function pedirPermisoAvisos(){
+  if('Notification' in window && Notification.permission === 'default'){
+    try{ const p = Notification.requestPermission(); if(p && p.catch) p.catch(function(){}); }catch(e){}
+  }
+}
+function programarAviso(){
+  clearTimeout(avisoTimer);
+  const est = leerEstado();
+  if(!est || !est.salida || est.avisado) return;
+  const falta = new Date(est.salida) - Date.now();
+  if(falta <= 0){ lanzarAviso(); return; }
+  avisoTimer = setTimeout(lanzarAviso, Math.min(falta, 2147000000));
+}
+function lanzarAviso(){
+  const est = leerEstado();
+  if(!est || !est.salida || est.avisado) return;
+  if(Date.now() < new Date(est.salida) - 1000){ programarAviso(); return; }
+  est.avisado = true; guardarEstado(est);
+  const txt = 'Son las '+hhmm(new Date(est.salida))+'. Es tu hora de salida: no olvides FICHAR.';
+  if(avisosOK()){
+    const titulo = 'Hora de salir, '+shortName(est.nombre);
+    const op = {body: txt, tag: 'salida-fregadores', requireInteraction: true, vibrate: [300,150,300,150,300], icon: 'icono-fregadores-192.png', badge: 'icono-fregadores-192.png'};
+    if(swReg) swReg.showNotification(titulo, op).catch(function(){});
+    else { try{ new Notification(titulo, op); }catch(e){} }
+  }
+  if(navigator.vibrate) navigator.vibrate([300,150,300,150,300]);
+  if(modal.hidden){
+    abrirModal('<div class="mtit" id="mtit">⏰ Hora de salir</div><div class="msub" style="font-size:1.05rem;color:var(--ink)">'+esc(txt)+'</div>'+
+               '<button class="mbtn" id="m-fichar">Fichar ahora</button><button class="mbtn sec" id="m-luego">Más tarde</button>');
+    boton('m-fichar', empezarFichaje);
+    boton('m-luego', cerrarModal);
+  }
+}
+
+document.getElementById('fichar').addEventListener('click', empezarFichaje);
+document.addEventListener('keydown', function(e){
+  if(modal.hidden) return;
+  if(e.key === 'Escape') cerrarModal();
+  else if(/^[0-9]$/.test(e.key)) pulsar(e.key);
+  else if(e.key === 'Backspace') pulsar('c');
+});
+document.addEventListener('visibilitychange', function(){ if(!document.hidden){ actualizarTurno(); programarAviso(); } });
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw-fregadores.js').catch(function(){});
+  navigator.serviceWorker.ready.then(function(r){ swReg = r; });
+}
+actualizarTurno(); programarAviso();
+setInterval(actualizarTurno, 1000);
 
 document.getElementById('q').addEventListener('input', render);
 document.getElementById('reload').addEventListener('click', load);
