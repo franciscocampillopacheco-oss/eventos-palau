@@ -23,7 +23,7 @@ self.addEventListener('push', function (e) {
   var m = d.data || d.notification || d;
   e.waitUntil(self.registration.showNotification(m.title || 'Fregadores', {
     body: m.body || '',
-    icon: 'icono-fregadores-192.png',
+    icon: m.icon || 'icono-fregadores-192.png',
     badge: 'icono-fregadores-192.png',
     tag: 'turno-fregadores',
     renotify: true,
