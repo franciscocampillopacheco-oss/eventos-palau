@@ -6,8 +6,8 @@
 <title>Horarios Fregadores</title>
 <meta name="theme-color" content="#1c1a17">
 <link rel="manifest" href="fregadores.webmanifest">
-<link rel="icon" href="icono-fregadores-192.png">
-<link rel="apple-touch-icon" href="icono-fregadores-180.png">
+<link rel="icon" href="icono-v2-192.png">
+<link rel="apple-touch-icon" href="icono-v2-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Fregadores">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -881,7 +881,7 @@ function lanzarAviso(){
   const txt = 'Son las '+hhmm(new Date(est.salida))+'. Es tu hora de salida: no olvides FICHAR.';
   if(avisosOK()){
     const titulo = 'Hora de salir, '+shortName(est.nombre);
-    const op = {body: txt, tag: 'salida-fregadores', requireInteraction: true, vibrate: [300,150,300,150,300], icon: 'icono-fregadores-192.png', badge: 'icono-fregadores-192.png'};
+    const op = {body: txt, tag: 'salida-fregadores', requireInteraction: true, vibrate: [300,150,300,150,300], icon: 'icono-v2-192.png', badge: 'icono-v2-192.png'};
     if(swReg) swReg.showNotification(titulo, op).catch(function(){});
     else { try{ new Notification(titulo, op); }catch(e){} }
   }
