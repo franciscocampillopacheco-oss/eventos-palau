@@ -649,7 +649,7 @@ const FICHAR_API = "https://script.google.com/macros/s/AKfycbx_u2vKeTj_BH8TZa9PQ
 const LS_KEY = 'fichajeFregadores';
 const HORAS_MAX_TURNO = 20; // igual que en el script de Google
 const modal = document.getElementById('modal'), mbox = document.getElementById('mbox');
-let modoPin = 'fichar', avisoToken = null, gpsTimer = null, gpsPreciso = true, sinUbiOk = false;
+let modoPin = 'fichar', avisoToken = null, gpsTimer = null, gpsPreciso = true, sinUbiOk = false, ubiDenegada = false;
 let pin = '', pos = null, posErr = null, enviando = false, watchId = null, swReg = null, avisoTimer = null;
 
 function leerEstado(){ try{ return JSON.parse(localStorage.getItem(LS_KEY) || 'null'); }catch(e){ return null; } }
@@ -755,7 +755,7 @@ function sacudir(){
 
 // ---------- ubicación (obligatoria) ----------
 function iniciarGPS(){
-  pararGPS(); pos = null; posErr = null; sinUbiOk = false; gpsPreciso = true;
+  pararGPS(); pos = null; posErr = null; sinUbiOk = false; ubiDenegada = false; gpsPreciso = true;
   vigilarGPS(true);
   // si en 12 s el móvil no encuentra la ubicación, se ficha igualmente sin ella
   // (el correo a los responsables lo indica; la persona no ve ningún aviso)
@@ -774,7 +774,12 @@ function vigilarGPS(preciso){
     if(pin.length === 4 && modoPin === 'fichar') intentarEnviar();
   }, function(e){
     posErr = e;
-    if(e.code === 1){ pararGPS(); pantallaSinUbicacion(); return; }
+    if(e.code === 1){
+      // ha denegado el permiso: ficha igualmente y el correo lo indica
+      pararGPS(); ubiDenegada = true; sinUbiOk = true; pintarGPS();
+      if(pin.length === 4 && modoPin === 'fichar') intentarEnviar();
+      return;
+    }
     // el GPS preciso no responde (dentro de edificios): probamos con la ubicación aproximada
     if(gpsPreciso) vigilarGPS(false);
     pintarGPS();
@@ -790,6 +795,7 @@ function pararGPS(){
 function pintarGPS(){
   const g = document.getElementById('gps'), t = document.getElementById('gps-t'); if(!g) return;
   if(pos){ g.className = 'gps ok'; t.textContent = 'Ubicación lista'; }
+  else if(ubiDenegada){ g.className = 'gps'; t.textContent = 'Escribe tu PIN'; }
   else if(posErr){ g.className = 'gps buscando'; t.textContent = 'Buscando tu ubicación…'; }
   else { g.className = 'gps buscando'; t.textContent = 'Buscando tu ubicación…'; }
 }
@@ -816,7 +822,8 @@ function intentarEnviar(){
     return;
   }
   enviando = true;
-  const cuerpo = JSON.stringify(pos ? {pin: pin, lat: pos.lat, lng: pos.lng, acc: pos.acc} : {pin: pin, sinUbicacion: true});
+  const cuerpo = JSON.stringify(pos ? {pin: pin, lat: pos.lat, lng: pos.lng, acc: pos.acc}
+                                    : (ubiDenegada ? {pin: pin, ubicacionDenegada: true} : {pin: pin, sinUbicacion: true}));
   abrirModal('<div class="mtit" id="mtit">Fichando…</div><div class="spin-big"></div>');
   fetch(FICHAR_API, {method: 'POST', body: cuerpo})
     .then(function(r){ return r.json(); })
