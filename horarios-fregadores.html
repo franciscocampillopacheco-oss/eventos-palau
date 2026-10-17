@@ -813,7 +813,7 @@ function pantallaSinUbicacion(){
 }
 
 // ---------- envío ----------
-function intentarEnviar(){
+function intentarEnviar(confirmar){
   if(enviando || pin.length !== 4) return;
   if(modoPin === 'avisos'){ enviarAltaAvisos(); return; }
   if(!pos && !sinUbiOk){
@@ -822,18 +822,34 @@ function intentarEnviar(){
     return;
   }
   enviando = true;
-  const cuerpo = JSON.stringify(pos ? {pin: pin, lat: pos.lat, lng: pos.lng, acc: pos.acc}
-                                    : (ubiDenegada ? {pin: pin, ubicacionDenegada: true} : {pin: pin, sinUbicacion: true}));
+  const datos = pos ? {pin: pin, lat: pos.lat, lng: pos.lng, acc: pos.acc}
+                    : (ubiDenegada ? {pin: pin, ubicacionDenegada: true} : {pin: pin, sinUbicacion: true});
+  if(confirmar === true) datos.confirmar = true;
+  const cuerpo = JSON.stringify(datos);
   abrirModal('<div class="mtit" id="mtit">Fichando…</div><div class="spin-big"></div>');
   fetch(FICHAR_API, {method: 'POST', body: cuerpo})
     .then(function(r){ return r.json(); })
     .then(function(res){
       enviando = false;
       if(res.bloqueo){ pararGPS(); yaFichado(res); return; }
+      if(res.confirmar){ pararGPS(); confirmarSalida(res); return; }
       if(!res.ok){ pin = ''; pantallaPin(res.error || 'No se ha podido fichar.'); return; }
       pararGPS(); fichado(res);
     })
     .catch(function(){ enviando = false; pin = ''; pantallaPin('Sin conexión. Inténtalo otra vez.'); });
+}
+
+// Va a fichar la SALIDA bastante antes de su hora: se le pregunta si es un error.
+function confirmarSalida(res){
+  const fin = new Date(res.fin);
+  let html = '<div class="mtit" id="mtit">⚠️ ¿Ya sales?</div>';
+  html += '<div class="msub" style="font-size:1.1rem;color:var(--ink)">'+esc(fullName(res.nombre))+'</div>';
+  html += '<div class="minfo aviso">Tu turno termina a las <b>'+hhmm(fin)+'</b>. ¿Seguro que quieres fichar la <b>SALIDA</b> ya?</div>';
+  html += '<button class="mbtn" id="m-no">No, me he equivocado</button>';
+  html += '<button class="mbtn sec" id="m-si">Sí, salgo ya</button>';
+  abrirModal(html);
+  boton('m-no', function(){ pin = ''; cerrarModal(); });
+  boton('m-si', function(){ intentarEnviar(true); });
 }
 
 // Ha vuelto a pulsar FICHAR justo después de fichar: no se guarda nada, solo se le recuerda.
