@@ -649,7 +649,7 @@ const FICHAR_API = "https://script.google.com/macros/s/AKfycbx_u2vKeTj_BH8TZa9PQ
 const LS_KEY = 'fichajeFregadores';
 const HORAS_MAX_TURNO = 20; // igual que en el script de Google
 const modal = document.getElementById('modal'), mbox = document.getElementById('mbox');
-let modoPin = 'fichar', avisoToken = null;
+let modoPin = 'fichar', avisoToken = null, gpsTimer = null, gpsPreciso = true, sinUbiOk = false;
 let pin = '', pos = null, posErr = null, enviando = false, watchId = null, swReg = null, avisoTimer = null;
 
 function leerEstado(){ try{ return JSON.parse(localStorage.getItem(LS_KEY) || 'null'); }catch(e){ return null; } }
@@ -723,9 +723,12 @@ function pantallaPin(error){
     (modoPin === 'avisos' ? '' : '<div class="gps" id="gps"><span class="pt"></span><span id="gps-t"></span></div>')+
     '<div class="dots" id="dots"><i></i><i></i><i></i><i></i></div>'+
     '<div class="merr" id="merr" role="alert">'+(error ? esc(error) : '')+'</div>'+
-    '<div class="pad" id="pad">'+teclas+'</div>'
+    '<div class="pad" id="pad">'+teclas+'</div>'+
+    (modoPin === 'avisos' ? '' : '<div id="sinubi" hidden><button class="mbtn sec" id="m-sinubi">Fichar sin ubicación</button>'+
+      '<div class="msub" style="font-size:.8rem;margin-top:6px">Se guardará con un aviso para revisarlo. Si puedes, activa la ubicación del móvil.</div></div>')
   );
-  pintarGPS(); pintarDots();
+  pintarGPS(); pintarDots(); pintarSinUbi();
+  boton('m-sinubi', function(){ sinUbiOk = true; if(pin.length === 4) intentarEnviar(); else { const m = document.getElementById('merr'); if(m) m.textContent = 'Escribe tu PIN para fichar sin ubicación'; } });
   if(error) sacudir();
   document.getElementById('pad').onclick = function(e){
     const b = e.target.closest('button'); if(!b) return;
@@ -755,23 +758,40 @@ function sacudir(){
 
 // ---------- ubicación (obligatoria) ----------
 function iniciarGPS(){
-  pararGPS(); pos = null; posErr = null;
+  pararGPS(); pos = null; posErr = null; sinUbiOk = false; gpsPreciso = true;
+  vigilarGPS(true);
+  // si en 15 s no hay ubicación, se ofrece fichar sin ella
+  gpsTimer = setTimeout(function(){ if(!pos){ posErr = posErr || {code: 3}; pintarGPS(); pintarSinUbi(); } }, 15000);
+}
+function vigilarGPS(preciso){
+  if(watchId !== null){ navigator.geolocation.clearWatch(watchId); watchId = null; }
+  gpsPreciso = preciso;
   watchId = navigator.geolocation.watchPosition(function(p){
     pos = {lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy};
-    posErr = null; pintarGPS();
+    posErr = null; pintarGPS(); pintarSinUbi();
     if(pin.length === 4 && modoPin === 'fichar') intentarEnviar();
   }, function(e){
     posErr = e;
     if(e.code === 1){ pararGPS(); pantallaSinUbicacion(); return; }
-    pintarGPS();
-  }, {enableHighAccuracy: true, timeout: 20000, maximumAge: 30000});
+    // el GPS preciso no responde (dentro de edificios): probamos con la ubicación aproximada
+    if(gpsPreciso) vigilarGPS(false);
+    pintarGPS(); pintarSinUbi();
+  }, preciso ? {enableHighAccuracy: true, timeout: 8000, maximumAge: 60000}
+             : {enableHighAccuracy: false, timeout: 15000, maximumAge: 300000});
 }
-function pararGPS(){ if(watchId !== null){ navigator.geolocation.clearWatch(watchId); watchId = null; } }
+function pararGPS(){
+  clearTimeout(gpsTimer);
+  if(watchId !== null){ navigator.geolocation.clearWatch(watchId); watchId = null; }
+}
+function pintarSinUbi(){
+  const d = document.getElementById('sinubi'); if(!d) return;
+  d.hidden = !!pos || !posErr || posErr.code === 1;
+}
 
 function pintarGPS(){
   const g = document.getElementById('gps'), t = document.getElementById('gps-t'); if(!g) return;
   if(pos){ g.className = 'gps ok'; t.textContent = 'Ubicación lista'; }
-  else if(posErr){ g.className = 'gps'; t.textContent = 'No encuentro tu ubicación…'; }
+  else if(posErr){ g.className = 'gps buscando'; t.textContent = 'Buscando tu ubicación… (¿está activada en el móvil?)'; }
   else { g.className = 'gps buscando'; t.textContent = 'Buscando tu ubicación…'; }
 }
 
@@ -791,13 +811,13 @@ function pantallaSinUbicacion(){
 function intentarEnviar(){
   if(enviando || pin.length !== 4) return;
   if(modoPin === 'avisos'){ enviarAltaAvisos(); return; }
-  if(!pos){
+  if(!pos && !sinUbiOk){
     const m = document.getElementById('merr');
     if(m) m.textContent = posErr ? 'No encuentro tu ubicación. Espera un momento…' : 'Esperando la ubicación…';
     return;
   }
   enviando = true;
-  const cuerpo = JSON.stringify({pin: pin, lat: pos.lat, lng: pos.lng, acc: pos.acc});
+  const cuerpo = JSON.stringify(pos ? {pin: pin, lat: pos.lat, lng: pos.lng, acc: pos.acc} : {pin: pin, sinUbicacion: true});
   abrirModal('<div class="mtit" id="mtit">Fichando…</div><div class="spin-big"></div>');
   fetch(FICHAR_API, {method: 'POST', body: cuerpo})
     .then(function(r){ return r.json(); })
@@ -827,7 +847,8 @@ function fichado(res){
     html += '<div class="mhora">'+hhmm(hora)+'</div><div class="msub" style="font-size:1.1rem;color:var(--ink)">'+esc(res.nombre)+'</div>';
     html += '<div class="minfo">Has trabajado <b>'+dur(res.minutos*60000)+'</b>. ¡Buen trabajo!</div>';
   }
-  if(!res.enZona) html += '<div class="minfo aviso">⚠️ Estás fuera del hotel y del Palau (a '+res.distancia+' m). El fichaje se ha guardado con un aviso.</div>';
+  if(res.sinUbicacion) html += '<div class="minfo aviso">⚠️ Fichado sin ubicación. Se ha guardado con un aviso para revisarlo. La próxima vez activa la ubicación del móvil.</div>';
+  else if(!res.enZona) html += '<div class="minfo aviso">⚠️ Estás fuera del hotel y del Palau (a '+res.distancia+' m). El fichaje se ha guardado con un aviso.</div>';
   html += '<button class="mbtn" id="m-ok">Hecho</button>';
   abrirModal(html);
   boton('m-ok', cerrarModal);
