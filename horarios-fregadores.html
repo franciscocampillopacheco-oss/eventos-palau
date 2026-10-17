@@ -723,12 +723,9 @@ function pantallaPin(error){
     (modoPin === 'avisos' ? '' : '<div class="gps" id="gps"><span class="pt"></span><span id="gps-t"></span></div>')+
     '<div class="dots" id="dots"><i></i><i></i><i></i><i></i></div>'+
     '<div class="merr" id="merr" role="alert">'+(error ? esc(error) : '')+'</div>'+
-    '<div class="pad" id="pad">'+teclas+'</div>'+
-    (modoPin === 'avisos' ? '' : '<div id="sinubi" hidden><button class="mbtn sec" id="m-sinubi">Fichar sin ubicación</button>'+
-      '<div class="msub" style="font-size:.8rem;margin-top:6px">Se guardará con un aviso para revisarlo. Si puedes, activa la ubicación del móvil.</div></div>')
+    '<div class="pad" id="pad">'+teclas+'</div>'
   );
-  pintarGPS(); pintarDots(); pintarSinUbi();
-  boton('m-sinubi', function(){ sinUbiOk = true; if(pin.length === 4) intentarEnviar(); else { const m = document.getElementById('merr'); if(m) m.textContent = 'Escribe tu PIN para fichar sin ubicación'; } });
+  pintarGPS(); pintarDots();
   if(error) sacudir();
   document.getElementById('pad').onclick = function(e){
     const b = e.target.closest('button'); if(!b) return;
@@ -760,22 +757,27 @@ function sacudir(){
 function iniciarGPS(){
   pararGPS(); pos = null; posErr = null; sinUbiOk = false; gpsPreciso = true;
   vigilarGPS(true);
-  // si en 15 s no hay ubicación, se ofrece fichar sin ella
-  gpsTimer = setTimeout(function(){ if(!pos){ posErr = posErr || {code: 3}; pintarGPS(); pintarSinUbi(); } }, 15000);
+  // si en 12 s el móvil no encuentra la ubicación, se ficha igualmente sin ella
+  // (el correo a los responsables lo indica; la persona no ve ningún aviso)
+  gpsTimer = setTimeout(function(){
+    if(pos) return;
+    sinUbiOk = true;
+    if(pin.length === 4 && modoPin === 'fichar') intentarEnviar();
+  }, 12000);
 }
 function vigilarGPS(preciso){
   if(watchId !== null){ navigator.geolocation.clearWatch(watchId); watchId = null; }
   gpsPreciso = preciso;
   watchId = navigator.geolocation.watchPosition(function(p){
     pos = {lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy};
-    posErr = null; pintarGPS(); pintarSinUbi();
+    posErr = null; pintarGPS();
     if(pin.length === 4 && modoPin === 'fichar') intentarEnviar();
   }, function(e){
     posErr = e;
     if(e.code === 1){ pararGPS(); pantallaSinUbicacion(); return; }
     // el GPS preciso no responde (dentro de edificios): probamos con la ubicación aproximada
     if(gpsPreciso) vigilarGPS(false);
-    pintarGPS(); pintarSinUbi();
+    pintarGPS();
   }, preciso ? {enableHighAccuracy: true, timeout: 8000, maximumAge: 60000}
              : {enableHighAccuracy: false, timeout: 15000, maximumAge: 300000});
 }
@@ -783,15 +785,12 @@ function pararGPS(){
   clearTimeout(gpsTimer);
   if(watchId !== null){ navigator.geolocation.clearWatch(watchId); watchId = null; }
 }
-function pintarSinUbi(){
-  const d = document.getElementById('sinubi'); if(!d) return;
-  d.hidden = !!pos || !posErr || posErr.code === 1;
-}
+
 
 function pintarGPS(){
   const g = document.getElementById('gps'), t = document.getElementById('gps-t'); if(!g) return;
   if(pos){ g.className = 'gps ok'; t.textContent = 'Ubicación lista'; }
-  else if(posErr){ g.className = 'gps buscando'; t.textContent = 'Buscando tu ubicación… (¿está activada en el móvil?)'; }
+  else if(posErr){ g.className = 'gps buscando'; t.textContent = 'Buscando tu ubicación…'; }
   else { g.className = 'gps buscando'; t.textContent = 'Buscando tu ubicación…'; }
 }
 
@@ -813,7 +812,7 @@ function intentarEnviar(){
   if(modoPin === 'avisos'){ enviarAltaAvisos(); return; }
   if(!pos && !sinUbiOk){
     const m = document.getElementById('merr');
-    if(m) m.textContent = posErr ? 'No encuentro tu ubicación. Espera un momento…' : 'Esperando la ubicación…';
+    if(m) m.textContent = 'Un momento…';
     return;
   }
   enviando = true;
@@ -847,8 +846,7 @@ function fichado(res){
     html += '<div class="mhora">'+hhmm(hora)+'</div><div class="msub" style="font-size:1.1rem;color:var(--ink)">'+esc(res.nombre)+'</div>';
     html += '<div class="minfo">Has trabajado <b>'+dur(res.minutos*60000)+'</b>. ¡Buen trabajo!</div>';
   }
-  if(res.sinUbicacion) html += '<div class="minfo aviso">⚠️ Fichado sin ubicación. Se ha guardado con un aviso para revisarlo. La próxima vez activa la ubicación del móvil.</div>';
-  else if(!res.enZona) html += '<div class="minfo aviso">⚠️ Estás fuera del hotel y del Palau (a '+res.distancia+' m). El fichaje se ha guardado con un aviso.</div>';
+  if(!res.sinUbicacion && !res.enZona) html += '<div class="minfo aviso">⚠️ Estás fuera del hotel y del Palau (a '+res.distancia+' m). El fichaje se ha guardado con un aviso.</div>';
   html += '<button class="mbtn" id="m-ok">Hecho</button>';
   abrirModal(html);
   boton('m-ok', cerrarModal);
