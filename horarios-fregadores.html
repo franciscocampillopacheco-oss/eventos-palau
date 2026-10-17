@@ -829,10 +829,23 @@ function intentarEnviar(){
     .then(function(r){ return r.json(); })
     .then(function(res){
       enviando = false;
+      if(res.bloqueo){ pararGPS(); yaFichado(res); return; }
       if(!res.ok){ pin = ''; pantallaPin(res.error || 'No se ha podido fichar.'); return; }
       pararGPS(); fichado(res);
     })
     .catch(function(){ enviando = false; pin = ''; pantallaPin('Sin conexión. Inténtalo otra vez.'); });
+}
+
+// Ha vuelto a pulsar FICHAR justo después de fichar: no se guarda nada, solo se le recuerda.
+function yaFichado(res){
+  const hora = new Date(res.hora), ent = res.tipo === 'ENTRADA';
+  let html = '<div class="big-ok '+(ent ? 'ent' : 'sal')+'" id="mtit">✓ YA FICHADO</div>';
+  html += '<div class="msub" style="font-size:1.1rem;color:var(--ink)">'+esc(fullName(res.nombre))+'</div>';
+  html += '<div class="minfo">Ya fichaste tu <b>'+(ent ? 'ENTRADA' : 'SALIDA')+'</b> a las <b>'+hhmm(hora)+'</b>. No hace falta volver a fichar.</div>';
+  html += '<div class="minfo">'+(ent ? 'Ficha la salida cuando termines tu turno.' : '¡Gracias y hasta la próxima! 🙌🏽')+'</div>';
+  html += '<button class="mbtn" id="m-ok">Hecho</button>';
+  abrirModal(html);
+  boton('m-ok', cerrarModal);
 }
 
 function fichado(res){
