@@ -196,11 +196,45 @@
   .search input{min-width:0;width:100%}
   .btn-av.on{color:var(--hotel);border-color:var(--hotel)}
   .spin-big{width:44px;height:44px;border:4px solid var(--line);border-top-color:var(--hotel);border-radius:50%;margin:22px auto;animation:spin .8s linear infinite}
+
+  /* ---------- MODO HALLOWEEN (se activa solo del 31 oct al 2 nov; ?halloween=1 para verlo otro día) ---------- */
+  html.halloween{
+    --paper:#140d1a; --card:#211628; --line:#3b2847;
+    --ink:#f7ead6; --soft:#cdb9c9; --faint:#a993a8;
+    --hoy:#ff7a1a; --hoy-bg:#2f1b1f;
+  }
+  html.halloween body{background:radial-gradient(ellipse at 50% -10%,#2b1638 0%,var(--paper) 55%) fixed}
+  html.halloween header{background:rgba(20,13,26,.96);border-bottom:2px solid #ff7a1a;overflow:hidden}
+  html.halloween .kicker::before{content:"🎃 ¡Feliz Halloween! 🦇";display:block;color:#ff9a3c;font-size:11px;letter-spacing:.1em;white-space:nowrap;font-weight:600;margin-bottom:3px}
+  html.halloween .fichar{background:#ff7a1a;color:#2a1200;box-shadow:0 0 0 3px rgba(255,122,26,.3),0 0 22px rgba(255,122,26,.35)}
+  html.halloween .fichar.dentro{background:#9b5de5;color:#16052a;box-shadow:0 0 0 3px rgba(155,93,229,.35),0 0 22px rgba(155,93,229,.4)}
+  html.halloween .tag-hoy{background:#ff7a1a;color:#2a1200}
+  .hw-bats{display:none}
+  html.halloween .hw-bats{display:block;position:absolute;inset:0;pointer-events:none;z-index:0}
+  html.halloween header > *:not(.hw-bats){position:relative;z-index:1}
+  .hw-bats span{position:absolute;font-size:15px;opacity:.55;animation:hwfly 9s ease-in-out infinite}
+  .hw-bats span:nth-child(1){top:6px;left:38%}
+  .hw-bats span:nth-child(2){top:30px;left:55%;font-size:12px;animation-delay:-3s;animation-duration:11s}
+  .hw-bats span:nth-child(3){top:12px;left:68%;font-size:10px;animation-delay:-6s;animation-duration:13s}
+  @keyframes hwfly{0%,100%{transform:translate(0,0)}25%{transform:translate(14px,-4px)}50%{transform:translate(-8px,5px)}75%{transform:translate(10px,3px)}}
+  @media (prefers-reduced-motion:reduce){.hw-bats span{animation:none}}
 </style>
+<script>
+  (function(){
+    try{
+      var d=new Date(), m=d.getMonth()+1, dia=d.getDate(), q=location.search;
+      var on=(m===10&&dia===31)||(m===11&&dia<=2);
+      if(/halloween=1/.test(q)) on=true;
+      if(/halloween=0/.test(q)) on=false;
+      if(on) document.documentElement.classList.add('halloween');
+    }catch(e){}
+  })();
+</script>
 </head>
 <body>
 
 <header>
+  <div class="hw-bats" aria-hidden="true"><span>🦇</span><span>🦇</span><span>🦇</span></div>
   <div class="top">
     <div class="top-txt">
       <div class="kicker">Meliá Palma Bay y Palau de Congressos de Palma</div>
