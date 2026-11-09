@@ -757,6 +757,7 @@ function pantallaPin(error){
     (modoPin === 'avisos' ? '' : '<div class="gps" id="gps"><span class="pt"></span><span id="gps-t"></span></div>')+
     '<div class="dots" id="dots"><i></i><i></i><i></i><i></i></div>'+
     '<div class="merr" id="merr" role="alert">'+(error ? esc(error) : '')+'</div>'+
+    (modoPin === 'fichar' && !leerEstado() ? '<div class="msub" style="font-size:.85rem">¿Ya fichaste la entrada y aquí no sale? No pasa nada: pon tu PIN y se guardará la salida.</div>' : '')+
     '<div class="pad" id="pad">'+teclas+'</div>'
   );
   pintarGPS(); pintarDots();
@@ -859,18 +860,75 @@ function intentarEnviar(confirmar){
   const datos = pos ? {pin: pin, lat: pos.lat, lng: pos.lng, acc: pos.acc}
                     : (ubiDenegada ? {pin: pin, ubicacionDenegada: true} : {pin: pin, sinUbicacion: true});
   if(confirmar === true) datos.confirmar = true;
-  const cuerpo = JSON.stringify(datos);
-  abrirModal('<div class="mtit" id="mtit">Fichando…</div><div class="spin-big"></div>');
-  fetch(FICHAR_API, {method: 'POST', body: cuerpo})
+  datos.horaCliente = new Date().toISOString(); // hora real en el móvil (por si llega tarde por falta de cobertura)
+  abrirModal('<div class="mtit" id="mtit">Fichando…</div><div class="spin-big"></div><div class="msub" id="m-intento"></div>');
+  enviarConReintentos(datos, 0);
+}
+
+// Envía el fichaje. Si falla la conexión lo reintenta solo (3 intentos).
+// Si aun así no llega, lo guarda en el móvil y lo manda en cuanto vuelva la cobertura.
+const INTENTOS = 3, LS_PEND = 'fichajePendiente', PEND_MAX_MIN = 120;
+function fetchConTiempo(url, op, ms){
+  const ctl = ('AbortController' in window) ? new AbortController() : null;
+  const t = ctl ? setTimeout(function(){ ctl.abort(); }, ms) : null;
+  if(ctl) op.signal = ctl.signal;
+  return fetch(url, op).finally(function(){ if(t) clearTimeout(t); });
+}
+function enviarConReintentos(datos, n){
+  fetchConTiempo(FICHAR_API, {method: 'POST', body: JSON.stringify(datos)}, 25000)
+    .then(function(r){ return r.json(); })
+    .then(function(res){ enviando = false; tratarRespuesta(res); })
+    .catch(function(){
+      if(n + 1 < INTENTOS){
+        const m = document.getElementById('m-intento');
+        if(m) m.textContent = 'La conexión va lenta. Reintentando (' + (n + 2) + ' de ' + INTENTOS + ')…';
+        setTimeout(function(){ enviarConReintentos(datos, n + 1); }, 2500 * (n + 1));
+        return;
+      }
+      enviando = false; pin = '';
+      guardarPendiente(datos);
+      pararGPS();
+      abrirModal('<div class="mtit" id="mtit">⚠️ Sin conexión</div>'+
+        '<div class="minfo aviso">No ha llegado tu fichaje de las <b>'+hhmm(new Date(datos.horaCliente))+'</b>. '+
+        'Lo he guardado en el móvil y se enviará solo en cuanto haya cobertura (deja la página abierta).</div>'+
+        '<div class="minfo">Si en unos minutos no ves el <b>✓</b>, manda un WhatsApp a Fran con tu nombre y la hora. Y firma siempre en papel.</div>'+
+        '<button class="mbtn" id="m-ok">Vale</button>');
+      boton('m-ok', cerrarModal);
+    });
+}
+function tratarRespuesta(res){
+  if(res.bloqueo){ pararGPS(); yaFichado(res); return; }
+  if(res.confirmar){ pararGPS(); confirmarSalida(res); return; }
+  if(!res.ok){ pin = ''; pantallaPin(res.error || 'No se ha podido fichar.'); return; }
+  pararGPS(); fichado(res);
+}
+function guardarPendiente(datos){ try{ localStorage.setItem(LS_PEND, JSON.stringify(datos)); }catch(e){} }
+function leerPendiente(){ try{ return JSON.parse(localStorage.getItem(LS_PEND) || 'null'); }catch(e){ return null; } }
+function borrarPendiente(){ try{ localStorage.removeItem(LS_PEND); }catch(e){} }
+let reenviando = false;
+function reenviarPendiente(){
+  const p = leerPendiente();
+  if(!p || reenviando || enviando || !FICHAR_API) return;
+  if(navigator.onLine === false) return;
+  if(Date.now() - new Date(p.horaCliente) > PEND_MAX_MIN*60000){
+    borrarPendiente();
+    if(modal.hidden){
+      abrirModal('<div class="mtit" id="mtit">⚠️ Fichaje sin enviar</div>'+
+        '<div class="minfo aviso">Tu fichaje de las <b>'+hhmm(new Date(p.horaCliente))+'</b> no se pudo enviar. '+
+        'Manda un WhatsApp a Fran con tu nombre y la hora para que lo apunte.</div><button class="mbtn" id="m-ok">Vale</button>');
+      boton('m-ok', cerrarModal);
+    }
+    return;
+  }
+  reenviando = true;
+  fetchConTiempo(FICHAR_API, {method: 'POST', body: JSON.stringify(p)}, 25000)
     .then(function(r){ return r.json(); })
     .then(function(res){
-      enviando = false;
-      if(res.bloqueo){ pararGPS(); yaFichado(res); return; }
-      if(res.confirmar){ pararGPS(); confirmarSalida(res); return; }
-      if(!res.ok){ pin = ''; pantallaPin(res.error || 'No se ha podido fichar.'); return; }
-      pararGPS(); fichado(res);
+      reenviando = false; borrarPendiente();
+      pin = p.pin; enviando = false;
+      tratarRespuesta(res);
     })
-    .catch(function(){ enviando = false; pin = ''; pantallaPin('Sin conexión. Inténtalo otra vez.'); });
+    .catch(function(){ reenviando = false; });
 }
 
 // Va a fichar la SALIDA bastante antes de su hora: se le pregunta si es un error.
@@ -1089,7 +1147,10 @@ document.addEventListener('keydown', function(e){
   else if(/^[0-9]$/.test(e.key)) pulsar(e.key);
   else if(e.key === 'Backspace') pulsar('c');
 });
-document.addEventListener('visibilitychange', function(){ if(!document.hidden){ actualizarTurno(); programarAviso(); } });
+document.addEventListener('visibilitychange', function(){ if(!document.hidden){ actualizarTurno(); programarAviso(); reenviarPendiente(); } });
+window.addEventListener('online', reenviarPendiente);
+setInterval(reenviarPendiente, 30000);
+setTimeout(reenviarPendiente, 3000);
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw-fregadores.js').catch(function(){});
   navigator.serviceWorker.ready.then(function(r){ swReg = r; });
