@@ -251,9 +251,9 @@ table.sum small.cmi{white-space:nowrap}
 
   <div class="controls">
     <div class="seg" role="group" aria-label="Vista">
-      <button id="v-day" aria-pressed="true">Por día</button>
+      <button id="v-day" aria-pressed="false">Por día</button>
       <button id="v-type" aria-pressed="false">Por tipo</button>
-      <button id="v-sum" aria-pressed="false">Resumen</button>
+      <button id="v-sum" aria-pressed="true">Resumen</button>
     </div>
     <div class="filters">
       <div class="frow"><span class="flabel">Servicio</span><div class="chips" id="chips"></div></div>
@@ -306,12 +306,12 @@ document.title=DATA.titulo;
 document.getElementById("eyebrow").textContent=DATA.eyebrow||"";
 document.getElementById("h1").innerHTML=esc(DATA.tituloA||DATA.titulo)+(DATA.tituloB?` <span>${esc(DATA.tituloB)}</span>`:"");
 
-let view="day";
+let view="sum";
 const activeF=new Set(["fb","nofb"]);
 const activeD=new Set(), activeR=new Set();
 const active=new Set(Object.keys(TYPES)), activeA=new Set(Object.keys(AUD)), activeG=new Set();
 let q="";
-try{const v=localStorage.getItem("beo-view"); if(v==="type"||v==="day"||v==="sum") view=v;}catch(e){}
+
 const norm=s=>String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 
 const typesUsed=Object.keys(TYPES).filter(t=>S.some(s=>s.t===t));
