@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1F3864">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ratios">
+<title>Ratios cocina · Meliá</title>
+<style>
+:root{--azul:#1F3864;--azul2:#2E5597;--fondo:#F3F5F9;--card:#fff;--txt:#1A1F2B;--gris:#6B7280;--linea:#E3E7EE;--amar:#FFF4CC;--ok:#0F7B4B}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--fondo);color:var(--txt)}
+header{position:sticky;top:0;z-index:10;background:var(--azul);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 12px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+h1{font-size:17px;margin:0;font-weight:700;letter-spacing:.3px}
+.tabs{display:flex;gap:6px;margin-top:10px}
+.tab{flex:1;border:0;border-radius:10px;padding:11px 4px;font-size:15px;font-weight:700;background:rgba(255,255,255,.14);color:#fff}
+.tab.on{background:#fff;color:var(--azul)}
+.pax{display:flex;align-items:center;gap:8px;margin-top:10px}
+.pax label{font-weight:800;font-size:15px}
+.pax button{width:46px;height:46px;border-radius:12px;border:0;background:rgba(255,255,255,.18);color:#fff;font-size:24px;font-weight:700}
+.pax input::-webkit-inner-spin-button,.pax input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.pax input{-moz-appearance:textfield;flex:1;min-width:0;height:46px;border-radius:12px;border:0;text-align:center;font-size:26px;font-weight:800;color:var(--azul)}
+.rapidos{display:flex;gap:6px;margin-top:8px;overflow-x:auto;scrollbar-width:none}
+.rapidos::-webkit-scrollbar{display:none}
+.rapidos button{flex:0 0 auto;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:20px;padding:6px 13px;font-size:14px;font-weight:600}
+.lineas{display:none;align-items:center;gap:8px;margin-top:8px;font-size:14px}
+.lineas.on{display:flex}
+.lineas button{width:36px;height:36px;border-radius:10px;border:0;background:rgba(255,255,255,.18);color:#fff;font-size:20px;font-weight:700}
+.lineas b{font-size:20px;min-width:26px;text-align:center}
+main{padding:12px 12px 40px;max-width:720px;margin:0 auto}
+.buscar{width:100%;height:44px;border-radius:12px;border:1px solid var(--linea);padding:0 14px;font-size:16px;margin-bottom:10px;background:#fff}
+.sec{margin:16px 2px 6px;font-size:13px;font-weight:800;color:var(--azul2);text-transform:uppercase;letter-spacing:.8px}
+.item{background:var(--card);border-radius:14px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.05);display:flex;gap:10px;align-items:center}
+.item .izq{flex:1;min-width:0}
+.item .nom{font-size:16px;font-weight:700}
+.item .rat{font-size:13px;color:var(--gris);margin-top:2px}
+.item .nota{font-size:12.5px;color:#4B5563;margin-top:5px;line-height:1.35}
+.item .der{text-align:right;flex:0 0 auto}
+.item .tot{font-size:24px;font-weight:800;color:var(--azul);line-height:1.1}
+.item .tot small{font-size:14px;font-weight:700;margin-left:2px}
+.item .sub{font-size:12.5px;color:var(--ok);font-weight:700;margin-top:3px}
+.item.sin{background:#FAFAFA}
+.item.sin .tot{font-size:14px;color:var(--gris);font-weight:600}
+.item.txt .tot{font-size:15px}
+.aviso{background:var(--amar);border-radius:12px;padding:10px 12px;font-size:13px;margin:6px 0 10px;line-height:1.4}
+.pie{font-size:12px;color:var(--gris);text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><h1>RATIOS COCINA · MELIÁ</h1></div>
+  <div class="tabs">
+    <button class="tab on" data-t="buffet">Buffet</button>
+    <button class="tab" data-t="cocktail">Cocktail</button>
+    <button class="tab" data-t="tacos">Tacos</button>
+  </div>
+  <div class="pax">
+    <label>PAX</label>
+    <button id="menos" aria-label="Menos">−</button>
+    <input id="pax" type="number" inputmode="numeric" min="0" value="100">
+    <button id="mas" aria-label="Más">+</button>
+  </div>
+  <div class="rapidos" id="rapidos"></div>
+  <div class="lineas" id="lineasBox">Líneas de buffet:
+    <button id="lmenos">−</button><b id="lineas">1</b><button id="lmas">+</button>
+    <span style="opacity:.8;font-size:12px">(cremas, salsas, tartas)</span>
+  </div>
+</header>
+<main>
+  <input class="buscar" id="buscar" type="search" placeholder="Buscar producto…">
+  <div id="lista"></div>
+  <div class="pie">Cantidades por persona de la hoja de ratios de cocina. Lo que sale en gris no tiene cantidad todavía.</div>
+</main>
+<script>
+/* tipos:
+ g      -> q gramos por pax, total en kg
+ u      -> q unidades por pax, total und (+ cajas si caja)
+ r      -> q raciones por pax (+ bandejas si caja)
+ linea  -> q por línea de buffet (unidad en un)
+ cada   -> 1 cada q pax (redondea arriba)
+ txt    -> texto tal cual
+ null q -> sin cantidad
+*/
+const DATA={
+buffet:[
+ ["Frío",[
+  {n:"Ensalada 5",t:"g",q:null},{n:"Ensalada casera",t:"g",q:null},{n:"Humus",t:"g",q:null}]],
+ ["Sopas y cremas",[
+  {n:"Cremas",t:"linea",q:5,un:"L"}]],
+ ["Buffet caliente",[
+  {n:"Salsas",t:"linea",q:4,un:"L",nota:"Carbonara, napolitana, boloñesa"},
+  {n:"Carnes y barquetas",t:"g",q:120},
+  {n:"Carne con desperdicios",t:"g",q:140},
+  {n:"Merluza y bacalao",t:"g",q:60},
+  {n:"Lubina o dorada",t:"g",q:50},
+  {n:"Salmón",t:"g",q:100},
+  {n:"Pastas",t:"g",q:40},
+  {n:"Espagueti",t:"g",q:50},
+  {n:"Arroz",t:"g",q:40},
+  {n:"Patata",t:"g",q:100},
+  {n:"Pimientos",t:"g",q:80},
+  {n:"Gratinados",t:"g",q:80},
+  {n:"Espinacas congeladas",t:"g",q:110},
+  {n:"Brócoli congelado",t:"g",q:90},
+  {n:"Verduras",t:"g",q:null},
+  {n:"Pasas",t:"g",q:null}]],
+ ["Postre y pan",[
+  {n:"Tartas",t:"linea",q:3,un:"cajas"},
+  {n:"Pan",t:"u",q:0.5,nota:"Medio pan por persona"}]]
+],
+cocktail:[
+ ["Mallorquín",[
+  {n:"Embutido mallorquín",t:"g",q:7,nota:"Sobrasada (abierta), butifarrón (al biaix), camaiot (en dados)"},
+  {n:"Coca de trampo",t:"cada",q:50,nota:"Corte 5×10"},
+  {n:"Empanadas y cocarrois",t:"txt",txt:"0'05 de cada"}]],
+ ["Embutidos",[
+  {n:"Embutido ibérico",t:"g",q:15,nota:"Salchichón, chorizo, lomo"},
+  {n:"Jamón ibérico",t:"g",q:20,nota:"Grosor 3,5"},
+  {n:"Pan cristal",t:"txt",txt:"1/2 cada 400"}]],
+ ["Quesos",[
+  {n:"Quesos",t:"g",q:15,nota:"Manchego (cuñas), idiazábal (cuñas), mahón (bastones), havarti, edam (dados), parmesano"}]],
+ ["Poke bol",[
+  {n:"Arroz sushi",t:"g",q:20},
+  {n:"Mango",t:"g",q:null},{n:"Edamame",t:"g",q:null},{n:"Wakame",t:"g",q:null},
+  {n:"Tomate cherry",t:"g",q:null},{n:"Cebolla",t:"g",q:null}]],
+ ["Dips",[
+  {n:"Ensaladilla rusa",t:"g",q:40},
+  {n:"Babaganush / Muhammara",t:"g",q:40},
+  {n:"Humus",t:"g",q:null}]],
+ ["Calientes / frituras",[
+  {n:"Miniburger",t:"u",q:1.5,caja:192,cajaN:"cajas grandes",nota:"Caja grande 192 u · cajita 48 u · blíster 24 u"},
+  {n:"Dumpling de cerdo",t:"u",q:1,caja:168,cajaN:"cajas",nota:"De pro a pro"},
+  {n:"Gyosas",t:"u",q:1,caja:30,cajaN:"cajas"},
+  {n:"Croquetas",t:"u",q:1,caja:100,cajaN:"cajas"},
+  {n:"Brocheta yakitori",t:"u",q:null,nota:"Caja grande 240 u · cajita 40 u"},
+  {n:"Samosas",t:"u",q:1,caja:67,cajaN:"cajitas"}]],
+ ["Postres · 0,75 por pax de cada",[
+  {n:"Brownie",t:"r",q:0.75,caja:54,cajaN:"bandejas"},
+  {n:"Tarta manzana",t:"r",q:0.75,caja:54,cajaN:"bandejas"},
+  {n:"Tarta zanahoria",t:"r",q:0.75,caja:80,cajaN:"bandejas",nota:"Corte 10×8"},
+  {n:"Profiterol",t:"r",q:0.75,caja:60,cajaN:"bandejas"},
+  {n:"Candy bar",t:"r",q:null}]]
+],
+tacos:[
+ ["Principales",[
+  {n:"Pollo pibil",t:"g",q:25},
+  {n:"Cochinita",t:"g",q:25},
+  {n:"Tricolor",t:"g",q:20,nota:"Pimientos, maíz y cebolla morada"},
+  {n:"Chili vegano",t:"g",q:20},
+  {n:"Pico de gallo",t:"g",q:null,nota:"Tomate, cebolla, cilantro, lima"},
+  {n:"Guacamole",t:"g",q:15}]],
+ ["Acompañamientos",["Nachos","Salsa queso","Queso mozzarella","Mezclum","Cebolla morada","Limas","Frijoles","Jalapeño rodaja","Nata agria","Fajitas / tacos","Tabasco","Maíz"].map(n=>({n,t:"g",q:null}))]
+]};
+const PAXDEF={buffet:180,cocktail:50,tacos:50};
+const RAP=[25,50,100,150,200,300,500,800,1000];
+const S={tab:"buffet",pax:{...PAXDEF},lineas:1,q:""};
+try{const g=JSON.parse(localStorage.getItem("ratiosMelia")||"{}");if(g.pax)Object.assign(S.pax,g.pax);if(g.tab)S.tab=g.tab;if(g.lineas)S.lineas=g.lineas}catch(e){}
+const $=id=>document.getElementById(id);
+const nf=(v,d)=>v.toLocaleString("es-ES",{minimumFractionDigits:0,maximumFractionDigits:d});
+const ratio=it=>{
+ if(it.q==null)return"";
+ switch(it.t){
+  case"g":return nf(it.q,0)+" g por pax";
+  case"u":return nf(it.q,2)+" und por pax";
+  case"r":return nf(it.q,2)+" raciones por pax";
+  case"linea":return nf(it.q,0)+" "+it.un+" por línea";
+  case"cada":return"1 cada "+it.q+" pax";
+ }return"";
+};
+function calc(it,p){
+ if(it.t==="txt")return{tot:it.txt,cls:"txt"};
+ if(it.q==null)return{tot:"sin cantidad",cls:"sin"};
+ let tot,sub="";
+ switch(it.t){
+  case"g":{const kg=it.q*p/1000;tot=nf(kg,kg<10?2:1)+"<small>kg</small>";break}
+  case"u":case"r":{const u=Math.ceil(it.q*p);tot=nf(u,0)+"<small>"+(it.t==="r"?"rac":"und")+"</small>";
+     if(it.caja&&u>0){const c=u/it.caja;const k=Math.ceil(c);sub=k+" "+(k===1?it.cajaN.replace(/s$/,"").replace("grandes","grande"):it.cajaN)+" ("+nf(c,2)+")"}break}
+  case"linea":tot=nf(it.q*S.lineas,1)+"<small>"+it.un+"</small>";break;
+  case"cada":tot=Math.ceil(p/it.q)+"<small>und</small>";break;
+ }
+ return{tot,sub,cls:""};
+}
+function render(){
+ const p=Math.max(0,parseInt($("pax").value)||0);
+ S.pax[S.tab]=p;
+ document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.t===S.tab));
+ $("lineasBox").classList.toggle("on",S.tab==="buffet");
+ $("lineas").textContent=S.lineas;
+ const q=S.q.trim().toLowerCase();
+ let h="";
+ for(const [sec,items] of DATA[S.tab]){
+  const f=items.filter(it=>!q||(it.n+" "+(it.nota||"")).toLowerCase().includes(q));
+  if(!f.length)continue;
+  h+=`<div class="sec">${sec}</div>`;
+  for(const it of f){
+   const r=calc(it,p);
+   h+=`<div class="item ${r.cls}"><div class="izq"><div class="nom">${it.n}</div>${ratio(it)?`<div class="rat">${ratio(it)}</div>`:""}${it.nota?`<div class="nota">${it.nota}</div>`:""}</div><div class="der"><div class="tot">${r.tot}</div>${r.sub?`<div class="sub">${r.sub}</div>`:""}</div></div>`;
+  }
+ }
+ $("lista").innerHTML=h||`<div class="aviso">No hay nada con “${S.q}”.</div>`;
+ try{localStorage.setItem("ratiosMelia",JSON.stringify({pax:S.pax,tab:S.tab,lineas:S.lineas}))}catch(e){}
+}
+function setTab(t){S.tab=t;$("pax").value=S.pax[t];render();window.scrollTo(0,0)}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>setTab(b.dataset.t));
+$("pax").oninput=render;
+$("mas").onclick=()=>{$("pax").value=(parseInt($("pax").value)||0)+10;render()};
+$("menos").onclick=()=>{$("pax").value=Math.max(0,(parseInt($("pax").value)||0)-10);render()};
+$("lmas").onclick=()=>{S.lineas++;render()};
+$("lmenos").onclick=()=>{S.lineas=Math.max(1,S.lineas-1);render()};
+$("buscar").oninput=e=>{S.q=e.target.value;render()};
+$("rapidos").innerHTML=RAP.map(n=>`<button data-n="${n}">${n}</button>`).join("");
+$("rapidos").onclick=e=>{const n=e.target.dataset.n;if(n){$("pax").value=n;render()}};
+$("pax").value=S.pax[S.tab];
+render();
+</script>
+</body>
+</html>
