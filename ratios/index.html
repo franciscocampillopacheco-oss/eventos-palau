@@ -85,6 +85,7 @@ main{padding:12px 12px 40px;max-width:720px;margin:0 auto}
     <button class="tab on" data-t="buffet">Buffet</button>
     <button class="tab" data-t="cocktail">Cocktail</button>
     <button class="tab" data-t="tacos">Tacos</button>
+    <button class="tab" data-t="coffee">Coffee</button>
     <button class="tab" data-t="eventos">Eventos</button>
   </div>
   <div class="pax" id="paxBox">
@@ -213,11 +214,35 @@ function aplicarHoja(lista,rows){
   if(iM>=0){for(const r of rows.slice(iM+1)){const n=(r[0]||"").trim();if(!n||/^pieza$/i.test(n))continue;if(/^celdas/i.test(n))break;
     men.push({n,t:"u",q:num(r[1]),caja:num(r[5]),cajaN:"racks",nota:/^sin cantidad$/i.test((r[7]||"").trim())?"":(r[7]||"").trim()})}}
   MEN[lista]=men;
-  if(DATA[lista])for(const [,its] of DATA[lista])for(const it of its){
+  if(!DATA[lista])DATA[lista]=[];
+  const usadas=new Set();
+  for(const [,its] of DATA[lista])for(const it of its){
     if(!["g","u","r"].includes(it.t))continue;
     const fila=comida.find(r=>{const a=normN(r[0]),b=normN(it.n);return a&&(a===b||a.startsWith(b)||b.startsWith(a))});
-    if(!fila)continue;const q=num(fila[1]),cj=num(fila[5]);
-    if(q!=null)it.q=q;if(cj!=null&&it.caja)it.caja=cj;}
+    if(!fila)continue;usadas.add(fila);const q=num(fila[1]),cj=num(fila[5]);
+    if(q!=null)it.q=q;if(cj!=null&&it.caja)it.caja=cj;
+    it.alias=(fila[8]||"").split("·").map(normN).filter(Boolean);}
+  if(lista==="tacos")return;
+  /* Platos nuevos de la hoja (p. ej. los que salen en las BEO): se añaden con su sección */
+  let sec=null;
+  for(const r of comida){
+    const n=(r[0]||"").trim();if(!n)continue;
+    const resto=r.slice(1,8).some(x=>String(x||"").trim());
+    const nm=n.replace(/\(.*?\)/g,"");
+    if(!resto&&nm===nm.toUpperCase()&&/[A-ZÁÉÍÓÚÑ]/.test(nm)){sec=n;continue}
+    if(usadas.has(r))continue;
+    const u=normN(r[2]);let t=null,un="";
+    if(/^g\b/.test(u))t="g";else if(/^und/.test(u))t="u";else if(/^racion/.test(u))t="r";
+    else if(/linea/.test(u)){t="linea";un=u.split("/")[0].trim()}
+    if(!t||!sec)continue;
+    if(DATA[lista].some(([,its])=>its.some(x=>normN(x.n)===normN(n))))continue;
+    const nota=(r[7]||"").trim();
+    const it={n,t,q:num(r[1]),un,caja:num(r[5])||0,cajaN:"cajas",nota:/^sin cantidad$/i.test(nota)?"":nota,alias:(r[8]||"").split("·").map(normN).filter(Boolean),hoja:1};
+    if(t==="linea"&&it.q==null)continue;
+    let blq=DATA[lista].find(b=>b.key===sec||normN(b[0])===normN(sec));
+    if(!blq){const s0=sec.replace(/\s*\(de las BEO\)/i,"");blq=[s0.charAt(0)+s0.slice(1).toLowerCase()+(s0!==sec?" · de las BEO":""),[]];blq.key=sec;DATA[lista].push(blq)}
+    blq[1].push(it);
+  }
 }
 async function cargarHoja(){
   let ok=0;
@@ -259,7 +284,15 @@ function materialCalc(lista,p,L,solo,base){
   const usa=[];
   for(const f of filas){
     const r=f.regla;
-    if(r.startsWith("kg")||r.startsWith("und")){
+    if(/de seccion/.test(r)){
+      const b=normN(f.prod);if(!b||!DATA[lista])continue;
+      let c=0,dets=[];
+      for(const [s,its] of DATA[lista]){const a=normN(s);if(!(a===b||a.startsWith(b)))continue;
+        for(const it of its){if(solo&&!solo.has(it.n))continue;const v=cantProd(it,p,L,r.startsWith("kg")?"kg":"und");if(v){c+=v}}}
+      if(!c)continue;usa.push(f);
+      if(!(f.cada>0)){pend.push(f);continue}
+      const v=Math.ceil(c/f.cada)*f.cant;add(f,v,`${f.prod.charAt(0)+f.prod.slice(1).toLowerCase()} ${v}`);
+    }else if(r.startsWith("kg")||r.startsWith("und")){
       const it=itemDe(lista,f.prod);if(!it)continue;
       if(solo&&!solo.has(it.n))continue;
       const c=cantProd(it,p,L,r);if(!c)continue;usa.push(f);
@@ -294,7 +327,7 @@ function materialHTML(m,conLineas){
   if(!m.items.length&&!m.pend.length)h+=`<div class="sinr">Nada del material de la hoja aplica a este servicio.</div>`;
   return h;
 }
-const PAXDEF={buffet:180,cocktail:50,tacos:50,eventos:0};
+const PAXDEF={buffet:180,cocktail:50,tacos:50,coffee:100,eventos:0};
 const RAP=[25,50,100,150,200,300,500,800,1000];
 const S={tab:"buffet",pax:{...PAXDEF},lineas:1,q:""};
 try{const g=JSON.parse(localStorage.getItem("ratiosCocina")||"{}");if(g.pax)Object.assign(S.pax,g.pax);if(g.tab)S.tab=g.tab;if(g.lineas)S.lineas=g.lineas}catch(e){}
@@ -426,18 +459,23 @@ function servEventos(){
  const G={};EV.data.grupos.forEach(g=>G[g.id]=g);
  return EV.data.servicios.filter(s=>TIPOS[s.t]).map(s=>Object.assign({grupo:G[s.g]||{n:s.g}},s));
 }
+const NOCOCINA=/^(caf[eé]|t[eé]s?\b|infusi|agua|leche|zumo|refresco|coffee break l[ií]quido|bebida)/i;
+function porAlias(orden,pl){const b=normN(pl);if(!b)return null;
+ for(const l of orden)for(const [,its] of (DATA[l]||[]))for(const it of its)if((it.alias||[]).includes(b)||(it.hoja||l==="coffee")&&normN(it.n)===b)return[l,it.n];return null}
 function cruzar(s){
- if(s.t==="cb")return{con:[],sin:[]};
- const orden=s.t==="coctel"?["cocktail"]:["buffet","cocktail"];
+ const orden=s.t==="coctel"?["cocktail"]:s.t==="cb"?["coffee"]:["buffet","cocktail"];
  const usados=new Map(),sin=[];
  for(const [sec,platos] of (s.menu||[])){
   if(/bebida|bodega/i.test(sec))continue;
   for(const pl of platos){
    let hit=null;
    const bocado=/^(wrap|s[aá]ndwich|bocadillo|pan bao|brioche|tosta|quiche|mini|rollito)/i.test(pl);
+   if(NOCOCINA.test(pl))continue;
    let hits=[];
-   const prod=REGLAS.find(([li,nm,re])=>li==="cocktail"&&PRODUCTO.has(nm)&&re.test(pl));
-   if(prod)hits=[prod];
+   const al=porAlias(orden,pl);
+   if(al)hits=[al];else if(s.t==="cb"){sin.push(pl);continue}
+   const prod=al?null:REGLAS.find(([li,nm,re])=>li==="cocktail"&&PRODUCTO.has(nm)&&re.test(pl));
+   if(al){}else if(prod)hits=[prod];
    else if(/^(sopa|crema)\b/i.test(pl)&&orden.includes("buffet"))hits=REGLAS.filter(r=>r[1]==="Cremas");
    else for(const l of orden){if(l==="buffet"&&bocado)continue;hits=REGLAS.filter(([li,,re])=>li===l&&re.test(pl));if(hits.length)break}
    if(!hits.length){sin.push(pl);continue}
@@ -483,7 +521,6 @@ function renderEventos(){
   if(!s.menu||!s.menu.length)h+=`<div class="sinr">La BEO no trae el menú detallado de este servicio.</div>`;
   else if(!con.length)h+=`<div class="sinr">Ningún plato de este menú tiene ratio todavía.</div>`;
   if(sin.length)h+=`<div class="sinr"><b>Sin ratio todavía:</b> ${esc(sin.join(" · "))}</div>`;
-  if(s.t==="cb")h+=`<div class="sinr">Coffee break: ratios de comida pendientes de cocina.</div>`;
   if(p&&(s.t==="coctel"||s.t==="alm"||s.t==="cena"))h+=`<button class="btnr" data-tab="${s.t==="coctel"?"cocktail":"buffet"}" data-pax="${p}">Ver todos los ratios de ${s.t==="coctel"?"cocktail":"buffet"} con ${p} pax</button>`;
   const porLista=new Map([[lp,new Set()]]);
   for(const x of con){if(!porLista.has(x.lista))porLista.set(x.lista,new Set());porLista.get(x.lista).add(x.it.n)}
