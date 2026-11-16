@@ -99,7 +99,7 @@ public class Avisos {
     }
 
     static String limpiar(String v) {
-        return v.replace("\\n", " · ").replace("\\,", ",").replace("\;", ";").replace("\\\\", "\\");
+        return v.replace("\\n", " · ").replace("\\,", ",").replace("\\;", ";").replace("\\\\", "\\");
     }
 
     static synchronized void programar(Context c, String ics) {
