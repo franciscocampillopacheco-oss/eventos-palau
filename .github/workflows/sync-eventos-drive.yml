@@ -1,0 +1,44 @@
+name: Eventos desde Google Drive
+
+# La tarea programada de BEO deja la página en Google Drive (no puede subir a GitHub).
+# Esto la recoge cada 20 minutos, regenera el calendario y lo publica. Todo automático.
+on:
+  schedule:
+    - cron: "*/20 * * * *"
+  push:
+    branches: [main]
+    paths: [".github/workflows/sync-eventos-drive.yml", "eventos/sync_drive.py"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: eventos-drive
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Traer de Drive
+        run: python eventos/sync_drive.py
+      - name: Regenerar calendario
+        run: python eventos/generar_ics.py
+      - name: Guardar y publicar si hay cambios
+        run: |
+          git config user.name "github-actions"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add eventos
+          if git diff --staged --quiet; then echo "Sin cambios"; exit 0; fi
+          git commit -m "Eventos: actualizado desde Drive"
+          git pull --rebase origin main
+          git push
+          curl -s -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/pages/builds || true
