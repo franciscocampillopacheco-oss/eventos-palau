@@ -188,10 +188,12 @@ tacos:[
   {n:"Guacamole",t:"g",q:15}]],
  ["Acompañamientos",["Nachos","Salsa queso","Queso mozzarella","Mezclum","Cebolla morada","Limas","Frijoles","Jalapeño rodaja","Nata agria","Fajitas / tacos","Tabasco","Maíz"].map(n=>({n,t:"g",q:null}))]
 ]};
-/* ===== Ratios en vivo desde la hoja de Google «Ratios cocina y menaje» ===== */
-const HOJA_ID="10TKRlDzwjpyc0cIykgmhW-Y5AU_wbenGoKcHlk2ne_g";
+/* ===== Ratios en vivo desde la hoja de Google «Ratios cocina» ===== */
+const HOJA_ID="1-GO7YcM6SICnqdsl-Vph-_7fMe2QWso-zmfqXgwgMWk";
 const HOJAS={buffet:"BUFFET",cocktail:"COCKTAIL",tacos:"ESTACION TACOS",coffee:"COFFEE BREAK"};
 const MEN={buffet:[],cocktail:[],tacos:[],coffee:[]};
+const MAT={buffet:[],cocktail:[],tacos:[],coffee:[]};
+let PAX_LINEA=null;
 let HOJA_ESTADO="";
 function csvParse(t){const rows=[];let row=[],f="",q=false;for(let i=0;i<t.length;i++){const c=t[i];
   if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=false}else f+=c}
@@ -201,7 +203,13 @@ const num=v=>{if(v==null)return null;v=String(v).trim().replace(/\s/g,"");if(!v)
 const normN=x=>String(x||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/\(.*?\)/g,"").trim();
 function aplicarHoja(lista,rows){
   const iM=rows.findIndex(r=>normN(r[0])==="menaje");
-  const comida=iM>=0?rows.slice(0,iM):rows, men=[];
+  const iK=rows.findIndex(r=>normN(r[0])==="material cocina");
+  const fin=iK>=0?iK:iM;
+  const comida=fin>=0?rows.slice(0,fin):rows, men=[], mat=[];
+  if(lista==="buffet"){const f=rows.find(r=>normN(r[0]).startsWith("pax por linea"));PAX_LINEA=f?num(f[1]):null}
+  if(iK>=0){for(const r of rows.slice(iK+1)){const n=(r[0]||"").trim();if(normN(n)==="menaje")break;if(!n||/^elemento$/i.test(n))continue;
+    mat.push({n,cant:num(r[1])??1,cada:num(r[2]),regla:normN(r[3]),prod:(r[4]||"").trim(),nota:/^rellena cada/i.test((r[7]||"").trim())?"":(r[7]||"").trim()})}}
+  MAT[lista]=mat;
   if(iM>=0){for(const r of rows.slice(iM+1)){const n=(r[0]||"").trim();if(!n||/^pieza$/i.test(n))continue;if(/^celdas/i.test(n))break;
     men.push({n,t:"u",q:num(r[1]),caja:num(r[5]),cajaN:"racks",nota:/^sin cantidad$/i.test((r[7]||"").trim())?"":(r[7]||"").trim()})}}
   MEN[lista]=men;
@@ -233,6 +241,59 @@ function menajeHTML(lista,p,material){
   if(!con.length)h+=`<div class="sinr">Ratios de menaje pendientes: rellénalos en la hoja «Ratios cocina y menaje».</div>`;
   return h;
 }
+/* ===== Material de cocina (GN, bandejas, carros…) desde el bloque MATERIAL COCINA de la hoja ===== */
+const lineasEv=p=>PAX_LINEA>0&&p>0?Math.max(1,Math.ceil(p/PAX_LINEA)):1;
+function itemDe(lista,nombre){const b=normN(nombre);if(!b||!DATA[lista])return null;
+  for(const [,its] of DATA[lista])for(const it of its){const a=normN(it.n);if(a&&(a===b||a.startsWith(b)||b.startsWith(a)))return it}return null}
+function cantProd(it,p,L,regla){
+  if(!it||it.q==null)return null;
+  if(regla.startsWith("kg")){if(it.t==="g")return it.q*p/1000;if(it.t==="linea"&&/^(l|kg)$/i.test(it.un))return it.q*L;return null}
+  if(it.t==="u"||it.t==="r")return Math.ceil(it.q*p);
+  if(it.t==="cada")return Math.ceil(p/it.q);
+  if(it.t==="linea")return it.q*L;
+  return null}
+/* solo: Set de nombres de producto que lleva el menú (Eventos); null = todos (pestañas) */
+function materialCalc(lista,p,L,solo,base){
+  const filas=MAT[lista]||[],res=new Map(),pend=[];
+  const add=(f,v,det)=>{if(!res.has(f.n))res.set(f.n,{n:f.n,v:0,det:[]});const x=res.get(f.n);x.v+=v;if(det)x.det.push(det)};
+  const usa=[];
+  for(const f of filas){
+    const r=f.regla;
+    if(r.startsWith("kg")||r.startsWith("und")){
+      const it=itemDe(lista,f.prod);if(!it)continue;
+      if(solo&&!solo.has(it.n))continue;
+      const c=cantProd(it,p,L,r);if(!c)continue;usa.push(f);
+      if(!(f.cada>0)){pend.push(f);continue}
+      const v=Math.ceil(c/f.cada)*f.cant;add(f,v,`${it.n} ${v}`);
+    }else if(r==="pax"||r.startsWith("linea")||r==="fijo"){
+      if(!base)continue;
+      if(f.prod){const it=itemDe(lista,f.prod);if(!it||(solo&&!solo.has(it.n)))continue}
+      usa.push(f);
+      if(r==="fijo"){add(f,f.cant);continue}
+      if(!(f.cada>0)){pend.push(f);continue}
+      add(f,Math.ceil((r==="pax"?p:L)/f.cada)*f.cant);
+    }
+  }
+  const sumaPor=re=>[...res.values()].filter(x=>re.test(x.n)).reduce((a,x)=>a+x.v,0);
+  for(const f of filas){
+    const r=f.regla;if(r!=="gn"&&!r.startsWith("bandeja"))continue;
+    const s=sumaPor(r==="gn"?/^gn/i:/^bandeja/i);
+    const hayPend=pend.some(x=>(r==="gn"?/^gn/i:/^bandeja/i).test(x.n));
+    if(!s&&!hayPend)continue;usa.push(f);
+    if(!(f.cada>0)){pend.push(f);continue}
+    if(s)add(f,Math.ceil(s/f.cada)*f.cant,`${s} ${r==="gn"?"GN":"bandejas"}`);
+  }
+  return{items:[...res.values()].filter(x=>x.v>0),pend,hay:filas.length>0};
+}
+function materialHTML(m,conLineas){
+  if(!m.hay)return `<div class="sinr">Esta pestaña de la hoja todavía no tiene bloque MATERIAL COCINA.</div>`;
+  let h=m.items.map(x=>`<div class="item"><div class="izq"><div class="nom">${esc(x.n)}</div>${x.det.length>1?`<div class="plato">${esc(x.det.join(" · "))}</div>`:x.det.length?`<div class="rat">${esc(x.det[0].replace(/ \d+$/,""))}</div>`:""}</div><div class="der"><div class="tot">${nf(x.v,0)}<small>und</small></div></div></div>`).join("");
+  if(conLineas)h+=`<div class="nota" style="padding:4px 2px">${conLineas}</div>`;
+  if(m.pend.length){const ps=[...new Map(m.pend.map(f=>[f.n+"|"+f.prod,f])).values()];
+    h+=`<div class="sinr"><b>Falta el CADA en la hoja:</b> ${esc(ps.map(f=>f.n+(f.prod?" ("+f.prod+")":"")).join(" · "))}</div>`}
+  if(!m.items.length&&!m.pend.length)h+=`<div class="sinr">Nada del material de la hoja aplica a este servicio.</div>`;
+  return h;
+}
 const PAXDEF={buffet:180,cocktail:50,tacos:50,eventos:0};
 const RAP=[25,50,100,150,200,300,500,800,1000];
 const S={tab:"buffet",pax:{...PAXDEF},lineas:1,q:""};
@@ -249,7 +310,8 @@ const ratio=it=>{
   case"cada":return"1 cada "+it.q+" pax";
  }return"";
 };
-function calc(it,p){
+function calc(it,p,L){
+ if(L==null)L=S.lineas;
  if(it.t==="txt")return{tot:it.txt,cls:"txt"};
  if(it.q==null)return{tot:"sin cantidad",cls:"sin"};
  let tot,sub="";
@@ -257,7 +319,7 @@ function calc(it,p){
   case"g":{const kg=it.q*p/1000;tot=nf(kg,kg<10?2:1)+"<small>kg</small>";break}
   case"u":case"r":{const u=Math.ceil(it.q*p);tot=nf(u,0)+"<small>"+(it.t==="r"?"rac":"und")+"</small>";
      if(it.caja&&u>0){const c=u/it.caja;const k=Math.ceil(c);sub=k+" "+(k===1?it.cajaN.replace(/s$/,"").replace("grandes","grande"):it.cajaN)+" ("+nf(c,2)+")"}break}
-  case"linea":tot=nf(it.q*S.lineas,1)+"<small>"+it.un+"</small>";break;
+  case"linea":tot=nf(it.q*L,1)+"<small>"+it.un+"</small>";break;
   case"cada":tot=Math.ceil(p/it.q)+"<small>und</small>";break;
  }
  return{tot,sub,cls:""};
@@ -283,7 +345,7 @@ function render(){
    h+=`<div class="item ${r.cls}"><div class="izq"><div class="nom">${it.n}</div>${ratio(it)?`<div class="rat">${ratio(it)}</div>`:""}${it.nota?`<div class="nota">${it.nota}</div>`:""}</div><div class="der"><div class="tot">${r.tot}</div>${r.sub?`<div class="sub">${r.sub}</div>`:""}</div></div>`;
   }
  }
- if(!q&&MEN[S.tab]){h+=`<div class="sec">Menaje</div>`+menajeHTML(S.tab,p,"")}
+ if(!q&&MAT[S.tab]){h+=`<div class="sec">🔧 Material cocina</div>`+materialHTML(materialCalc(S.tab,p,S.lineas,null,true),"")}
  $("lista").innerHTML=h||`<div class="aviso">No hay nada con “${S.q}”.</div>`;
  try{localStorage.setItem("ratiosCocina",JSON.stringify({pax:S.pax,tab:S.tab,lineas:S.lineas}))}catch(e){}
 }
@@ -343,6 +405,7 @@ const PRODUCTO=new Set(["Miniburger","Dumpling de cerdo","Gyosas","Croquetas","B
 const FIND=(lista,n)=>{for(const [,its] of DATA[lista]){const it=its.find(x=>x.n===n);if(it)return it}return null};
 const EV={data:null,dia:null,err:"",vista:"todo"};
 try{EV.vista=localStorage.getItem("ratiosVista")||"todo"}catch(e){}
+if(!["todo","comida","material"].includes(EV.vista))EV.vista="todo";
 const TIPOS={coctel:"Cóctel",alm:"Almuerzo",cena:"Cena",cb:"Coffee break"};
 const LISTA_DE={coctel:"cocktail",alm:"buffet",cena:"buffet",cb:"coffee"};
 const esc=x=>String(x??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -387,8 +450,8 @@ function cruzar(s){
  }
  return{con:[...usados.values()].filter(x=>x.it),sin};
 }
-function itemHTML(x,p,otra){
- const r=calc(x.it,p);
+function itemHTML(x,p,otra,L){
+ const r=calc(x.it,p,L);
  return `<div class="item ${r.cls}"><div class="izq"><div class="nom">${x.it.n}${otra?` <span style="font-size:11px;color:var(--gris);font-weight:600">(ratio de ${x.lista})</span>`:""}</div>${ratio(x.it)?`<div class="rat">${ratio(x.it)}</div>`:""}${x.platos?`<div class="plato">${esc(x.platos.join(" · "))}</div>`:""}</div><div class="der"><div class="tot">${r.tot}</div>${r.sub?`<div class="sub">${r.sub}</div>`:""}</div></div>`;
 }
 function renderEventos(){
@@ -407,14 +470,14 @@ function renderEventos(){
   const p=typeof s.pax==="number"?s.pax:0;
   const {con,sin}=cruzar(s);
   const sinHora=/sin (horario|indicar)|franja/i.test(s.time||"");
-  const fx=(s.facts||[]).join(" ").toLowerCase(),mat=/bamb|biodegrad/.test(fx)?"Bambú":/vajilla/.test(fx)?"Vajilla":"";
-  h+=`<div class="ev"><div class="evh"><div class="izq"><div class="hora">${sinHora?esc(s.time):fh(s.start)+" · "+esc(TIPOS[s.t])}</div><div class="tit">${esc(s.grupo.n)} · ${esc(s.title)}</div><div class="meta">📍 ${esc((s.salas&&s.salas.join(", "))||s.place)}${s.grupo.cm?" · "+esc(s.grupo.cm):""}</div></div><div class="px">${p||"—"}<small>pax</small></div></div><div class="evb${EV.vista==="todo"?" dos":""}"><div class="col colC"${EV.vista==="menaje"?" hidden":""}><div class="colt">🍽 Comida</div>`;
+  const L=lineasEv(p),lp=LISTA_DE[s.t];
+  h+=`<div class="ev"><div class="evh"><div class="izq"><div class="hora">${sinHora?esc(s.time):fh(s.start)+" · "+esc(TIPOS[s.t])}</div><div class="tit">${esc(s.grupo.n)} · ${esc(s.title)}</div><div class="meta">📍 ${esc((s.salas&&s.salas.join(", "))||s.place)}${s.grupo.cm?" · "+esc(s.grupo.cm):""}</div></div><div class="px">${p||"—"}<small>pax</small></div></div><div class="evb${EV.vista==="todo"?" dos":""}"><div class="col colC"${EV.vista==="material"?" hidden":""}><div class="colt">🍽 Comida</div>`;
   if(con.length){
    for(const x of con){
-    h+=itemHTML(x,p,(s.t==="coctel")!==(x.lista==="cocktail")&&x.lista!=="tacos");
+    h+=itemHTML(x,p,(s.t==="coctel")!==(x.lista==="cocktail")&&x.lista!=="tacos",L);
     const r=calc(x.it,p),k=x.lista+"|"+x.it.n;
-    if(!tot.has(k))tot.set(k,{lista:x.lista,it:x.it,pax:0});
-    tot.get(k).pax+=p;
+    if(!tot.has(k))tot.set(k,{lista:x.lista,it:x.it,pax:0,L:0});
+    tot.get(k).pax+=p;tot.get(k).L+=L;
    }
   }
   if(!s.menu||!s.menu.length)h+=`<div class="sinr">La BEO no trae el menú detallado de este servicio.</div>`;
@@ -422,15 +485,21 @@ function renderEventos(){
   if(sin.length)h+=`<div class="sinr"><b>Sin ratio todavía:</b> ${esc(sin.join(" · "))}</div>`;
   if(s.t==="cb")h+=`<div class="sinr">Coffee break: ratios de comida pendientes de cocina.</div>`;
   if(p&&(s.t==="coctel"||s.t==="alm"||s.t==="cena"))h+=`<button class="btnr" data-tab="${s.t==="coctel"?"cocktail":"buffet"}" data-pax="${p}">Ver todos los ratios de ${s.t==="coctel"?"cocktail":"buffet"} con ${p} pax</button>`;
-  h+=`</div><div class="col colM"${EV.vista==="comida"?" hidden":""}><div class="colt">🍷 Menaje${mat?` <span class="mat">${mat}</span>`:""}</div>${menajeHTML(LISTA_DE[s.t],p,mat)}</div></div></div>`;
-  for(const it of (MEN[LISTA_DE[s.t]]||[]).filter(i=>i.q!=null)){const k="men|"+LISTA_DE[s.t]+"|"+it.n;if(!totM.has(k))totM.set(k,{it,pax:0});totM.get(k).pax+=p}
+  const porLista=new Map([[lp,new Set()]]);
+  for(const x of con){if(!porLista.has(x.lista))porLista.set(x.lista,new Set());porLista.get(x.lista).add(x.it.n)}
+  const mm={items:[],pend:[],hay:false};
+  for(const [li,set] of porLista){const m=materialCalc(li,p,L,set,li===lp||set.size>0);mm.hay=mm.hay||m.hay;mm.pend.push(...m.pend);
+    for(const x of m.items){const y=mm.items.find(z=>z.n===x.n);if(y){y.v+=x.v;y.det.push(...x.det)}else mm.items.push({...x,det:[...x.det]})}}
+  const txtL=(s.t==="alm"||s.t==="cena")?(PAX_LINEA>0?`${L} línea${L>1?"s":""} de buffet (1 cada ${PAX_LINEA} pax)`:"1 línea de buffet · pon «PAX POR LÍNEA» en la hoja BUFFET para calcularlas"):"";
+  h+=`</div><div class="col colM"${EV.vista==="comida"?" hidden":""}><div class="colt">🔧 Material cocina</div>${p?materialHTML(mm,txtL):`<div class="sinr">Sin pax: no se calcula material.</div>`}</div></div></div>`;
+  for(const x of mm.items){if(!totM.has(x.n))totM.set(x.n,0);totM.set(x.n,totM.get(x.n)+x.v)}
  }
  let t="";
  if(tot.size>1&&ss.length>1){
-  if(EV.vista!=="menaje")t=`<div class="totdia"><div class="sec">Total del día · comida</div>`+[...tot.values()].map(x=>itemHTML({it:x.it,lista:x.lista},x.pax,false)).join("")+`</div>`;
+  if(EV.vista!=="material")t=`<div class="totdia"><div class="sec">Total del día · comida</div>`+[...tot.values()].map(x=>itemHTML({it:x.it,lista:x.lista},x.pax,false,x.L)).join("")+`</div>`;
  }
- if(totM.size&&ss.length>1&&EV.vista!=="comida")t+=`<div class="totdia"><div class="sec">Total del día · menaje</div>`+[...totM.values()].map(x=>{const r=calc(x.it,x.pax);return `<div class="item"><div class="izq"><div class="nom">${esc(x.it.n)}</div></div><div class="der"><div class="tot">${r.tot}</div>${r.sub?`<div class="sub">${r.sub}</div>`:""}</div></div>`}).join("")+`</div>`;
- t=`<div class="vistas">${["todo","comida","menaje"].map(v=>`<button data-v="${v}" class="${EV.vista===v?"on":""}">${{todo:"Todo",comida:"🍽 Comida",menaje:"🍷 Menaje"}[v]}</button>`).join("")}</div>`+t;
+ if(totM.size&&ss.length>1&&EV.vista!=="comida")t+=`<div class="totdia"><div class="sec">Total del día · material cocina (si los servicios no se solapan, se reutiliza)</div>`+[...totM].map(([n,v])=>`<div class="item"><div class="izq"><div class="nom">${esc(n)}</div></div><div class="der"><div class="tot">${nf(v,0)}<small>und</small></div></div></div>`).join("")+`</div>`;
+ t=`<div class="vistas">${["todo","comida","material"].map(v=>`<button data-v="${v}" class="${EV.vista===v?"on":""}">${{todo:"Todo",comida:"🍽 Comida",material:"🔧 Material"}[v]}</button>`).join("")}</div>`+t;
  box.innerHTML=t+h;
 }
 $("dias").onclick=e=>{const d=e.target.dataset.d;if(d){EV.dia=d;render();window.scrollTo(0,0)}};
