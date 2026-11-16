@@ -36,7 +36,7 @@ L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Eventos Palau y Palma Bay//ES"
      "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU", "END:DAYLIGHT",
      "BEGIN:STANDARD", "TZOFFSETFROM:+0200", "TZOFFSETTO:+0100", "TZNAME:CET", "DTSTART:19701025T030000",
      "RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU", "END:STANDARD", "END:VTIMEZONE"]
-stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+stamp = hoy.strftime("%Y%m%dT000000Z")  # fijo durante el día: así no hay cambios (ni commits) cada 20 min
 vistos = {}; n = 0
 for s in data["servicios"]:
     if s.get("t") in NOFB or sinhora.search(s.get("time") or ""): continue
