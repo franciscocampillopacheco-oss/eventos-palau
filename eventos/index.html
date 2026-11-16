@@ -214,6 +214,13 @@ table.sum tr.det td{background:color-mix(in srgb,var(--c) 5%,var(--surface));bor
 table.sum small.cmi{white-space:nowrap}
 .cm{font-size:12.5px;color:var(--muted)}.cm b{color:var(--ink);font-weight:600}
 @media (min-width:1000px){.wrap{padding-left:max(28px,env(safe-area-inset-left,0px));padding-right:max(28px,env(safe-area-inset-right,0px))}}
+table.sum .cd{font-family:var(--f-body);font-size:11.5px;font-weight:600;color:var(--sea);white-space:nowrap;margin-top:1px}
+table.sum .cd.m120{color:#B7791F}table.sum .cd.m30{color:#C2412D}
+table.sum .cd.now{color:#1F8A4C}table.sum .cd.fin{color:var(--muted);font-weight:400}
+#bell{flex:none;font-weight:600}#bell[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink);opacity:1}#bell[aria-pressed="false"]{opacity:1}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;max-width:min(92vw,520px);opacity:0;pointer-events:none;transition:.25s;z-index:60}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:700px){table.sum .cd{font-size:10.5px}}
 .pdfov{position:fixed;inset:0;z-index:50;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(3px);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
 .pdfbar{display:flex;align-items:center;gap:12px;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--line);background:var(--surface)}
 .pdfbar b{font-family:var(--f-display);font-size:18px}
@@ -255,6 +262,7 @@ table.sum small.cmi{white-space:nowrap}
       <button id="v-type" aria-pressed="false">Por tipo</button>
       <button id="v-sum" aria-pressed="true">Resumen</button>
     </div>
+    <button type="button" class="chip" id="bell" aria-pressed="false" title="Aviso 30 minutos antes de cada servicio con F&amp;B">🔕 Avisos</button>
     <div class="filters">
       <div class="frow"><span class="flabel">Servicio</span><div class="chips" id="chips"></div></div>
     </div>
@@ -412,7 +420,7 @@ function header(list){
   counts.sort((x,y)=>y[2]-x[2]||y[3]-x[3]);const maxc=Math.max(1,...counts.map(c=>c[2]));
   document.getElementById("typebars").innerHTML=counts.filter(c=>c[2]>0).map(([t,a,n])=>`<div class="trow"><span>${tn(t)}<small class="aud">${esc(AUD[a].n)}</small></span><div><div class="bar" style="width:${n/maxc*100}%;background:${col(t)}"></div></div><span class="num">${n}</span></div>`).join("")||`<p class="note">Sin servicios con estos filtros.</p>`;
 }
-function render(){
+function render(){setTimeout(()=>typeof tick==="function"&&tick(),0);
   document.getElementById("v-day").setAttribute("aria-pressed",view==="day");
   document.getElementById("v-type").setAttribute("aria-pressed",view==="type");
   document.getElementById("v-sum").setAttribute("aria-pressed",view==="sum");
@@ -432,7 +440,7 @@ function render(){
     el.innerHTML=DAYS.map(d=>{const ss=list.filter(s=>s.fecha===d.id).sort((x,y)=>x.start-y.start||x.end-y.end);if(!ss.length)return"";
       const pk=Math.max(0,...ss.filter(isPax).map(s=>s.pax));
       return `<section class="day"><div class="dayhead"><h2>${d.name}</h2><span class="meta">${ss.length} servicio${ss.length===1?"":"s"} · pico ${pk} pax</span></div>
-      <div class="sumwrap"><table class="sum"><colgroup><col class="c1"><col><col class="c3"><col class="c4"><col class="c5"><col class="c6"></colgroup><thead><tr><th>Hora</th><th>Evento</th><th class="r">Pax</th><th>Sala</th><th>Duración</th><th>Material</th></tr></thead><tbody>${ss.map(s=>`<tr tabindex="0" aria-expanded="false" style="--c:${col(s.t)}" class="srow${isFb(s)?"":" nofb"}"><td class="h">${noH(s)?`<span title="${esc(s.time)}">s/h</span>`:hh(s.start)}</td><td><i class="car">▸</i><b>${esc(GRP[s.g])}</b> · ${esc(s.title)}${cmOf(s)?` <small class="cmi">· ${esc(cmOf(s))}</small>`:""}</td><td class="r">${paxS(s)}</td><td>${esc(salasOf(s).join(", ")||s.place||"")}</td><td class="h">${dur(s)}</td><td>${mat(s)}</td></tr><tr class="det" hidden style="--c:${col(s.t)}"><td colspan="6">${sumDet(s)}</td></tr>`).join("")}</tbody></table></div></section>`}).join("")||empty;
+      <div class="sumwrap"><table class="sum"><colgroup><col class="c1"><col><col class="c3"><col class="c4"><col class="c5"><col class="c6"></colgroup><thead><tr><th>Hora</th><th>Evento</th><th class="r">Pax</th><th>Sala</th><th>Duración</th><th>Material</th></tr></thead><tbody>${ss.map(s=>`<tr tabindex="0" aria-expanded="false" style="--c:${col(s.t)}" class="srow${isFb(s)?"":" nofb"}"><td class="h">${noH(s)?`<span title="${esc(s.time)}">s/h</span>`:hh(s.start)}${isFb(s)&&!noH(s)?`<div class="cd" data-i="${s.i}"></div>`:""}</td><td><i class="car">▸</i><b>${esc(GRP[s.g])}</b> · ${esc(s.title)}${cmOf(s)?` <small class="cmi">· ${esc(cmOf(s))}</small>`:""}</td><td class="r">${paxS(s)}</td><td>${esc(salasOf(s).join(", ")||s.place||"")}</td><td class="h">${dur(s)}</td><td>${mat(s)}</td></tr><tr class="det" hidden style="--c:${col(s.t)}"><td colspan="6">${sumDet(s)}</td></tr>`).join("")}</tbody></table></div></section>`}).join("")||empty;
   }else if(view==="day"){
     el.innerHTML=DAYS.map(d=>{const ss=list.filter(s=>s.fecha===d.id);if(!ss.length)return"";
       const pk=Math.max(0,...ss.filter(isPax).map(s=>s.pax));
@@ -445,6 +453,33 @@ function render(){
   }
 }
 render();
+/* ===== Cuenta atrás y avisos 30 min antes (solo F&B con hora) ===== */
+const tOf=(s,h)=>{const d=new Date(s.fecha+"T00:00:00");d.setMinutes(Math.round(h*60));return d};
+function cdTxt(s,now){const a=tOf(s,s.start)-now,b=tOf(s,s.end)-now;
+  if(b<=0)return["hecho","fin"];if(a<=0)return["en curso","now"];
+  const m=Math.round(a/60000);let t;
+  if(m<60)t=m+" min";else if(m<48*60){const h=Math.floor(m/60),r=m%60;t=h+" h"+(r&&h<10?" "+r+" min":"")}else t=Math.round(m/1440)+" días";
+  return["en "+t,m<=30?"m30":m<=120?"m120":""]}
+function tick(){const now=Date.now();
+  document.querySelectorAll(".cd[data-i]").forEach(el=>{const s=S[+el.dataset.i];if(!s)return;const [t,c]=cdTxt(s,now);el.textContent=t;el.className="cd "+c;});
+  avisar(now);}
+let AV=false;try{AV=localStorage.getItem("beo-avisos")==="1"}catch(e){}
+const bell=document.getElementById("bell");
+const okN=()=>"Notification" in window&&Notification.permission==="granted";
+function paintBell(){const on=AV&&okN();bell.setAttribute("aria-pressed",on);bell.textContent=on?"🔔 Avisos activados":"🔕 Avisos";}
+bell.onclick=async()=>{
+  if(!("Notification" in window)){toast("Este navegador no permite avisos. En iPhone, añade la página a la pantalla de inicio y ábrela desde ahí.");return}
+  if(AV&&okN()){AV=false}else{let p=Notification.permission;if(p!=="granted"){try{p=await Notification.requestPermission()}catch(e){}}
+    AV=p==="granted";if(!AV)toast("No se han activado: el navegador no ha dado permiso para avisos.");else toast("Avisos activados: te aviso 30 min antes de cada servicio con F&B mientras la página esté abierta.");}
+  try{localStorage.setItem("beo-avisos",AV?"1":"0")}catch(e){}paintBell();};
+function avisados(){try{return new Set(JSON.parse(localStorage.getItem("beo-avisados")||"[]"))}catch(e){return new Set()}}
+function avisar(now){if(!AV||!okN())return;const done=avisados();let ch=false;
+  for(const s of S){if(!isFb(s)||noH(s))continue;const a=tOf(s,s.start).getTime(),k=s.fecha+"|"+s.i+"|"+s.start;
+    if(now>=a-30*60000&&now<a&&!done.has(k)){done.add(k);ch=true;
+      try{new Notification("⏰ En "+Math.max(1,Math.round((a-now)/60000))+" min: "+(GRP[s.g]||"")+" · "+s.title,{body:fmtH(s.start)+" · "+salasOf(s).join(", ")+(s.pax?" · "+s.pax+" pax":""),tag:k})}catch(e){toast("⏰ "+(GRP[s.g]||"")+" · "+s.title+" a las "+fmtH(s.start))}}}
+  if(ch)try{localStorage.setItem("beo-avisados",JSON.stringify([...done].slice(-300)))}catch(e){}}
+function toast(m){let t=document.getElementById("toast");if(!t){t=document.createElement("div");t.id="toast";document.body.appendChild(t)}t.textContent=m;t.classList.add("on");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("on"),5000)}
+paintBell();setInterval(tick,30000);
 document.getElementById("view").addEventListener("click",e=>{if(e.target.closest(".beolink,.det"))return;const r=e.target.closest("tr.srow");if(!r)return;const d=r.nextElementSibling,o=d.hidden;d.hidden=!o;r.setAttribute("aria-expanded",o);});
 document.getElementById("view").addEventListener("keydown",e=>{const r=e.target.closest&&e.target.closest("tr.srow");if(r&&(e.key==="Enter"||e.key===" ")){e.preventDefault();r.click();}});
 (function(){const c=chipsD.querySelector('.chip[data-k^="2"][aria-pressed="true"]');if(c)chipsD.scrollLeft=c.offsetLeft-chipsD.offsetLeft-120;})();
