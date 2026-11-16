@@ -217,7 +217,7 @@ table.sum small.cmi{white-space:nowrap}
 table.sum .cd{font-family:var(--f-body);font-size:11.5px;font-weight:600;color:var(--sea);white-space:nowrap;margin-top:1px}
 table.sum .cd.m120{color:#B7791F}table.sum .cd.m30{color:#C2412D}
 table.sum .cd.now{color:#1F8A4C}table.sum .cd.fin{color:var(--muted);font-weight:400}
-#bell{flex:none;font-weight:600}#bell[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink);opacity:1}#bell[aria-pressed="false"]{opacity:1}
+#bell,#bellTest{flex:none;font-weight:600}#bell[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink);opacity:1}#bell[aria-pressed="false"]{opacity:1}
 #toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;max-width:min(92vw,520px);opacity:0;pointer-events:none;transition:.25s;z-index:60}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 @media (max-width:700px){table.sum .cd{font-size:10.5px}}
@@ -272,6 +272,7 @@ details.charts .two{padding:14px}
       <button id="v-sum" aria-pressed="true">Resumen</button>
     </div>
     <button type="button" class="chip" id="bell" aria-pressed="false" title="Aviso 30 minutos antes de cada servicio con F&amp;B">🔕 Avisos</button>
+    <button type="button" class="chip" id="bellTest" hidden title="Manda un aviso de prueba dentro de 10 segundos">Probar aviso</button>
     <div class="filters">
       <div class="frow"><span class="flabel">Servicio</span><div class="chips" id="chips"></div></div>
     </div>
@@ -463,6 +464,7 @@ function render(){setTimeout(()=>typeof tick==="function"&&tick(),0);
 }
 render();
 /* ===== Cuenta atrás y avisos 30 min antes (solo F&B con hora) ===== */
+const noHG=s=>/sin (horario|indicar)|franja/i.test(s.time||"");
 const tOf=(s,h)=>{const d=new Date(s.fecha+"T00:00:00");d.setMinutes(Math.round(h*60));return d};
 function cdTxt(s,now){const a=tOf(s,s.start)-now,b=tOf(s,s.end)-now;
   if(b<=0)return["hecho","fin"];if(a<=0)return["en curso","now"];
@@ -479,7 +481,12 @@ function tick(){const now=Date.now(),hoy=jornada(now);
 let AV=false;try{AV=localStorage.getItem("beo-avisos")==="1"}catch(e){}
 const bell=document.getElementById("bell");
 const okN=()=>"Notification" in window&&Notification.permission==="granted";
-function paintBell(){const on=AV&&okN();bell.setAttribute("aria-pressed",on);bell.textContent=on?"🔔 Avisos activados":"🔕 Avisos";}
+function paintBell(){const on=AV&&okN();bell.setAttribute("aria-pressed",on);bell.textContent=on?"🔔 Avisos activados":"🔕 Avisos";document.getElementById("bellTest").hidden=!on;}
+document.getElementById("bellTest").onclick=()=>{
+  const now=Date.now(),hoy=jornada(now);
+  const s=S.filter(x=>isFb(x)&&!noHG(x)&&x.fecha>=hoy).sort((a,b)=>a.fecha.localeCompare(b.fecha)||a.start-b.start).find(x=>tOf(x,x.start)>now)||S.find(isFb);
+  toast("Aviso de prueba en 10 segundos. Puedes cambiar de pestaña o bloquear la pantalla para ver si llega.");
+  setTimeout(()=>{try{new Notification("⏰ PRUEBA · En 30 min: "+(GRP[s.g]||"")+" · "+s.title,{body:fmtH(s.start)+" · "+salasOf(s).join(", ")+(s.pax?" · "+s.pax+" pax":""),tag:"prueba"})}catch(e){toast("El navegador no ha dejado mostrar el aviso: "+e.message)}},10000);};
 bell.onclick=async()=>{
   if(!("Notification" in window)){toast("Este navegador no permite avisos. En iPhone, añade la página a la pantalla de inicio y ábrela desde ahí.");return}
   if(AV&&okN()){AV=false}else{let p=Notification.permission;if(p!=="granted"){try{p=await Notification.requestPermission()}catch(e){}}
@@ -487,7 +494,7 @@ bell.onclick=async()=>{
   try{localStorage.setItem("beo-avisos",AV?"1":"0")}catch(e){}paintBell();};
 function avisados(){try{return new Set(JSON.parse(localStorage.getItem("beo-avisados")||"[]"))}catch(e){return new Set()}}
 function avisar(now){if(!AV||!okN())return;const done=avisados();let ch=false;
-  for(const s of S){if(!isFb(s)||noH(s))continue;const a=tOf(s,s.start).getTime(),k=s.fecha+"|"+s.i+"|"+s.start;
+  for(const s of S){if(!isFb(s)||noHG(s))continue;const a=tOf(s,s.start).getTime(),k=s.fecha+"|"+s.i+"|"+s.start;
     if(now>=a-30*60000&&now<a&&!done.has(k)){done.add(k);ch=true;
       try{new Notification("⏰ En "+Math.max(1,Math.round((a-now)/60000))+" min: "+(GRP[s.g]||"")+" · "+s.title,{body:fmtH(s.start)+" · "+salasOf(s).join(", ")+(s.pax?" · "+s.pax+" pax":""),tag:k})}catch(e){toast("⏰ "+(GRP[s.g]||"")+" · "+s.title+" a las "+fmtH(s.start))}}}
   if(ch)try{localStorage.setItem("beo-avisados",JSON.stringify([...done].slice(-300)))}catch(e){}}
