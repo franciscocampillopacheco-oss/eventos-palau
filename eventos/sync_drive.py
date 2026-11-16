@@ -1,3 +1,4 @@
+# Sincroniza Eventos desde Drive (ver .github/workflows/sync-eventos-drive.yml)
 """Trae a GitHub la página de Eventos (y los PDF de BEO nuevos) que la tarea programada deja en Google Drive.
 La hoja «Eventos Palau – puntero web» (pública con enlace) dice qué archivo de Drive es el último:
   fila html: ruta eventos/index.html, id = id del archivo en Drive
