@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -16,8 +17,12 @@ import android.webkit.WebViewClient;
 public class MainActivity extends Activity {
     private static final String HOST = "franciscocampillopacheco-oss.github.io";
     private static final String OCULTAR =
-        "(function(){if(document.getElementById('appCss'))return;var s=document.createElement('style');s.id='appCss';" +
-        "s.textContent='#bell,#bellTest,#calsub{display:none!important}';document.head.appendChild(s);})();";
+        "(function(){if(!document.getElementById('appCss')){var s=document.createElement('style');s.id='appCss';" +
+        "s.textContent='#bell,#bellTest,#calsub{display:none!important}';document.head.appendChild(s);}" +
+        "var b=document.getElementById('bell');if(!b||!window.AndroidApp)return;var c=document.getElementById('appBell');" +
+        "if(!c){c=document.createElement('button');c.type='button';c.id='appBell';c.className='chip';c.style.fontWeight='600';" +
+        "c.onclick=function(){AndroidApp.avisos();};b.parentNode.insertBefore(c,b);}" +
+        "c.textContent=AndroidApp.activados()?'\\uD83D\\uDD14 Avisos activados \\u00B7 probar':'\\uD83D\\uDD15 Activar avisos';})();";
     private WebView web;
     private long pausa = 0;
 
@@ -34,6 +39,7 @@ public class MainActivity extends Activity {
         s.setUseWideViewPort(true);
         s.setCacheMode(hayRed() ? WebSettings.LOAD_DEFAULT : WebSettings.LOAD_CACHE_ELSE_NETWORK);
         web.setWebChromeClient(new WebChromeClient());
+        if (BuildConfig.AVISOS) web.addJavascriptInterface(new Puente(), "AndroidApp");
         web.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest r) {
@@ -54,6 +60,25 @@ public class MainActivity extends Activity {
         if (estado != null) web.restoreState(estado);
         else web.loadUrl(BuildConfig.URL);
         Avisos.iniciar(this);
+    }
+
+    /** Botón nativo de avisos dentro de la página (solo app de eventos). */
+    class Puente {
+        @JavascriptInterface
+        public boolean activados() { return Avisos.activados(MainActivity.this); }
+        @JavascriptInterface
+        public void avisos() { runOnUiThread(() -> Avisos.boton(MainActivity.this)); }
+    }
+
+    void repintar() {
+        if (BuildConfig.AVISOS && web != null) web.evaluateJavascript(OCULTAR, null);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int rc, String[] perms, int[] res) {
+        super.onRequestPermissionsResult(rc, perms, res);
+        Avisos.resultado(this);
+        repintar();
     }
 
     private boolean hayRed() {
@@ -87,6 +112,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         web.onResume();
+        repintar();
         if (pausa > 0 && System.currentTimeMillis() - pausa > 15 * 60 * 1000L) {
             web.getSettings().setCacheMode(hayRed() ? WebSettings.LOAD_DEFAULT : WebSettings.LOAD_CACHE_ELSE_NETWORK);
             web.reload();

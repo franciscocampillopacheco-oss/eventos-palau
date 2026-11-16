@@ -35,12 +35,81 @@ public class Avisos {
 
     public static void iniciar(Activity a) {
         crearCanal(a);
-        if (Build.VERSION.SDK_INT >= 33 &&
-            a.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            a.requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
-        }
         programarJob(a);
         actualizarEnHilo(a);
+        SharedPreferences p = prefs(a);
+        if (activados(a)) {
+            if (!p.getBoolean("bienvenida", false)) { p.edit().putBoolean("bienvenida", true).apply(); prueba(a, "Avisos activados \u2705"); }
+        } else if (Build.VERSION.SDK_INT >= 33 && !p.getBoolean("pedido", false)) {
+            p.edit().putBoolean("pedido", true).apply();
+            a.requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+        } else {
+            dialogo(a);
+        }
+    }
+
+    public static boolean activados(Context c) {
+        if (Build.VERSION.SDK_INT >= 33 &&
+            c.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return false;
+        NotificationManager nm = (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (!nm.areNotificationsEnabled()) return false;
+        if (Build.VERSION.SDK_INT >= 26) {
+            NotificationChannel ch = nm.getNotificationChannel(CANAL);
+            if (ch != null && ch.getImportance() == NotificationManager.IMPORTANCE_NONE) return false;
+        }
+        return true;
+    }
+
+    /** Botón «Avisos» de la página: si están activados manda una prueba; si no, lleva a los ajustes. */
+    public static void boton(Activity a) {
+        if (activados(a)) prueba(a, "Aviso de prueba \uD83D\uDD14");
+        else if (Build.VERSION.SDK_INT >= 33 &&
+                 a.shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS))
+            a.requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+        else abrirAjustes(a);
+    }
+
+    public static void resultado(Activity a) {
+        if (activados(a)) {
+            prefs(a).edit().putBoolean("bienvenida", true).apply();
+            prueba(a, "Avisos activados \u2705");
+        } else dialogo(a);
+    }
+
+    static void dialogo(Activity a) {
+        try {
+            new android.app.AlertDialog.Builder(a)
+                .setTitle("Activa los avisos")
+                .setMessage("Para que te avise 30 minutos antes de cada servicio con F&B, activa las notificaciones de Eventos Palau.")
+                .setPositiveButton("Abrir ajustes", (d, w) -> abrirAjustes(a))
+                .setNegativeButton("Ahora no", null)
+                .show();
+        } catch (Exception e) { }
+    }
+
+    static void abrirAjustes(Activity a) {
+        try {
+            Intent i;
+            if (Build.VERSION.SDK_INT >= 26) {
+                i = new Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                    .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, a.getPackageName());
+            } else {
+                i = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    android.net.Uri.parse("package:" + a.getPackageName()));
+            }
+            a.startActivity(i);
+        } catch (Exception e) {
+            a.startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                android.net.Uri.parse("package:" + a.getPackageName())));
+        }
+    }
+
+    static void prueba(Context c, String titulo) {
+        Intent i = new Intent(c, AvisoReceiver.class)
+            .putExtra("titulo", titulo)
+            .putExtra("texto", "Te aviso 30 minutos antes de cada servicio con F&B, aunque la app esté cerrada.")
+            .putExtra("id", 4242);
+        new AvisoReceiver().onReceive(c, i);
     }
 
     static void crearCanal(Context c) {
