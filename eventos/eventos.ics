@@ -1418,6 +1418,25 @@ TRIGGER:-PT30M
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
+UID:6feb12a50c8747fc9fe6@eventos-palau
+DTSTAMP:20261118T000000Z
+DTSTART;TZID=Europe/Madrid:20261123T163000
+DTEND;TZID=Europe/Madrid:20261123T213000
+SUMMARY:Nautalia · Roche (23 nov) · Coffee Break permanente KM0 (15 pax)
+LOCATION:Portopi
+DESCRIPTION:Coffee break · 16:30–21:30\nPax: 15 pax\nSala: Portopi\nCate
+ ring manager: Nora Navares\n+ fruta cortada · + wrap de salmón\n⚠ Los 
+ suplementos (fruta cortada y wrap de salmón y alcaparras) son solo de 16:
+ 30 a 17:00. Reposición a las 19:00 (pausa). Antes salía como coffee sin 
+ hora ni menú.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Nautalia · Roche (23 nov) · Coffee Break permanente KM0 (15 p
+ ax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
 UID:9b190e1dce0d4d1b74af@eventos-palau
 DTSTAMP:20261118T000000Z
 DTSTART;TZID=Europe/Madrid:20261124T130000
@@ -1430,6 +1449,43 @@ DESCRIPTION:Cóctel · 13:00–14:30\nPax: 10 pax\nSala: Restaurante Traslu
 BEGIN:VALARM
 ACTION:DISPLAY
 DESCRIPTION:Cepheid · Cóctel almuerzo (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:67a71dc51bb71f15b4eb@eventos-palau
+DTSTAMP:20261118T000000Z
+DTSTART;TZID=Europe/Madrid:20261126T163000
+DTEND;TZID=Europe/Madrid:20261126T170000
+SUMMARY:Hapag Lloyd · Recordati (SWP) · PM coffee break · Sweet & Savory
+  2 + extras (220 pax)
+LOCATION:Hall Auditorium Mallorca
+DESCRIPTION:Coffee break · 16:30–17:00\nPax: 220 pax\nSala: Hall 1 Audit
+ orium Mallorca\nCatering manager: Paquita López\n+ refrescos · + fruta c
+ ortada\n⚠ Hora ya indicada (antes orientativa).
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Hapag Lloyd · Recordati (SWP) · PM coffee break · Sweet & Sa
+ vory 2 + extras (220 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f63f1f82ac03777fa542@eventos-palau
+DTSTAMP:20261118T000000Z
+DTSTART;TZID=Europe/Madrid:20261127T110000
+DTEND;TZID=Europe/Madrid:20261127T113000
+SUMMARY:Hapag Lloyd · Recordati (SWP) · AM coffee break · Sweet & Savory
+  3 + extras (220 pax)
+LOCATION:Hall Auditorium Mallorca
+DESCRIPTION:Coffee break · 11:00–11:30\nPax: 220 pax\nSala: Hall 1 Audit
+ orium Mallorca\nCatering manager: Paquita López\n+ refrescos · + fruta d
+ e temporada\n⚠ Cambio: es AM a las 11:00 (antes salía como PM sin hora)
+ .
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Hapag Lloyd · Recordati (SWP) · AM coffee break · Sweet & Sa
+ vory 3 + extras (220 pax)
 TRIGGER:-PT30M
 END:VALARM
 END:VEVENT
