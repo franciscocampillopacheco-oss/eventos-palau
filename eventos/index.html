@@ -345,9 +345,9 @@ function wire(box,set){
     box.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x.dataset.k===b.dataset.k));render();});
 }
 const chipsD=document.getElementById("chipsD");
-chipsD.innerHTML=`<button class="chip" data-k="all" aria-pressed="true">Todos</button><button class="chip" data-k="next" aria-pressed="false">Próximas 2 semanas</button>`+DAYS.map(d=>`<button class="chip" data-k="${d.id}" aria-pressed="false">${d.short} <small>(${S.filter(s=>s.fecha===d.id).length})</small></button>`).join("");
+chipsD.innerHTML=`<button class="chip" data-k="all" aria-pressed="true">Todos</button><button class="chip" data-k="next" aria-pressed="false">Desde hoy</button>`+DAYS.map(d=>`<button class="chip" data-k="${d.id}" aria-pressed="false">${d.short} <small>(${S.filter(s=>s.fecha===d.id).length})</small></button>`).join("");
 const isoD=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-function nextDays(){const h=new Date(Date.now()-4*3600000),f=new Date(h);f.setDate(f.getDate()+13);const a=isoD(h),b=isoD(f);return DAYS.filter(d=>d.id>=a&&d.id<=b).map(d=>d.id);}
+function nextDays(){const a=isoD(new Date(Date.now()-4*3600000));return DAYS.filter(d=>d.id>=a).map(d=>d.id);}
 function setNext(){activeD.clear();nextDays().forEach(id=>activeD.add(id));}
 function isNext(){const n=nextDays();return n.length>0&&n.length===activeD.size&&n.every(id=>activeD.has(id));}
 function paintD(){const nx=isNext();chipsD.querySelectorAll(".chip").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k==="all"?activeD.size===0:b.dataset.k==="next"?nx:activeD.has(b.dataset.k)));}
