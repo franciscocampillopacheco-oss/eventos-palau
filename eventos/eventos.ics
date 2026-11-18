@@ -1386,17 +1386,18 @@ UID:fd4961dc6c5bd82034ff@eventos-palau
 DTSTAMP:20261118T000000Z
 DTSTART;TZID=Europe/Madrid:20261120T140000
 DTEND;TZID=Europe/Madrid:20261120T153000
-SUMMARY:Almuerzo GEBC · Almuerzo de trabajo 1 (20 pax)
+SUMMARY:Almuerzo GEBC · Almuerzo de trabajo 1 (24 pax)
 LOCATION:Restaurante Trasluz
-DESCRIPTION:Almuerzo · 14:00–15:30\nPax: 20 pax\nSala: Restaurante Trasl
+DESCRIPTION:Almuerzo · 14:00–15:30\nPax: 24 pax\nSala: Restaurante Trasl
  uz\nCatering manager: Marta Cerezales\nBanquete · Menú 1 · + vino y cer
- veza\n⚠ Alergias e intolerancias: pendientes de confirmar. Pueden subir 
- hasta 30 pax y no confirman el nº final hasta 48 h antes. 13:00–14:00 b
- ienvenida en el restaurante: las bebidas de ese rato las paga cada asisten
- te.
+ veza\n⚠ MOD 1: el BEO pone 24 pax en la línea del servicio (antes 20)\;
+  el perfil del evento dice 20 personas y que pueden subir hasta 30. No con
+ firman el nº final hasta 48 h antes. Alergias e intolerancias: pendientes
+  de confirmar. 13:00–14:00 bienvenida: las bebidas de ese rato las paga 
+ cada asistente.
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:Almuerzo GEBC · Almuerzo de trabajo 1 (20 pax)
+DESCRIPTION:Almuerzo GEBC · Almuerzo de trabajo 1 (24 pax)
 TRIGGER:-PT30M
 END:VALARM
 END:VEVENT
@@ -1405,13 +1406,14 @@ UID:b14c337f4c5856a66509@eventos-palau
 DTSTAMP:20261118T000000Z
 DTSTART;TZID=Europe/Madrid:20261120T093000
 DTEND;TZID=Europe/Madrid:20261120T100000
-SUMMARY:HUB7 · Redeia · Coffee Break dulce · Menú 3 (25 pax)
+SUMMARY:HUB7 · Redeia · Coffee Break dulce · Menú 3 (19 pax)
 LOCATION:Hall The Level
-DESCRIPTION:Coffee break · 09:30–10:00\nPax: 25 pax\nSala: Hall The Leve
- l\nCatering manager: Nora Navares
+DESCRIPTION:Coffee break · 09:30–10:00\nPax: 19 pax\nSala: Hall The Leve
+ l\nCatering manager: Nora Navares\n⚠ MOD 1: pax 25 → 19 (reducen comen
+ sales del coffee break\; a devolver 69 € tras el evento).
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:HUB7 · Redeia · Coffee Break dulce · Menú 3 (25 pax)
+DESCRIPTION:HUB7 · Redeia · Coffee Break dulce · Menú 3 (19 pax)
 TRIGGER:-PT30M
 END:VALARM
 END:VEVENT
@@ -1428,6 +1430,23 @@ DESCRIPTION:Cóctel · 13:00–14:30\nPax: 10 pax\nSala: Restaurante Traslu
 BEGIN:VALARM
 ACTION:DISPLAY
 DESCRIPTION:Cepheid · Cóctel almuerzo (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:efdb975b9a7ee5f7f877@eventos-palau
+DTSTAMP:20261118T000000Z
+DTSTART;TZID=Europe/Madrid:20261128T143000
+DTEND;TZID=Europe/Madrid:20261128T160000
+SUMMARY:OCB · L'Aferrada · Cóctel · Menú 2 (150 pax)
+LOCATION:Hall Eivissa
+DESCRIPTION:Cóctel · 14:30–16:00\nPax: 150 pax\nSala: Hall Eivissa\nCat
+ ering manager: Nora Navares\nMenú 2 · Bodega I incluida\n⚠ Alérgenos 
+ e intolerancias: no constan en el BEO\, a confirmar. Hora ya indicada (14:
+ 30–16:00\; antes orientativa).
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:OCB · L'Aferrada · Cóctel · Menú 2 (150 pax)
 TRIGGER:-PT30M
 END:VALARM
 END:VEVENT

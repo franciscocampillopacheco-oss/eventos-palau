@@ -2,12 +2,8 @@ name: Eventos desde Google Drive
 
 # La tarea programada de BEO deja la página en Google Drive (no puede subir a GitHub).
 # Esto la recoge cada 20 minutos, regenera el calendario y lo publica. Todo automático.
+# Desactivado (18/11/2026): Paco prefiere que Claude suba la página a GitHub cuando él lo pida.
 on:
-  schedule:
-    - cron: "*/20 * * * *"
-  push:
-    branches: [main]
-    paths: [".github/workflows/sync-eventos-drive.yml", "eventos/sync_drive.py"]
   workflow_dispatch:
 
 permissions:
