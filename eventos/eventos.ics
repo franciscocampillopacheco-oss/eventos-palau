@@ -1506,4 +1506,188 @@ DESCRIPTION:OCB · L'Aferrada · Cóctel · Menú 2 (150 pax)
 TRIGGER:-PT30M
 END:VALARM
 END:VEVENT
+BEGIN:VEVENT
+UID:82960e220e322c8c4cb2@eventos-palau
+DTSTAMP:20261118T000000Z
+DTSTART;TZID=Europe/Madrid:20261130T110000
+DTEND;TZID=Europe/Madrid:20261130T113000
+SUMMARY:Tot Destins Viatges · Coffee break (50 pax)
+LOCATION:Santa Catalina
+DESCRIPTION:Coffee break · 11:00–11:30\nPax: 50 pax\nSala: Santa Catalin
+ a\nCatering manager: Nora Navares\n⚠ El BEO no trae el menú del coffee\
+ ; en MARS pone 30 asistentes en F&B y la línea del coffee 50 pax. Confirm
+ ar menú y pax.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Tot Destins Viatges · Coffee break (50 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:b5fd4fb05598f37d4556@eventos-palau
+DTSTAMP:20261118T000000Z
+DTSTART;TZID=Europe/Madrid:20261201T120000
+DTEND;TZID=Europe/Madrid:20261201T130000
+SUMMARY:Plus Voyages · Clariane · Almuerzo de trabajo 2 (17 pax)
+LOCATION:Restaurante Trasluz
+DESCRIPTION:Almuerzo · 12:00–13:00\nPax: 17 pax\nSala: Restaurante Trasl
+ uz\nCatering manager: Marta Cerezales\nMenú 2\n⚠ Alérgenos e intoleran
+ cias: pendientes.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Plus Voyages · Clariane · Almuerzo de trabajo 2 (17 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:8ed6588c98e7086484d2@eventos-palau
+DTSTAMP:20261118T000000Z
+DTSTART;TZID=Europe/Madrid:20261201T153000
+DTEND;TZID=Europe/Madrid:20261201T160000
+SUMMARY:Plus Voyages · Clariane · Coffee break dulce 2 (17 pax)
+LOCATION:Santa Catalina
+DESCRIPTION:Coffee break · 15:30–16:00\nPax: 17 pax\nSala: Santa Catalin
+ a\nCatering manager: Marta Cerezales
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Plus Voyages · Clariane · Coffee break dulce 2 (17 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:b356d9aa1968dac6a28e@eventos-palau
+DTSTAMP:20261118T000000Z
+DTSTART;TZID=Europe/Madrid:20261203T083000
+DTEND;TZID=Europe/Madrid:20261203T090000
+SUMMARY:Air Europa · Convención de ventas · Coffee break líquido (115 p
+ ax)
+LOCATION:Hall Menorca
+DESCRIPTION:Coffee break · 08:30–09:00\nPax: 115 pax\nSala: Hall Menorca
+ \nCatering manager: Marta Cerezales
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Air Europa · Convención de ventas · Coffee break líquido (1
+ 15 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:fea1b09bc314c91046ca@eventos-palau
+DTSTAMP:20261118T000000Z
+DTSTART;TZID=Europe/Madrid:20261203T110000
+DTEND;TZID=Europe/Madrid:20261203T113000
+SUMMARY:Air Europa · Convención de ventas · Coffee break dulce y salado 
+ 1 (115 pax)
+LOCATION:Sala Palma
+DESCRIPTION:Coffee break · 11:00–11:30\nPax: 115 pax\nSala: Sala Palma +
+  Rooftop\nCatering manager: Marta Cerezales\nMenú 1\n⚠ La agenda del BE
+ O pone el coffee 11:00–11:30 como horario provisional.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Air Europa · Convención de ventas · Coffee break dulce y sal
+ ado 1 (115 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:4b9cbe1b799480117d09@eventos-palau
+DTSTAMP:20261118T000000Z
+DTSTART;TZID=Europe/Madrid:20261203T134500
+DTEND;TZID=Europe/Madrid:20261203T151500
+SUMMARY:Air Europa · Convención de ventas · Lunch buffet de trabajo 2 (1
+ 15 pax)
+LOCATION:Hall Menorca
+DESCRIPTION:Almuerzo · 13:45–15:15\nPax: 115 pax\nSala: Hall Menorca\nCa
+ tering manager: Marta Cerezales\n+ vino y cerveza · + café\n⚠ Ojo en e
+ l BEO: «Merluza - OK Patri». La agenda pone el almuerzo de 13:00 a 14:30
+  y el servicio va de 13:45 a 15:15: confirmar hora.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Air Europa · Convención de ventas · Lunch buffet de trabajo 
+ 2 (115 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:488c052b19db794f6a74@eventos-palau
+DTSTAMP:20261118T000000Z
+DTSTART;TZID=Europe/Madrid:20261204T090000
+DTEND;TZID=Europe/Madrid:20261204T093000
+SUMMARY:Air Europa · Convención de ventas · Coffee break líquido (103 p
+ ax)
+LOCATION:Hall Menorca
+DESCRIPTION:Coffee break · 09:00–09:30\nPax: 103 pax\nSala: Hall Menorca
+ \nCatering manager: Marta Cerezales
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Air Europa · Convención de ventas · Coffee break líquido (1
+ 03 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:2ac07f849ceb1fead78c@eventos-palau
+DTSTAMP:20261118T000000Z
+DTSTART;TZID=Europe/Madrid:20261204T110000
+DTEND;TZID=Europe/Madrid:20261204T113000
+SUMMARY:Air Europa · Convención de ventas · Coffee break dulce y salado 
+ (103 pax)
+LOCATION:Hall Menorca
+DESCRIPTION:Coffee break · 11:00–11:30\nPax: 103 pax\nSala: Hall Menorca
+ \nCatering manager: Marta Cerezales\n⚠ Marcado con «OJO» en el BEO: cr
+ oissant de cereales y wrap de jamón cocido\, queso y espinacas.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Air Europa · Convención de ventas · Coffee break dulce y sal
+ ado (103 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:47521bec12d43170cdf6@eventos-palau
+DTSTAMP:20261118T000000Z
+DTSTART;TZID=Europe/Madrid:20261204T134500
+DTEND;TZID=Europe/Madrid:20261204T151500
+SUMMARY:Air Europa · Convención de ventas · Cocktail 1 (82 pax)
+LOCATION:Sala Palma
+DESCRIPTION:Cóctel · 13:45–15:15\nPax: 82 pax\nSala: Sala Palma + Rooft
+ op\nCatering manager: Marta Cerezales\n+ café
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Air Europa · Convención de ventas · Cocktail 1 (82 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:30f96bc1b4f84c518687@eventos-palau
+DTSTAMP:20261118T000000Z
+DTSTART;TZID=Europe/Madrid:20261211T230000
+DTEND;TZID=Europe/Madrid:20261212T000000
+SUMMARY:Quirónsalud · Cóctel · Tickets de copas (1200 pax)
+LOCATION:EXPO
+DESCRIPTION:Open bar · 23:00–23:59\nPax: 1200 pax\nSala: EXPO 1+2\nCater
+ ing manager: Ana Riera
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Quirónsalud · Cóctel · Tickets de copas (1200 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:2cdd73cab46e81559c0d@eventos-palau
+DTSTAMP:20261118T000000Z
+DTSTART;TZID=Europe/Madrid:20261218T190000
+DTEND;TZID=Europe/Madrid:20261218T210000
+SUMMARY:Hospital Sant Joan de Déu · Navidad · Barra libre 2 horas (433 p
+ ax)
+LOCATION:EXPO
+DESCRIPTION:Open bar · 19:00–21:00\nPax: 433 pax\nSala: EXPO 1+2\nCateri
+ ng manager: Ana Riera
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Hospital Sant Joan de Déu · Navidad · Barra libre 2 horas (4
+ 33 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
 END:VCALENDAR
