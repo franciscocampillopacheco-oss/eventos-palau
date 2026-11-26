@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1F3864">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fichas">
+<title>Fichas de plato</title>
+<link rel="icon" type="image/png" sizes="32x32" href="icono-32.png">
+<link rel="apple-touch-icon" href="icono-180.png">
+<style>
+:root{--azul:#1F3864;--azul2:#2E5597;--fondo:#F3F5F9;--card:#fff;--txt:#1A1F2B;--gris:#6B7280;--linea:#E3E7EE;--amar:#FFF4CC;--ok:#0F7B4B;--rev:#B7791F;--mal:#C2412D}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--fondo);color:var(--txt);font-size:15px}
+header{position:sticky;top:0;z-index:10;background:var(--azul);color:#fff;padding:calc(10px + env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 12px max(14px,env(safe-area-inset-left));box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.top{display:flex;align-items:center;gap:10px}
+.logo{width:42px;height:42px;border-radius:10px;box-shadow:0 0 0 2px rgba(255,255,255,.35)}
+h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.3px;flex:1}
+.volver{color:#fff;text-decoration:none;font-size:13px;font-weight:700;border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:6px 12px;white-space:nowrap}
+.tabs{display:flex;gap:6px;margin-top:10px}
+.tab{flex:1;border:0;border-radius:10px;padding:11px 4px;font-size:15px;font-weight:700;background:rgba(255,255,255,.14);color:#fff}
+.tab.on{background:#fff;color:var(--azul)}
+.dias{display:flex;gap:6px;margin-top:8px;overflow-x:auto;scrollbar-width:none}
+.dias::-webkit-scrollbar{display:none}
+.dias button{flex:0 0 auto;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:20px;padding:6px 13px;font-size:14px;font-weight:600}
+.dias button.on{background:#fff;color:var(--azul);border-color:#fff}
+main{padding:12px max(12px,env(safe-area-inset-right)) 60px max(12px,env(safe-area-inset-left));max-width:760px;margin:0 auto}
+.buscar{width:100%;height:46px;border-radius:12px;border:1px solid var(--linea);padding:0 14px;font-size:16px;background:#fff}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:10px 0 4px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid var(--linea);background:#fff;color:var(--azul);border-radius:20px;padding:7px 13px;font-size:14px;font-weight:700}
+.chip.on{background:var(--azul);color:#fff;border-color:var(--azul)}
+.prog{display:flex;align-items:center;gap:10px;margin:8px 2px 4px;font-size:13px;color:var(--gris)}
+.prog .bar{flex:1;height:8px;border-radius:5px;background:var(--linea);overflow:hidden}
+.prog .bar i{display:block;height:100%;background:var(--ok)}
+.sec{margin:16px 2px 6px;font-size:13px;font-weight:800;color:var(--azul2);text-transform:uppercase;letter-spacing:.8px}
+.pl{background:var(--card);border-radius:14px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.05);display:flex;gap:10px;align-items:center;width:100%;border:0;text-align:left;font:inherit;color:inherit}
+.pl .izq{flex:1;min-width:0}
+.pl .nom{font-size:16px;font-weight:700}
+.pl .sub{font-size:12.5px;color:var(--gris);margin-top:2px}
+.pl .prox{font-size:12px;font-weight:700;color:var(--azul2);margin-top:3px}
+.est{flex:none;font-size:12px;font-weight:800;border-radius:8px;padding:4px 8px;white-space:nowrap}
+.est.vacia{background:#FDECEA;color:var(--mal)}.est.rev{background:#FDF3E1;color:var(--rev)}.est.ok{background:#E3F4EC;color:var(--ok)}
+.nuevo{display:block;width:100%;border:2px dashed var(--linea);background:transparent;border-radius:14px;padding:12px;font-size:15px;font-weight:700;color:var(--azul2);margin-top:6px}
+.aviso{background:var(--amar);border-radius:12px;padding:10px 12px;font-size:13.5px;margin:8px 0;line-height:1.45}
+/* Formulario */
+#form{position:fixed;inset:0;z-index:30;background:var(--fondo);overflow-y:auto;padding-bottom:calc(90px + env(safe-area-inset-bottom))}
+.fh{position:sticky;top:0;z-index:2;background:var(--azul);color:#fff;padding:calc(10px + env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 12px max(14px,env(safe-area-inset-left));display:flex;gap:10px;align-items:flex-start}
+.fh .t{flex:1;min-width:0}.fh b{display:block;font-size:18px;line-height:1.2}.fh small{opacity:.8;font-size:12.5px}
+.fh button{border:0;background:rgba(255,255,255,.18);color:#fff;border-radius:10px;font-size:15px;font-weight:700;padding:8px 12px}
+.fbody{max-width:640px;margin:0 auto;padding:4px max(12px,env(safe-area-inset-right)) 0 max(12px,env(safe-area-inset-left))}
+.blk{background:#fff;border-radius:14px;padding:14px;margin-top:12px;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.blk h3{margin:0 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:.7px;color:var(--azul2)}
+.blk .ayuda{font-size:12.5px;color:var(--gris);margin:-4px 0 10px}
+.step{display:flex;align-items:center;gap:8px}
+.step button{width:52px;height:52px;border-radius:12px;border:0;background:#E8EEF8;color:var(--azul);font-size:26px;font-weight:800;flex:none}
+.step input{flex:1;min-width:0;height:52px;border-radius:12px;border:1px solid var(--linea);text-align:center;font-size:24px;font-weight:800;color:var(--azul)}
+.ops{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.op{border:1px solid var(--linea);background:#fff;color:var(--txt);border-radius:10px;padding:9px 13px;font-size:15px;font-weight:600}
+.op.on{background:var(--azul);color:#fff;border-color:var(--azul)}
+.calc{margin-top:10px;font-size:14px;color:var(--ok);font-weight:700}
+.men{display:grid;gap:8px}
+.mrow{border:1px solid var(--linea);border-radius:12px;padding:10px}
+.mrow .mt{display:flex;align-items:center;gap:8px;font-weight:700}
+.mrow .mt span{flex:1}
+.mrow .x{border:0;background:#FDECEA;color:var(--mal);border-radius:8px;width:34px;height:34px;font-size:18px;font-weight:800}
+.mrow .q{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap}
+.mrow .q button.sm{width:40px;height:40px;border-radius:10px;border:0;background:#E8EEF8;color:var(--azul);font-size:20px;font-weight:800}
+.mrow .q input{width:64px;height:40px;border-radius:10px;border:1px solid var(--linea);text-align:center;font-size:18px;font-weight:800}
+.mrow .q .modo{flex-basis:100%;display:flex;border:1px solid var(--linea);border-radius:10px;overflow:hidden}
+.mrow .q .modo button{flex:1;border:0;background:#fff;padding:9px 10px;font-size:13.5px;font-weight:700;color:var(--gris)}
+.mrow .q .modo button.on{background:var(--azul);color:#fff}
+select,.txt{width:100%;height:46px;border-radius:12px;border:1px solid var(--linea);padding:0 12px;font-size:16px;background:#fff;color:var(--txt)}
+textarea.txt{height:90px;padding:10px 12px;font-family:inherit;resize:vertical}
+.foto{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.foto img{width:96px;height:96px;object-fit:cover;border-radius:10px;border:1px solid var(--linea)}
+.foto label{display:inline-flex;align-items:center;gap:8px;border:2px dashed var(--linea);border-radius:12px;padding:12px 16px;font-weight:700;color:var(--azul2)}
+.foto input{display:none}
+.guardar{position:fixed;left:0;right:0;bottom:0;z-index:3;padding:10px max(12px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));background:linear-gradient(transparent,var(--fondo) 30%)}
+.guardar button{display:block;width:100%;max-width:640px;margin:0 auto;height:56px;border:0;border-radius:14px;background:var(--ok);color:#fff;font-size:18px;font-weight:800;box-shadow:0 4px 14px rgba(15,123,75,.35)}
+.guardar button:disabled{background:#9CA3AF;box-shadow:none}
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--azul);color:#fff;padding:10px 16px;border-radius:12px;font-size:14.5px;font-weight:600;z-index:40;opacity:0;transition:.25s;pointer-events:none;max-width:90vw}
+#toast.on{opacity:1}
+/* Por evento */
+.ev{background:var(--card);border-radius:14px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden}
+.evh{padding:12px 14px;border-left:6px solid var(--azul2);display:flex;gap:10px;align-items:flex-start}
+.evh .izq{flex:1;min-width:0}
+.evh .hora{font-size:13px;font-weight:800;color:var(--azul2)}
+.evh .tit{font-size:16.5px;font-weight:800;margin-top:1px}
+.evh .meta{font-size:12.5px;color:var(--gris);margin-top:2px}
+.evh .px{font-size:26px;font-weight:800;color:var(--azul);text-align:right;line-height:1}
+.evh .px small{display:block;font-size:11px;color:var(--gris);font-weight:600}
+.evb{padding:0 10px 10px}
+.it{display:flex;gap:10px;align-items:center;border:1px solid var(--linea);border-radius:12px;padding:9px 12px;margin-bottom:6px;background:#fff}
+.it .izq{flex:1;min-width:0}.it .nom{font-size:15px;font-weight:700}.it .rat{font-size:12.5px;color:var(--gris);margin-top:2px}
+.it .tot{font-size:20px;font-weight:800;color:var(--azul);text-align:right;white-space:nowrap}.it .tot small{font-size:13px;margin-left:2px}
+.it .tot .s2{display:block;font-size:12.5px;color:var(--ok);font-weight:700}
+.it.sin{background:#FAFAFA}.it.sin .tot{font-size:13px;color:var(--gris);font-weight:700}
+.it .rell{border:0;background:var(--azul2);color:#fff;border-radius:9px;padding:7px 10px;font-size:13px;font-weight:700}
+.colt{font-size:12px;font-weight:800;color:var(--azul2);text-transform:uppercase;letter-spacing:.8px;margin:10px 2px 6px}
+.totdia{background:#E8EEF8;border-radius:14px;padding:4px 10px 10px;margin-bottom:16px}
+.pie{font-size:12px;color:var(--gris);text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><img src="icono-96.png" alt="" class="logo"><h1>FICHAS DE PLATO</h1><a class="volver" href="./">← Ratios</a></div>
+  <div class="tabs">
+    <button class="tab on" data-t="rellenar">📝 Rellenar</button>
+    <button class="tab" data-t="cocina">👨‍🍳 Cocina</button>
+    <button class="tab" data-t="fregadores">🧽 Fregadores</button>
+  </div>
+  <div class="dias" id="dias" hidden></div>
+</header>
+<main>
+  <div id="vRellenar">
+    <input class="buscar" id="buscar" type="search" placeholder="Buscar plato…">
+    <div class="chips" id="fGrupo"></div>
+    <div class="chips" id="fEstado"></div>
+    <div class="prog" id="prog"></div>
+    <div id="lista"></div>
+    <button class="nuevo" id="nuevo">＋ Plato que no está en la lista</button>
+  </div>
+  <div id="vEvento" hidden>
+    <div id="lock"></div>
+    <div id="evs"></div>
+  </div>
+  <div class="pie" id="estado"></div>
+</main>
+
+<div id="form" hidden>
+  <div class="fh"><div class="t"><b id="fPlato"></b><small id="fGrupoTxt"></small></div><button id="fCerrar">✕</button></div>
+  <div class="fbody">
+    <div class="blk" id="bNuevo" hidden><h3>Plato nuevo</h3>
+      <input class="txt" id="nNombre" placeholder="Nombre del plato">
+      <div class="ops" id="nGrupo"></div>
+    </div>
+    <div class="blk"><h3>👤 ¿Quién rellena?</h3>
+      <input class="txt" id="fCocinero" placeholder="Tu nombre" autocomplete="name">
+      <div class="ops" id="fCocineros"></div>
+    </div>
+    <div class="blk"><h3>⚖️ Cantidad por persona</h3>
+      <div class="step"><button data-d="-1">−</button><input id="fCant" type="number" inputmode="decimal" min="0" step="any" placeholder="0"><button data-d="1">+</button></div>
+      <div class="ops" id="fUnidad"></div>
+      <div class="calc" id="fCalc"></div>
+    </div>
+    <div class="blk"><h3>🗑 Merma / desperdicio</h3>
+      <div class="ayuda">Lo que se pierde al limpiar o cocinar. Se suma al pedir.</div>
+      <div class="ops" id="fMerma"></div>
+    </div>
+    <div class="blk"><h3>🍽 Menaje de presentación</h3>
+      <div class="ayuda">En qué se sirve. Así el fregador sabe qué piezas prepara y friega.</div>
+      <div class="men" id="fMenaje"></div>
+      <select id="fMenAdd" style="margin-top:10px"></select>
+    </div>
+    <div class="blk"><h3>🥘 Recipiente de cocina</h3>
+      <div class="ops" id="fRecip"></div>
+      <div class="ayuda" style="margin:12px 0 6px">¿Para cuántas personas da cada recipiente lleno?</div>
+      <div class="step"><button data-r="-5">−</button><input id="fCabe" type="number" inputmode="numeric" min="0" placeholder="pax"><button data-r="5">+</button></div>
+    </div>
+    <div class="blk"><h3>📷 Foto del emplatado</h3>
+      <div class="foto"><img id="fFotoPrev" alt="" hidden><label>📷 Hacer o elegir foto<input id="fFoto" type="file" accept="image/*" capture="environment"></label></div>
+      <div class="ayuda" id="fFotoYa" style="margin-top:8px"></div>
+    </div>
+    <div class="blk"><h3>📝 Notas</h3>
+      <textarea class="txt" id="fNotas" placeholder="Corte, montaje, alérgenos…"></textarea>
+    </div>
+  </div>
+  <div class="guardar"><button id="fGuardar">Guardar ficha</button></div>
+</div>
+<div id="toast"></div>
+
+<script src="eventos-datos.js"></script>
+<script>
+/* ===== Configuración ===== */
+const HOJA_ID="1-GO7YcM6SICnqdsl-Vph-_7fMe2QWso-zmfqXgwgMWk";
+const SCRIPT_URL="";   /* aplicación web de Apps Script (fichas-apps-script.gs) */
+const MENAJE_DEF=["Plato llano","Plato hondo","Plato postre","Plato pizarra","Bol pequeño","Bol grande","Vasito de cristal","Vasito desechable","Cucharita degustación","Mini cazuelita","Tabla de madera","Bandeja espejo","Bandeja melamina","Fuente de cristal","Cesta de pan","Jarra","Palillo / brocheta"];
+const RECIP_DEF=["GN 1/1","GN 1/2","GN 1/3","GN 1/4","GN 1/6","GN 1/9","Bandeja horno 60×40","Bandeja pastelería","Olla / marmita","Cubeta","Táper"];
+const UNIDADES=[["g / pax","g"],["und / pax","und"],["ml / pax","ml"],["rac / pax","rac"]];
+const MERMAS=[0,5,10,15,20,30];
+const FAMILIAS=["COFFEE BREAK","CÓCTEL","BUFFET"];
+const TIPOS={des:"Desayuno",cafe:"Café",beb:"Bebidas",cb:"Coffee break",alm:"Almuerzo",cena:"Cena",coctel:"Cóctel",bar:"Open bar",fruta:"Fruta",otro:"Otro"};
+
+/* ===== Utilidades ===== */
+const $=id=>document.getElementById(id);
+const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm=x=>String(x||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/\s+/g," ").trim();
+const num=v=>{v=String(v??"").trim().replace(/\s/g,"").replace(",",".");if(!v)return null;const n=Number(v);return isFinite(n)?n:null};
+const nf=(v,d)=>v.toLocaleString("es-ES",{maximumFractionDigits:d});
+const ls=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}};
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),2600)}
+function csvParse(t){const rows=[];let row=[],f="",q=false;for(let i=0;i<t.length;i++){const c=t[i];
+  if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=false}else f+=c}
+  else if(c=='"')q=true;else if(c==","){row.push(f);f=""}else if(c=="\n"){row.push(f);rows.push(row);row=[];f=""}else if(c!="\r")f+=c}
+  if(f||row.length){row.push(f);rows.push(row)}return rows}
+const gviz=h=>`https://docs.google.com/spreadsheets/d/${HOJA_ID}/gviz/tq?tqx=out:csv&headers=0&sheet=${encodeURIComponent(h)}`;
+/* menaje en texto «Pieza:1 | Pieza:c20» (c20 = 1 cada 20 pax) */
+const menParse=s=>String(s||"").split("|").map(x=>x.trim()).filter(Boolean).map(x=>{const i=x.lastIndexOf(":");const n=(i>0?x.slice(0,i):x).trim();const v=i>0?x.slice(i+1).trim():"1";
+  return /^c/i.test(v)?{n,modo:"cada",v:num(v.slice(1))||1}:{n,modo:"pax",v:num(v)??1}});
+const menTxt=a=>a.map(m=>m.n+":"+(m.modo==="cada"?"c"+m.v:String(m.v).replace(".",","))).join(" | ");
+const menPorPax=m=>m.modo==="cada"?1/(m.v||1):m.v;
+
+/* ===== Estado ===== */
+const S={tab:ls("fichasTab")||"rellenar",q:"",fam:"",est:"",dia:null};
+let FICHAS=[],MENAJE=MENAJE_DEF.slice(),RECIP=RECIP_DEF.slice(),EVD=null,PROX={},CARGA="";
+
+/* ===== Carga de fichas ===== */
+function deFilas(cab,filas){
+  const ix=n=>cab.findIndex(c=>norm(c).startsWith(norm(n)));
+  const I={plato:0,grupo:ix("GRUPO"),veces:ix("VECES"),cant:ix("CANTIDAD POR PAX"),uni:ix("UNIDAD"),rec:ix("RECIPIENTE"),cabe:ix("CUÁNTO CABE"),notas:ix("NOTAS"),por:ix("RELLENADO"),fecha:ix("FECHA"),re:ix("BUSCAR EN BEO"),merma:ix("MERMA"),men:ix("MENAJE"),foto:ix("FOTO"),est:ix("ESTADO")};
+  const g=(r,k)=>I[k]>=0?String(r[I[k]]??"").trim():"";
+  return filas.filter(r=>String(r[0]||"").trim()).map(r=>{
+    let re=null;try{const s=g(r,"re");if(s)re=new RegExp(s,"i")}catch(e){}
+    const f={plato:g(r,"plato"),grupo:g(r,"grupo"),veces:num(g(r,"veces"))||0,cant:num(g(r,"cant")),uni:g(r,"uni")||"g / pax",rec:g(r,"rec"),cabe:num(g(r,"cabe")),notas:g(r,"notas"),por:g(r,"por"),fecha:g(r,"fecha"),re,merma:num(g(r,"merma")),men:menParse(g(r,"men")),foto:g(r,"foto"),est:g(r,"est")};
+    f.estado=/^ok/i.test(f.est)?"ok":(f.cant!=null||f.men.length)?"rev":"vacia";
+    return f});
+}
+async function cargarFichas(){
+  try{
+    if(SCRIPT_URL){const r=await fetch(SCRIPT_URL,{cache:"no-store"});const d=await r.json();
+      FICHAS=deFilas(d.cab,d.filas);if(d.menaje&&d.menaje.length)MENAJE=d.menaje;if(d.recipientes&&d.recipientes.length)RECIP=d.recipientes}
+    else{const t=await (await fetch(gviz("FICHAS"),{cache:"no-store"})).text();const rows=csvParse(t);FICHAS=deFilas(rows[0],rows.slice(1))}
+    ls("fichasCache",JSON.stringify({FICHAS:FICHAS.map(f=>({...f,re:f.re?f.re.source:null})),MENAJE,RECIP}));
+    CARGA="Fichas leídas de la hoja «Ratios cocina» a las "+new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})+".";
+  }catch(e){
+    try{const c=JSON.parse(ls("fichasCache")||"null");if(c){FICHAS=c.FICHAS.map(f=>({...f,re:f.re?new RegExp(f.re,"i"):null}));MENAJE=c.MENAJE;RECIP=c.RECIP}}catch(e2){}
+    CARGA="Sin conexión con la hoja: enseño las últimas fichas guardadas en este móvil.";
+  }
+  $("estado").textContent=CARGA+(SCRIPT_URL?"":" (Guardado todavía sin conectar.)");
+  calcProx();render();
+}
+
+/* ===== Cruce menú ↔ fichas ===== */
+const NOCOCINA=/^(caf[eé]|t[eé]s?\b|infusi|agua|leche|zumos?|refresco|bebida|cerveza|vino|cava|blanco |tinto |rosado )/i;
+function fichaDe(pl){const n=norm(pl);if(!n||NOCOCINA.test(n))return undefined;
+  return FICHAS.find(f=>f.re&&f.re.test(n))||FICHAS.find(f=>norm(f.plato)===n)||null}
+function platosDe(s){const out=[];for(const [sec,pls] of (s.menu||[])){if(/bebida|bodega|vino/i.test(sec))continue;for(const pl of pls){const f=fichaDe(pl);if(f===undefined)continue;out.push({pl,f})}}return out}
+const hoyISO=()=>{const d=new Date(Date.now()-4*3600000);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+function servicios(){if(!EVD)return[];const G={};EVD.grupos.forEach(g=>G[g.id]=g);const h=hoyISO();
+  return EVD.servicios.filter(s=>s.fecha>=h&&TIPOS[s.t]&&s.menu&&s.menu.length).map(s=>({...s,grupo:G[s.g]||{n:s.g}})).sort((a,b)=>a.fecha.localeCompare(b.fecha)||a.start-b.start)}
+function calcProx(){PROX={};for(const s of servicios())for(const {f} of platosDe(s))if(f&&!PROX[f.plato])PROX[f.plato]=s.fecha}
+const diaCorto=iso=>{const d=new Date(iso+"T12:00:00");const t=d.toLocaleDateString("es-ES",{weekday:"short",day:"numeric",month:"short"}).replace(/\./g,"");return t.charAt(0).toUpperCase()+t.slice(1)};
+
+/* ===== Cálculos ===== */
+const uniCorta=u=>(UNIDADES.find(x=>x[0]===u)||[0,u.split("/")[0].trim()])[1];
+function cantTotal(f,pax){if(f.cant==null||!pax)return null;const t=f.cant*pax*(1+(f.merma||0)/100);const u=uniCorta(f.uni);
+  if(u==="g")return t>=1000?{v:nf(t/1000,t<10000?2:1),u:"kg"}:{v:nf(t,0),u:"g"};
+  if(u==="ml")return t>=1000?{v:nf(t/1000,1),u:"L"}:{v:nf(t,0),u:"ml"};
+  return{v:nf(Math.ceil(t),0),u}}
+const recipN=(f,pax)=>f.rec&&f.cabe>0&&pax?Math.ceil(pax/f.cabe):null;
+
+/* ===== Pintar ===== */
+function render(){
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.t===S.tab));
+  const ev=S.tab!=="rellenar";$("vRellenar").hidden=ev;$("vEvento").hidden=!ev;$("dias").hidden=!ev;
+  ls("fichasTab",S.tab);
+  ev?renderEvento():renderLista();
+}
+function famDe(f){return FAMILIAS.find(x=>f.grupo.toUpperCase().startsWith(x))||"OTROS"}
+function renderLista(){
+  $("fGrupo").innerHTML=[["","Todos"],...FAMILIAS.map(x=>[x,x.charAt(0)+x.slice(1).toLowerCase()])].map(([k,t])=>`<button class="chip${S.fam===k?" on":""}" data-fam="${esc(k)}">${esc(t)}</button>`).join("");
+  const cuenta=e=>FICHAS.filter(f=>(!S.fam||famDe(f)===S.fam)&&(!e||f.estado===e)).length;
+  $("fEstado").innerHTML=[["","Todas"],["vacia","Sin rellenar"],["rev","Por revisar"],["ok","Revisadas"],["prox","Salen pronto"]].map(([k,t])=>`<button class="chip${S.est===k?" on":""}" data-est="${k}">${t}${k&&k!=="prox"?" ("+cuenta(k)+")":""}</button>`).join("");
+  const tot=cuenta(""),hechas=tot-cuenta("vacia");
+  $("prog").innerHTML=`<span>${hechas} de ${tot} rellenas</span><span class="bar"><i style="width:${tot?hechas/tot*100:0}%"></i></span>`;
+  const q=norm(S.q);
+  let L=FICHAS.filter(f=>(!S.fam||famDe(f)===S.fam)&&(!q||norm(f.plato+" "+f.grupo).includes(q)));
+  if(S.est==="prox")L=L.filter(f=>PROX[f.plato]);else if(S.est)L=L.filter(f=>f.estado===S.est);
+  L.sort((a,b)=>(PROX[a.plato]||"9").localeCompare(PROX[b.plato]||"9")||b.veces-a.veces);
+  const EST={vacia:["vacia","Sin rellenar"],rev:["rev","Por revisar"],ok:["ok","✓ Revisada"]};
+  let h="",grp=null;const porGrupo=!S.est&&!q;
+  if(porGrupo)L.sort((a,b)=>a.grupo.localeCompare(b.grupo)||(PROX[a.plato]||"9").localeCompare(PROX[b.plato]||"9")||b.veces-a.veces);
+  for(const f of L){
+    if(porGrupo&&f.grupo!==grp){grp=f.grupo;h+=`<div class="sec">${esc(grp||"Sin grupo")}</div>`}
+    const e=EST[f.estado];
+    const det=f.cant!=null?`${nf(f.cant,2)} ${esc(f.uni)}${f.men.length?" · "+esc(f.men.map(m=>m.n).join(", ")):""}`:`Sale ${f.veces} ${f.veces===1?"vez":"veces"} en el último año`;
+    h+=`<button class="pl" data-p="${esc(f.plato)}"><span class="izq"><span class="nom">${esc(f.plato)}</span><span class="sub" style="display:block">${det}</span>${PROX[f.plato]?`<span class="prox" style="display:block">📅 Sale el ${diaCorto(PROX[f.plato])}</span>`:""}</span><span class="est ${e[0]}">${e[1]}</span></button>`;
+  }
+  $("lista").innerHTML=h||`<div class="aviso">No hay platos con ese filtro.</div>`;
+}
+async function asegurarEventos(){
+  if(EVD||S.cargandoEv)return;S.cargandoEv=true;
+  $("evs").innerHTML=`<div class="aviso">Cargando eventos…</div>`;
+  try{EVD=await cargarDatosEventos($("lock"));calcProx()}catch(e){$("evs").innerHTML=`<div class="aviso">No se han podido leer los eventos. Comprueba la conexión.</div>`}
+  S.cargandoEv=false;render();
+}
+function renderEvento(){
+  if(!EVD){asegurarEventos();return}
+  const all=servicios();const dias=[...new Set(all.map(s=>s.fecha))];
+  if(!dias.length){$("dias").innerHTML="";$("evs").innerHTML=`<div class="aviso">No hay servicios con menú a partir de hoy.</div>`;return}
+  if(!dias.includes(S.dia))S.dia=dias[0];
+  $("dias").innerHTML=dias.map(d=>`<button data-d="${d}" class="${d===S.dia?"on":""}">${diaCorto(d)}</button>`).join("");
+  const ss=all.filter(s=>s.fecha===S.dia);
+  const coc=S.tab==="cocina";
+  let h="";const TOT=new Map();const addT=(k,v,u)=>{const x=TOT.get(k)||{v:0,u};x.v+=v;TOT.set(k,x)};
+  for(const s of ss){
+    const pax=typeof s.pax==="number"?s.pax:null;
+    const ps=platosDe(s);
+    let body="";const sin=[];
+    if(coc){
+      for(const {pl,f} of ps){
+        if(!f||f.cant==null){sin.push({pl,f});continue}
+        const t=cantTotal(f,pax),r=recipN(f,pax);
+        body+=`<div class="it"><div class="izq"><div class="nom">${esc(f.plato)}</div><div class="rat">${nf(f.cant,2)} ${esc(f.uni)}${f.merma?` · +${nf(f.merma,0)} % merma`:""}${f.rec?` · ${esc(f.rec)}${f.cabe?` (${f.cabe} pax)`:""}`:""}</div>${norm(pl)!==norm(f.plato)?`<div class="rat">BEO: ${esc(pl)}</div>`:""}</div><div class="tot">${t?`${t.v}<small>${t.u}</small>`:"—"}${r?`<span class="s2">${r} × ${esc(f.rec)}</span>`:""}</div></div>`;
+      }
+    }else{
+      const M=new Map();
+      for(const {pl,f} of ps){
+        if(!f||(!f.men.length&&!f.rec)){sin.push({pl,f});continue}
+        for(const m of f.men){const n=pax?Math.ceil(menPorPax(m)*pax):0;const x=M.get(m.n)||{n:0,de:[]};x.n+=n;x.de.push(f.plato);M.set(m.n,x)}
+        const r=recipN(f,pax);if(r){const k="🥘 "+f.rec;const x=M.get(k)||{n:0,de:[]};x.n+=r;x.de.push(f.plato);M.set(k,x)}
+      }
+      for(const [n,x] of [...M].sort((a,b)=>a[0].localeCompare(b[0]))){addT(n,x.n,"piezas");
+        body+=`<div class="it"><div class="izq"><div class="nom">${esc(n)}</div><div class="rat">${esc([...new Set(x.de)].join(" · "))}</div></div><div class="tot">${pax?nf(x.n,0):"—"}<small>${n.startsWith("🥘")?"recip.":"piezas"}</small></div></div>`}
+    }
+    if(sin.length)body+=`<div class="colt">Falta ficha</div>`+sin.map(({pl,f})=>`<div class="it sin"><div class="izq"><div class="nom">${esc(f?f.plato:pl)}</div>${f?"":`<div class="rat">Plato del BEO sin ficha</div>`}</div><button class="rell" data-p="${esc(f?f.plato:"")}" data-nuevo="${f?"":esc(pl)}" data-g="${esc(TIPOS[s.t]||"")}">Rellenar</button></div>`).join("");
+    if(!ps.length)body=`<div class="rat" style="padding:4px 4px 8px">El menú del BEO no lleva platos de cocina.</div>`;
+    h+=`<div class="ev"><div class="evh"><div class="izq"><div class="hora">${esc(s.time||"")} · ${esc(TIPOS[s.t])}</div><div class="tit">${esc(s.grupo.n)}</div><div class="meta">${esc(s.title||"")}${s.place?" · "+esc(s.place):""}</div></div><div class="px">${pax??esc(s.paxLabel||"—")}<small>pax</small></div></div><div class="evb">${body}</div></div>`;
+  }
+  if(!coc&&TOT.size)h=`<div class="totdia"><div class="colt">Total del día para fregar</div>${[...TOT].sort((a,b)=>a[0].localeCompare(b[0])).map(([n,x])=>`<div class="it"><div class="izq"><div class="nom">${esc(n)}</div></div><div class="tot">${nf(x.v,0)}<small>${n.startsWith("🥘")?"recip.":"piezas"}</small></div></div>`).join("")}</div>`+h;
+  $("evs").innerHTML=h;
+}
+
+/* ===== Formulario ===== */
+let F=null;
+function abrir(plato,nuevoNombre,grupoSug){
+  const f=FICHAS.find(x=>x.plato===plato);
+  F=f?{plato:f.plato,grupo:f.grupo,cant:f.cant,uni:f.uni||"g / pax",merma:f.merma||0,men:f.men.map(m=>({...m})),rec:f.rec,cabe:f.cabe,notas:/^del excel/i.test(f.notas)?"":f.notas,foto:null,fotoYa:f.foto,nuevo:false}
+    :{plato:"",grupo:"",cant:null,uni:"und / pax",merma:0,men:[],rec:"",cabe:null,notas:"",foto:null,nuevo:true,sug:nuevoNombre||"",gsug:grupoSug||""};
+  $("bNuevo").hidden=!F.nuevo;$("nNombre").value=F.sug||"";
+  const gr=[...new Set(FICHAS.map(x=>x.grupo).filter(Boolean))].sort();
+  if(F.nuevo){const fam=/cóctel|coctel/i.test(F.gsug)?"CÓCTEL":/coffee/i.test(F.gsug)?"COFFEE BREAK":/almuerzo|cena/i.test(F.gsug)?"BUFFET":"";F.grupo=gr.find(g=>fam&&g.startsWith(fam))||""}
+  $("nGrupo").innerHTML=gr.map(g=>`<button class="op${g===F.grupo?" on":""}" data-g="${esc(g)}">${esc(g)}</button>`).join("");
+  $("fPlato").textContent=F.nuevo?"Plato nuevo":F.plato;$("fGrupoTxt").textContent=F.nuevo?"":F.grupo+(f&&f.por?` · última vez: ${f.por}${f.fecha?" ("+f.fecha+")":""}`:"");
+  $("fCocinero").value=ls("fichasCocinero")||"";
+  const nombres=[...new Set(FICHAS.map(x=>x.por).filter(Boolean))].slice(0,8);
+  $("fCocineros").innerHTML=nombres.map(n=>`<button class="op" data-n="${esc(n)}">${esc(n)}</button>`).join("");
+  $("fCant").value=F.cant??"";$("fNotas").value=F.notas||"";$("fCabe").value=F.cabe??"";
+  $("fFoto").value="";$("fFotoPrev").hidden=true;
+  $("fFotoYa").innerHTML=F.fotoYa?`Ya tiene foto: <a href="${esc(F.fotoYa)}" target="_blank" rel="noopener">ver foto</a>. Si subes otra, se guarda la nueva.`:"";
+  pintarForm();$("form").hidden=false;$("form").scrollTop=0;document.body.style.overflow="hidden";
+}
+function cerrar(){$("form").hidden=true;document.body.style.overflow="";F=null}
+function pintarForm(){
+  $("fUnidad").innerHTML=UNIDADES.map(([k,t])=>`<button class="op${F.uni===k?" on":""}" data-u="${k}">${k}</button>`).join("");
+  $("fMerma").innerHTML=MERMAS.map(m=>`<button class="op${(F.merma||0)===m?" on":""}" data-m="${m}">${m?m+" %":"Sin merma"}</button>`).join("");
+  $("fRecip").innerHTML=RECIP.map(r=>`<button class="op${F.rec===r?" on":""}" data-r="${esc(r)}">${esc(r)}</button>`).join("")+`<button class="op" data-r="__otro">＋ Otro</button>`;
+  $("fMenaje").innerHTML=F.men.length?F.men.map((m,i)=>`<div class="mrow" data-i="${i}"><div class="mt"><span>${esc(m.n)}</span><button class="x" data-x="${i}" aria-label="Quitar">×</button></div>
+    <div class="q"><div class="modo"><button data-modo="pax" class="${m.modo==="pax"?"on":""}">por persona</button><button data-modo="cada" class="${m.modo==="cada"?"on":""}">1 cada X personas</button></div>
+    <button class="sm" data-mq="-1">−</button><input data-mv="${i}" type="number" inputmode="decimal" value="${m.v}"><button class="sm" data-mq="1">+</button><span style="font-size:13.5px;color:var(--gris)">${m.modo==="cada"?"personas":"pieza(s) por persona"}</span></div></div>`).join(""):`<div class="ayuda" style="margin:0">Todavía sin piezas. Elige abajo en qué se sirve.</div>`;
+  $("fMenAdd").innerHTML=`<option value="">＋ Añadir pieza de menaje…</option>`+MENAJE.filter(n=>!F.men.some(m=>m.n===n)).map(n=>`<option>${esc(n)}</option>`).join("")+`<option value="__otro">Otra pieza (escribir)…</option>`;
+  const c=num($("fCant").value),u=uniCorta(F.uni);
+  $("fCalc").textContent=c?`Para 100 pax: ${(()=>{const t=cantTotal({cant:c,uni:F.uni,merma:F.merma},100);return t.v+" "+t.u})()}${F.merma?" (con merma)":""}`:"";
+}
+async function postar(d){
+  const r=await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(d)});
+  const j=await r.json();if(!j.ok)throw new Error(j.error||"error");return j}
+function pedirTexto(titulo){return new Promise(res=>{
+  const d=document.createElement("div");d.style.cssText="position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.4);display:grid;place-items:center;padding:16px";
+  d.innerHTML=`<div style="background:#fff;border-radius:16px;padding:16px;width:min(420px,100%)"><b style="display:block;margin-bottom:10px">${esc(titulo)}</b><input class="txt"><div style="display:flex;gap:8px;margin-top:12px"><button class="op" style="flex:1">Cancelar</button><button class="op on" style="flex:1">Añadir</button></div></div>`;
+  document.body.appendChild(d);const i=d.querySelector("input");i.focus();
+  const fin=v=>{d.remove();res(v)};const [c,a]=d.querySelectorAll("button");c.onclick=()=>fin("");a.onclick=()=>fin(i.value.trim());i.onkeydown=e=>{if(e.key==="Enter")fin(i.value.trim())}})}
+async function comprimir(file){
+  const img=await createImageBitmap(file);const k=Math.min(1,1280/Math.max(img.width,img.height));
+  const c=document.createElement("canvas");c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+  return c.toDataURL("image/jpeg",.72)}
+async function guardar(){
+  const cocinero=$("fCocinero").value.trim();
+  const plato=F.nuevo?$("nNombre").value.trim():F.plato;
+  if(!plato){toast("Escribe el nombre del plato");return}
+  if(F.nuevo&&!F.grupo){toast("Elige el grupo del plato");return}
+  if(!cocinero){toast("Pon tu nombre");$("fCocinero").focus();return}
+  const cant=num($("fCant").value);
+  if(cant==null&&!F.men.length&&!F.rec){toast("Rellena al menos la cantidad o el menaje");return}
+  if(!SCRIPT_URL){toast("El guardado todavía no está conectado a la hoja");return}
+  ls("fichasCocinero",cocinero);
+  const b=$("fGuardar");b.disabled=true;b.textContent="Guardando…";
+  try{
+    const d={accion:"ficha",plato,grupo:F.grupo,cocinero,cantidad:cant??"",unidad:F.uni,merma:F.merma||"",menaje:menTxt(F.men),recipiente:F.rec||"",cabe:num($("fCabe").value)??"",notas:$("fNotas").value.trim(),foto:F.foto||""};
+    const j=await postar(d);
+    let f=FICHAS.find(x=>x.plato===plato);
+    if(!f){f={plato,grupo:F.grupo,veces:0,re:null,men:[]};FICHAS.push(f)}
+    Object.assign(f,{cant,uni:F.uni,merma:F.merma,men:F.men,rec:F.rec,cabe:num($("fCabe").value),notas:d.notas,por:cocinero,fecha:j.fecha,est:"Por revisar",estado:cant!=null||F.men.length?"rev":"vacia"});
+    if(j.foto)f.foto=j.foto;
+    cerrar();calcProx();render();toast("✓ Ficha guardada: "+plato);
+  }catch(e){toast("No se ha podido guardar. Revisa la conexión y prueba otra vez.")}
+  b.disabled=false;b.textContent="Guardar ficha";
+}
+
+/* ===== Eventos de la interfaz ===== */
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{S.tab=b.dataset.t;render();window.scrollTo(0,0)});
+$("buscar").oninput=e=>{S.q=e.target.value;renderLista()};
+$("fGrupo").onclick=e=>{const b=e.target.closest("[data-fam]");if(b){S.fam=b.dataset.fam;renderLista()}};
+$("fEstado").onclick=e=>{const b=e.target.closest("[data-est]");if(b){S.est=S.est===b.dataset.est?"":b.dataset.est;renderLista()}};
+$("lista").onclick=e=>{const b=e.target.closest("[data-p]");if(b)abrir(b.dataset.p)};
+$("nuevo").onclick=()=>abrir(null);
+$("dias").onclick=e=>{const b=e.target.closest("[data-d]");if(b){S.dia=b.dataset.d;renderEvento();window.scrollTo(0,0)}};
+$("evs").onclick=e=>{const b=e.target.closest(".rell");if(b)b.dataset.p?abrir(b.dataset.p):abrir(null,b.dataset.nuevo,b.dataset.g)};
+$("fCerrar").onclick=cerrar;
+$("nGrupo").onclick=e=>{const b=e.target.closest("[data-g]");if(b){F.grupo=b.dataset.g;$("nGrupo").querySelectorAll(".op").forEach(x=>x.classList.toggle("on",x===b))}};
+$("fCocineros").onclick=e=>{const b=e.target.closest("[data-n]");if(b)$("fCocinero").value=b.dataset.n};
+document.querySelectorAll(".step button[data-d]").forEach(b=>b.onclick=()=>{const u=uniCorta(F.uni);const st=u==="g"||u==="ml"?5:.5;$("fCant").value=Math.max(0,Math.round(((num($("fCant").value)||0)+st*+b.dataset.d)*100)/100);pintarForm()});
+document.querySelectorAll(".step button[data-r]").forEach(b=>b.onclick=()=>{$("fCabe").value=Math.max(0,(num($("fCabe").value)||0)+ +b.dataset.r)});
+$("fCant").oninput=pintarForm;
+$("fUnidad").onclick=e=>{const b=e.target.closest("[data-u]");if(b){F.uni=b.dataset.u;pintarForm()}};
+$("fMerma").onclick=e=>{const b=e.target.closest("[data-m]");if(b){F.merma=+b.dataset.m;pintarForm()}};
+$("fRecip").onclick=async e=>{const b=e.target.closest("[data-r]");if(!b)return;
+  if(b.dataset.r==="__otro"){const n=await pedirTexto("Nuevo recipiente de cocina");if(!n)return;if(!RECIP.includes(n)){RECIP.push(n);if(SCRIPT_URL)postar({accion:"pieza",tipo:"recipiente",nombre:n}).catch(()=>{})}F.rec=n}
+  else F.rec=F.rec===b.dataset.r?"":b.dataset.r;pintarForm()};
+$("fMenAdd").onchange=async e=>{let n=e.target.value;if(!n)return;
+  if(n==="__otro"){n=await pedirTexto("Nueva pieza de menaje");if(!n){pintarForm();return}if(!MENAJE.includes(n)){MENAJE.push(n);if(SCRIPT_URL)postar({accion:"pieza",tipo:"menaje",nombre:n}).catch(()=>{})}}
+  F.men.push({n,modo:"pax",v:1});pintarForm()};
+$("fMenaje").onclick=e=>{const x=e.target.closest("[data-x]");if(x){F.men.splice(+x.dataset.x,1);pintarForm();return}
+  const row=e.target.closest(".mrow");if(!row)return;const m=F.men[+row.dataset.i];
+  const md=e.target.closest("[data-modo]");if(md){m.modo=md.dataset.modo;m.v=m.modo==="cada"?20:1;pintarForm();return}
+  const q=e.target.closest("[data-mq]");if(q){const st=m.modo==="cada"?5:.5;m.v=Math.max(m.modo==="cada"?1:0,Math.round((m.v+st*+q.dataset.mq)*100)/100);pintarForm()}};
+$("fMenaje").oninput=e=>{const i=e.target.dataset.mv;if(i!=null){const v=num(e.target.value);if(v!=null)F.men[+i].v=v}};
+$("fFoto").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{F.foto=await comprimir(f);$("fFotoPrev").src=F.foto;$("fFotoPrev").hidden=false}catch(err){toast("No se ha podido leer la foto")}};
+$("fGuardar").onclick=guardar;
+window.addEventListener("keydown",e=>{if(e.key==="Escape"&&F)cerrar()});
+
+cargarFichas();
+/* los eventos se cargan para ordenar «Salen pronto» si este móvil ya tiene la clave; si no, al abrir Cocina o Fregadores */
+cargarDatosEventos(null).then(d=>{EVD=d;calcProx();render()}).catch(()=>{});
+</script>
+</body>
+</html>

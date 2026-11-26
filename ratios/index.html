@@ -80,7 +80,7 @@ main{padding:12px 12px 40px;max-width:720px;margin:0 auto}
 </head>
 <body>
 <header>
-  <div class="top"><img src="icono-96.png" alt="" class="logo"><h1>RATIOS COCINA</h1></div>
+  <div class="top"><img src="icono-96.png" alt="" class="logo"><h1 style="flex:1">RATIOS COCINA</h1><a href="fichas.html" style="color:#fff;text-decoration:none;font-size:13px;font-weight:700;border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:6px 12px;white-space:nowrap">📝 Fichas</a></div>
   <div class="tabs">
     <button class="tab on" data-t="buffet">Buffet</button>
     <button class="tab" data-t="cocktail">Cocktail</button>
@@ -104,10 +104,12 @@ main{padding:12px 12px 40px;max-width:720px;margin:0 auto}
 <main>
   <input class="buscar" id="buscar" type="search" placeholder="Buscar producto…">
   <div id="lista"></div>
+  <div id="evlock"></div>
   <div id="evs" hidden></div>
   <div class="pie" id="hojaEstado"></div>
   <div class="pie">Cantidades por persona de la hoja de ratios de cocina. Lo que sale en gris no tiene cantidad todavía.</div>
 </main>
+<script src="eventos-datos.js"></script>
 <script>
 /* tipos:
  g      -> q gramos por pax, total en kg
@@ -361,7 +363,7 @@ function render(){
  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.t===S.tab));
  const isEv=S.tab==="eventos";
  $("paxBox").style.display=isEv?"none":"";$("rapidos").style.display=isEv?"none":"";
- $("dias").classList.toggle("on",isEv);$("evs").hidden=!isEv;$("lista").hidden=isEv;$("buscar").hidden=isEv;
+ $("dias").classList.toggle("on",isEv);$("evs").hidden=!isEv;$("evlock").hidden=!isEv;$("lista").hidden=isEv;$("buscar").hidden=isEv;
  if(isEv){$("lineasBox").classList.remove("on");renderEventos();try{localStorage.setItem("ratiosCocina",JSON.stringify({pax:S.pax,tab:S.tab,lineas:S.lineas}))}catch(e){}return}
  const p=Math.max(0,parseInt($("pax").value)||0);
  S.pax[S.tab]=p;
@@ -446,11 +448,7 @@ const isoHoy=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMont
 const fh=h=>{const m=Math.round(h*60);return String(Math.floor(m/60)%24).padStart(2,"0")+":"+String(m%60).padStart(2,"0")};
 async function cargarEventos(){
  try{
-  const r=await fetch("../eventos/index.html",{cache:"no-store"});
-  const t=await r.text();
-  const m=t.match(/const DATA = (\{[\s\S]*?\});\n/);
-  if(!m)throw new Error("sin datos");
-  EV.data=JSON.parse(m[1]);EV.err="";
+  EV.data=await cargarDatosEventos($("evlock"));EV.err="";
  }catch(e){EV.err="No se ha podido leer la página de Eventos. Comprueba la conexión y vuelve a abrir la pestaña."}
  if(S.tab==="eventos")render();
 }
