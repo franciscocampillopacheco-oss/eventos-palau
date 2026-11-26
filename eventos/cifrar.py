@@ -58,7 +58,7 @@ GATE = r"""<div id="gate" hidden><div class="gbox"><span id="gmsg">Dibuja el pat
 #gpad circle{fill:var(--line)}#gpad circle.on{fill:var(--sea)}
 #gline{stroke:var(--sea);opacity:.55}
 #gate.bad #gline{stroke:#C2412D}
-#gout{font-size:12px;padding:3px 9px}
+#gout{font-size:13px;padding:4px 10px;font-weight:600;flex:none}
 </style>
 <script>
 (function(){
@@ -81,7 +81,7 @@ async function start(raw){
   window.__D=d;
   document.getElementById("gate").hidden=true;
   const s=document.createElement("script");s.textContent=document.getElementById("appsrc").textContent;document.body.appendChild(s);
-  const t=document.querySelector(".titlerow");if(t){const b=document.createElement("button");b.type="button";b.className="chip";b.id="gout";b.title="Olvidar el patrón en este dispositivo";b.textContent="🔒 Salir";
+  const t=document.querySelector(".titlerow");if(t){const b=document.createElement("button");b.type="button";b.className="chip";b.id="gout";b.title="Olvidar el patrón en este dispositivo";b.className="chip navb";b.innerHTML="🔒<span class=\"nt\"> Salir</span>";
     b.onclick=()=>{ls("beo-k",null);location.reload();};t.appendChild(b);}
 }
 const g=document.getElementById("gate"),pad=document.getElementById("gpad"),line=document.getElementById("gline"),msg=document.getElementById("gmsg");
