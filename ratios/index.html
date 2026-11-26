@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1F3864">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ratios">
+<title>Ratios cocina</title>
+<link rel="icon" type="image/png" sizes="32x32" href="icono-32.png">
+<link rel="apple-touch-icon" href="icono-180.png">
+<link rel="manifest" href="ratios.webmanifest">
+<style>
+:root{--azul:#1F3864;--azul2:#2E5597;--fondo:#F3F5F9;--card:#fff;--txt:#1A1F2B;--gris:#6B7280;--linea:#E3E7EE;--amar:#FFF4CC;--ok:#0F7B4B}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--fondo);color:var(--txt)}
+header{position:sticky;top:0;z-index:10;background:var(--azul);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 12px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.top{display:flex;align-items:center;gap:10px}
+.logo{width:46px;height:46px;border-radius:10px;box-shadow:0 0 0 2px rgba(255,255,255,.35)}
+h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.3px}
+.tabs{display:flex;gap:6px;margin-top:10px}
+.tab{flex:1;border:0;border-radius:10px;padding:11px 4px;font-size:15px;font-weight:700;background:rgba(255,255,255,.14);color:#fff}
+.tab.on{background:#fff;color:var(--azul)}
+.pax{display:flex;align-items:center;gap:8px;margin-top:10px}
+.pax label{font-weight:800;font-size:15px}
+.pax button{width:46px;height:46px;border-radius:12px;border:0;background:rgba(255,255,255,.18);color:#fff;font-size:24px;font-weight:700}
+.pax input::-webkit-inner-spin-button,.pax input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.pax input{-moz-appearance:textfield;flex:1;min-width:0;height:46px;border-radius:12px;border:0;text-align:center;font-size:26px;font-weight:800;color:var(--azul)}
+.rapidos{display:flex;gap:6px;margin-top:8px;overflow-x:auto;scrollbar-width:none}
+.rapidos::-webkit-scrollbar{display:none}
+.rapidos button{flex:0 0 auto;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:20px;padding:6px 13px;font-size:14px;font-weight:600}
+.lineas{display:none;align-items:center;gap:8px;margin-top:8px;font-size:14px}
+.lineas.on{display:flex}
+.lineas button{width:36px;height:36px;border-radius:10px;border:0;background:rgba(255,255,255,.18);color:#fff;font-size:20px;font-weight:700}
+.lineas b{font-size:20px;min-width:26px;text-align:center}
+main{padding:12px 12px 40px;max-width:720px;margin:0 auto}
+.buscar{width:100%;height:44px;border-radius:12px;border:1px solid var(--linea);padding:0 14px;font-size:16px;margin-bottom:10px;background:#fff}
+.sec{margin:16px 2px 6px;font-size:13px;font-weight:800;color:var(--azul2);text-transform:uppercase;letter-spacing:.8px}
+.item{background:var(--card);border-radius:14px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.05);display:flex;gap:10px;align-items:center}
+.item .izq{flex:1;min-width:0}
+.item .nom{font-size:16px;font-weight:700}
+.item .rat{font-size:13px;color:var(--gris);margin-top:2px}
+.item .nota{font-size:12.5px;color:#4B5563;margin-top:5px;line-height:1.35}
+.item .der{text-align:right;flex:0 0 auto}
+.item .tot{font-size:24px;font-weight:800;color:var(--azul);line-height:1.1}
+.item .tot small{font-size:14px;font-weight:700;margin-left:2px}
+.item .sub{font-size:12.5px;color:var(--ok);font-weight:700;margin-top:3px}
+.item.sin{background:#FAFAFA}
+.item.sin .tot{font-size:14px;color:var(--gris);font-weight:600}
+.item.txt .tot{font-size:15px}
+.aviso{background:var(--amar);border-radius:12px;padding:10px 12px;font-size:13px;margin:6px 0 10px;line-height:1.4}
+.dias{display:none}.dias.on{display:flex}
+.dias button.on{background:#fff;color:var(--azul);border-color:#fff}
+.ev{background:var(--card);border-radius:14px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden}
+.evh{padding:12px 14px;border-left:6px solid var(--azul2);display:flex;gap:10px;align-items:flex-start}
+.evh .izq{flex:1;min-width:0}
+.evh .hora{font-size:13px;font-weight:800;color:var(--azul2)}
+.evh .tit{font-size:16.5px;font-weight:800;margin-top:1px}
+.evh .meta{font-size:12.5px;color:var(--gris);margin-top:2px}
+.evh .px{font-size:26px;font-weight:800;color:var(--azul);text-align:right;line-height:1}
+.evh .px small{display:block;font-size:11px;color:var(--gris);font-weight:600}
+.evb{padding:0 10px 10px}
+.evb .item{box-shadow:none;border:1px solid var(--linea);margin-bottom:6px;padding:9px 12px}
+.evb .item .nom{font-size:15px}
+.evb .item .tot{font-size:20px}
+.evb .plato{font-size:12px;color:var(--gris);margin-top:2px}
+.sinr{font-size:12.5px;color:var(--gris);padding:4px 4px 0;line-height:1.45}
+.sinr b{color:var(--txt);font-weight:700}
+.btnr{display:block;width:100%;border:0;border-radius:10px;background:var(--azul2);color:#fff;font-weight:700;font-size:14px;padding:10px;margin-top:8px}
+.totdia{background:#E8EEF8;border-radius:14px;padding:4px 10px 10px;margin-bottom:16px}
+.totdia .sec{margin-top:10px}
+.vistas{display:flex;gap:6px;margin:0 0 12px}
+.vistas button{flex:1;border:1px solid var(--linea);background:#fff;border-radius:10px;padding:9px 4px;font-size:14px;font-weight:700;color:var(--azul)}
+.vistas button.on{background:var(--azul);color:#fff;border-color:var(--azul)}
+.colt{font-size:12px;font-weight:800;color:var(--azul2);text-transform:uppercase;letter-spacing:.8px;margin:8px 2px 6px;display:flex;align-items:center;gap:8px}
+.mat{font-size:11px;text-transform:none;letter-spacing:0;background:#E8EEF8;color:var(--azul);padding:1px 8px;border-radius:6px}
+@media (min-width:860px){main{max-width:1100px}.evb.dos{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}}
+.pie{font-size:12px;color:var(--gris);text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><img src="icono-96.png" alt="" class="logo"><h1>RATIOS COCINA</h1></div>
+  <div class="tabs">
+    <button class="tab on" data-t="buffet">Buffet</button>
+    <button class="tab" data-t="cocktail">Cocktail</button>
+    <button class="tab" data-t="tacos">Tacos</button>
+    <button class="tab" data-t="coffee">Coffee</button>
+    <button class="tab" data-t="eventos">Eventos</button>
+  </div>
+  <div class="pax" id="paxBox">
+    <label>PAX</label>
+    <button id="menos" aria-label="Menos">−</button>
+    <input id="pax" type="number" inputmode="numeric" min="0" value="100">
+    <button id="mas" aria-label="Más">+</button>
+  </div>
+  <div class="rapidos" id="rapidos"></div>
+  <div class="rapidos dias" id="dias"></div>
+  <div class="lineas" id="lineasBox">Líneas de buffet:
+    <button id="lmenos">−</button><b id="lineas">1</b><button id="lmas">+</button>
+    <span style="opacity:.8;font-size:12px">(cremas, salsas, tartas)</span>
+  </div>
+</header>
+<main>
+  <input class="buscar" id="buscar" type="search" placeholder="Buscar producto…">
+  <div id="lista"></div>
+  <div id="evs" hidden></div>
+  <div class="pie" id="hojaEstado"></div>
+  <div class="pie">Cantidades por persona de la hoja de ratios de cocina. Lo que sale en gris no tiene cantidad todavía.</div>
+</main>
+<script>
+/* tipos:
+ g      -> q gramos por pax, total en kg
+ u      -> q unidades por pax, total und (+ cajas si caja)
+ r      -> q raciones por pax (+ bandejas si caja)
+ linea  -> q por línea de buffet (unidad en un)
+ cada   -> 1 cada q pax (redondea arriba)
+ txt    -> texto tal cual
+ null q -> sin cantidad
+*/
+const DATA={
+buffet:[
+ ["Frío",[
+  {n:"Ensalada 5",t:"g",q:null},{n:"Ensalada casera",t:"g",q:null},{n:"Humus",t:"g",q:null}]],
+ ["Sopas y cremas",[
+  {n:"Cremas",t:"linea",q:5,un:"L"}]],
+ ["Buffet caliente",[
+  {n:"Salsas",t:"linea",q:4,un:"L",nota:"Carbonara, napolitana, boloñesa"},
+  {n:"Carnes y barquetas",t:"g",q:120},
+  {n:"Carne con desperdicios",t:"g",q:140},
+  {n:"Merluza y bacalao",t:"g",q:60},
+  {n:"Lubina o dorada",t:"g",q:50},
+  {n:"Salmón",t:"g",q:100},
+  {n:"Pastas",t:"g",q:40},
+  {n:"Espagueti",t:"g",q:50},
+  {n:"Arroz",t:"g",q:40},
+  {n:"Patata",t:"g",q:100},
+  {n:"Pimientos",t:"g",q:80},
+  {n:"Gratinados",t:"g",q:80},
+  {n:"Espinacas congeladas",t:"g",q:110},
+  {n:"Brócoli congelado",t:"g",q:90},
+  {n:"Verduras",t:"g",q:null},
+  {n:"Pasas",t:"g",q:null}]],
+ ["Postre y pan",[
+  {n:"Tartas",t:"linea",q:3,un:"cajas"},
+  {n:"Pan",t:"u",q:0.5,nota:"Medio pan por persona"}]]
+],
+cocktail:[
+ ["Mallorquín",[
+  {n:"Embutido mallorquín",t:"g",q:7,nota:"Sobrasada (abierta), butifarrón (al biaix), camaiot (en dados)"},
+  {n:"Coca de trampo",t:"cada",q:50,nota:"Corte 5×10"},
+  {n:"Empanadas",t:"txt",txt:"Preguntar a cocina",nota:"Ratio pendiente: preguntar a cocina antes"},
+  {n:"Cocarrois",t:"txt",txt:"Preguntar a cocina",nota:"Ratio pendiente: preguntar a cocina antes"}]],
+ ["Embutidos",[
+  {n:"Embutido ibérico",t:"g",q:15,nota:"Salchichón, chorizo, lomo"},
+  {n:"Jamón ibérico",t:"g",q:20,nota:"Grosor 3,5"},
+  {n:"Pan cristal",t:"txt",txt:"1/2 cada 400"}]],
+ ["Quesos",[
+  {n:"Quesos",t:"g",q:15,nota:"Manchego (cuñas), idiazábal (cuñas), mahón (bastones), havarti, edam (dados), parmesano"}]],
+ ["Poke bol",[
+  {n:"Arroz sushi",t:"g",q:20},
+  {n:"Mango",t:"g",q:null},{n:"Edamame",t:"g",q:null},{n:"Wakame",t:"g",q:null},
+  {n:"Tomate cherry",t:"g",q:null},{n:"Cebolla",t:"g",q:null}]],
+ ["Dips",[
+  {n:"Ensaladilla rusa",t:"g",q:40},
+  {n:"Babaganush / Muhammara",t:"g",q:40},
+  {n:"Humus",t:"g",q:null}]],
+ ["Calientes / frituras",[
+  {n:"Miniburger",t:"u",q:1.5,caja:192,cajaN:"cajas grandes",nota:"Caja grande 192 u · cajita 48 u · blíster 24 u"},
+  {n:"Dumpling de cerdo",t:"u",q:1,caja:168,cajaN:"cajas",nota:"De pro a pro"},
+  {n:"Gyosas",t:"u",q:1,caja:30,cajaN:"cajas"},
+  {n:"Croquetas",t:"u",q:1,caja:100,cajaN:"cajas"},
+  {n:"Brocheta yakitori",t:"u",q:null,nota:"Caja grande 240 u · cajita 40 u"},
+  {n:"Samosas",t:"u",q:1,caja:67,cajaN:"cajitas"}]],
+ ["Postres · 0,75 por pax de cada",[
+  {n:"Brownie",t:"r",q:0.75,caja:54,cajaN:"bandejas"},
+  {n:"Tarta manzana",t:"r",q:0.75,caja:54,cajaN:"bandejas"},
+  {n:"Tarta zanahoria",t:"r",q:0.75,caja:80,cajaN:"bandejas",nota:"Corte 10×8"},
+  {n:"Profiterol",t:"r",q:0.75,caja:60,cajaN:"bandejas"},
+  {n:"Candy bar",t:"r",q:null}]]
+],
+tacos:[
+ ["Principales",[
+  {n:"Pollo pibil",t:"g",q:25},
+  {n:"Cochinita",t:"g",q:25},
+  {n:"Tricolor",t:"g",q:20,nota:"Pimientos, maíz y cebolla morada"},
+  {n:"Chili vegano",t:"g",q:20},
+  {n:"Pico de gallo",t:"g",q:null,nota:"Tomate, cebolla, cilantro, lima"},
+  {n:"Guacamole",t:"g",q:15}]],
+ ["Acompañamientos",["Nachos","Salsa queso","Queso mozzarella","Mezclum","Cebolla morada","Limas","Frijoles","Jalapeño rodaja","Nata agria","Fajitas / tacos","Tabasco","Maíz"].map(n=>({n,t:"g",q:null}))]
+]};
+/* ===== Ratios en vivo desde la hoja de Google «Ratios cocina» ===== */
+const HOJA_ID="1-GO7YcM6SICnqdsl-Vph-_7fMe2QWso-zmfqXgwgMWk";
+const HOJAS={buffet:"BUFFET",cocktail:"COCKTAIL",tacos:"ESTACION TACOS",coffee:"COFFEE BREAK"};
+const MEN={buffet:[],cocktail:[],tacos:[],coffee:[]};
+const MAT={buffet:[],cocktail:[],tacos:[],coffee:[]};
+let PAX_LINEA=null;
+let HOJA_ESTADO="";
+function csvParse(t){const rows=[];let row=[],f="",q=false;for(let i=0;i<t.length;i++){const c=t[i];
+  if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=false}else f+=c}
+  else if(c=='"')q=true;else if(c==","){row.push(f);f=""}else if(c=="\n"){row.push(f);rows.push(row);row=[];f=""}else if(c!="\r")f+=c}
+  if(f||row.length){row.push(f);rows.push(row)}return rows}
+const num=v=>{if(v==null)return null;v=String(v).trim().replace(/\s/g,"");if(!v)return null;if(/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(v))v=v.replace(/\./g,"");v=v.replace(",",".");const n=Number(v);return isFinite(n)?n:null};
+const normN=x=>String(x||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/\(.*?\)/g,"").trim();
+function aplicarHoja(lista,rows){
+  const iM=rows.findIndex(r=>normN(r[0])==="menaje");
+  const iK=rows.findIndex(r=>normN(r[0])==="material cocina");
+  const fin=iK>=0?iK:iM;
+  const comida=fin>=0?rows.slice(0,fin):rows, men=[], mat=[];
+  if(lista==="buffet"){const f=rows.find(r=>normN(r[0]).startsWith("pax por linea"));PAX_LINEA=f?num(f[1]):null}
+  if(iK>=0){for(const r of rows.slice(iK+1)){const n=(r[0]||"").trim();if(normN(n)==="menaje")break;if(!n||/^elemento$/i.test(n))continue;
+    mat.push({n,cant:num(r[1])??1,cada:num(r[2]),regla:normN(r[3]),prod:(r[4]||"").trim(),nota:/^rellena cada/i.test((r[7]||"").trim())?"":(r[7]||"").trim()})}}
+  MAT[lista]=mat;
+  if(iM>=0){for(const r of rows.slice(iM+1)){const n=(r[0]||"").trim();if(!n||/^pieza$/i.test(n))continue;if(/^celdas/i.test(n))break;
+    men.push({n,t:"u",q:num(r[1]),caja:num(r[5]),cajaN:"racks",nota:/^sin cantidad$/i.test((r[7]||"").trim())?"":(r[7]||"").trim()})}}
+  MEN[lista]=men;
+  if(!DATA[lista])DATA[lista]=[];
+  const usadas=new Set();
+  for(const [,its] of DATA[lista])for(const it of its){
+    if(!["g","u","r"].includes(it.t))continue;
+    const fila=comida.find(r=>{const a=normN(r[0]),b=normN(it.n);return a&&(a===b||a.startsWith(b)||b.startsWith(a))});
+    if(!fila)continue;usadas.add(fila);const q=num(fila[1]),cj=num(fila[5]);
+    if(q!=null)it.q=q;if(cj!=null&&it.caja)it.caja=cj;
+    it.alias=(fila[8]||"").split("·").map(normN).filter(Boolean);}
+  if(lista==="tacos")return;
+  /* Platos nuevos de la hoja (p. ej. los que salen en las BEO): se añaden con su sección */
+  let sec=null;
+  for(const r of comida){
+    const n=(r[0]||"").trim();if(!n)continue;
+    const resto=r.slice(1,8).some(x=>String(x||"").trim());
+    const nm=n.replace(/\(.*?\)/g,"");
+    if(!resto&&nm===nm.toUpperCase()&&/[A-ZÁÉÍÓÚÑ]/.test(nm)){sec=n;continue}
+    if(usadas.has(r))continue;
+    const u=normN(r[2]);let t=null,un="";
+    if(/^g\b/.test(u))t="g";else if(/^und/.test(u))t="u";else if(/^racion/.test(u))t="r";
+    else if(/linea/.test(u)){t="linea";un=u.split("/")[0].trim()}
+    if(!t||!sec)continue;
+    if(DATA[lista].some(([,its])=>its.some(x=>normN(x.n)===normN(n))))continue;
+    const nota=(r[7]||"").trim();
+    const it={n,t,q:num(r[1]),un,caja:num(r[5])||0,cajaN:"cajas",nota:/^sin cantidad$/i.test(nota)?"":nota,alias:(r[8]||"").split("·").map(normN).filter(Boolean),hoja:1};
+    if(t==="linea"&&it.q==null)continue;
+    let blq=DATA[lista].find(b=>b.key===sec||normN(b[0])===normN(sec));
+    if(!blq){const s0=sec.replace(/\s*\(de las BEO\)/i,"");blq=[s0.charAt(0)+s0.slice(1).toLowerCase()+(s0!==sec?" · de las BEO":""),[]];blq.key=sec;DATA[lista].push(blq)}
+    blq[1].push(it);
+  }
+}
+async function cargarHoja(){
+  let ok=0;
+  await Promise.all(Object.entries(HOJAS).map(async([lista,hoja])=>{
+    try{const r=await fetch(`https://docs.google.com/spreadsheets/d/${HOJA_ID}/gviz/tq?tqx=out:csv&headers=0&sheet=${encodeURIComponent(hoja)}`,{cache:"no-store"});
+      if(!r.ok)throw 0;const t=await r.text();const rows=csvParse(t);aplicarHoja(lista,rows);ok++;
+      try{localStorage.setItem("ratiosHoja_"+lista,t)}catch(e){}}
+    catch(e){try{const t=localStorage.getItem("ratiosHoja_"+lista);if(t)aplicarHoja(lista,csvParse(t))}catch(e2){}}
+  }));
+  const hm=new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"});
+  HOJA_ESTADO=ok?`Ratios leídos de la hoja de Google a las ${hm}.`:"Sin conexión con la hoja de Google: uso los últimos ratios guardados.";
+  const pe=document.getElementById("hojaEstado");if(pe)pe.textContent=HOJA_ESTADO;
+  render();
+}
+function menajeHTML(lista,p,material){
+  const its=MEN[lista]||[];
+  if(!its.length)return `<div class="sinr">Menaje: todavía sin piezas en la hoja.</div>`;
+  const con=its.filter(i=>i.q!=null);
+  let h="";
+  for(const it of con){const r=calc(it,p);h+=`<div class="item"><div class="izq"><div class="nom">${esc(it.n)}</div><div class="rat">${nf(it.q,2)} por pax${it.caja?" · "+it.caja+" por rack":""}</div>${it.nota?`<div class="nota">${esc(it.nota)}</div>`:""}</div><div class="der"><div class="tot">${r.tot}</div>${r.sub?`<div class="sub">${r.sub}</div>`:""}</div></div>`}
+  if(!con.length)h+=`<div class="sinr">Ratios de menaje pendientes: rellénalos en la hoja «Ratios cocina y menaje».</div>`;
+  return h;
+}
+/* ===== Material de cocina (GN, bandejas, carros…) desde el bloque MATERIAL COCINA de la hoja ===== */
+const lineasEv=p=>PAX_LINEA>0&&p>0?Math.max(1,Math.ceil(p/PAX_LINEA)):1;
+function itemDe(lista,nombre){const b=normN(nombre);if(!b||!DATA[lista])return null;
+  for(const [,its] of DATA[lista])for(const it of its){const a=normN(it.n);if(a&&(a===b||a.startsWith(b)||b.startsWith(a)))return it}return null}
+function cantProd(it,p,L,regla){
+  if(!it||it.q==null)return null;
+  if(regla.startsWith("kg")){if(it.t==="g")return it.q*p/1000;if(it.t==="linea"&&/^(l|kg)$/i.test(it.un))return it.q*L;return null}
+  if(it.t==="u"||it.t==="r")return Math.ceil(it.q*p);
+  if(it.t==="cada")return Math.ceil(p/it.q);
+  if(it.t==="linea")return it.q*L;
+  return null}
+/* solo: Set de nombres de producto que lleva el menú (Eventos); null = todos (pestañas) */
+function materialCalc(lista,p,L,solo,base){
+  const filas=MAT[lista]||[],res=new Map(),pend=[];
+  const add=(f,v,det)=>{if(!res.has(f.n))res.set(f.n,{n:f.n,v:0,det:[]});const x=res.get(f.n);x.v+=v;if(det)x.det.push(det)};
+  const usa=[];
+  for(const f of filas){
+    const r=f.regla;
+    if(/de seccion/.test(r)){
+      const b=normN(f.prod);if(!b||!DATA[lista])continue;
+      let c=0,dets=[];
+      for(const [s,its] of DATA[lista]){const a=normN(s);if(!(a===b||a.startsWith(b)))continue;
+        for(const it of its){if(solo&&!solo.has(it.n))continue;const v=cantProd(it,p,L,r.startsWith("kg")?"kg":"und");if(v){c+=v}}}
+      if(!c)continue;usa.push(f);
+      if(!(f.cada>0)){pend.push(f);continue}
+      const v=Math.ceil(c/f.cada)*f.cant;add(f,v,`${f.prod.charAt(0)+f.prod.slice(1).toLowerCase()} ${v}`);
+    }else if(r.startsWith("kg")||r.startsWith("und")){
+      const it=itemDe(lista,f.prod);if(!it)continue;
+      if(solo&&!solo.has(it.n))continue;
+      const c=cantProd(it,p,L,r);if(!c)continue;usa.push(f);
+      if(!(f.cada>0)){pend.push(f);continue}
+      const v=Math.ceil(c/f.cada)*f.cant;add(f,v,`${it.n} ${v}`);
+    }else if(r==="pax"||r.startsWith("linea")||r==="fijo"){
+      if(!base)continue;
+      if(f.prod){const it=itemDe(lista,f.prod);if(!it||(solo&&!solo.has(it.n)))continue}
+      usa.push(f);
+      if(r==="fijo"){add(f,f.cant);continue}
+      if(!(f.cada>0)){pend.push(f);continue}
+      add(f,Math.ceil((r==="pax"?p:L)/f.cada)*f.cant);
+    }
+  }
+  const sumaPor=re=>[...res.values()].filter(x=>re.test(x.n)).reduce((a,x)=>a+x.v,0);
+  for(const f of filas){
+    const r=f.regla;if(r!=="gn"&&!r.startsWith("bandeja"))continue;
+    const s=sumaPor(r==="gn"?/^gn/i:/^bandeja/i);
+    const hayPend=pend.some(x=>(r==="gn"?/^gn/i:/^bandeja/i).test(x.n));
+    if(!s&&!hayPend)continue;usa.push(f);
+    if(!(f.cada>0)){pend.push(f);continue}
+    if(s)add(f,Math.ceil(s/f.cada)*f.cant,`${s} ${r==="gn"?"GN":"bandejas"}`);
+  }
+  return{items:[...res.values()].filter(x=>x.v>0),pend,hay:filas.length>0};
+}
+function materialHTML(m,conLineas){
+  if(!m.hay)return `<div class="sinr">Esta pestaña de la hoja todavía no tiene bloque MATERIAL COCINA.</div>`;
+  let h=m.items.map(x=>`<div class="item"><div class="izq"><div class="nom">${esc(x.n)}</div>${x.det.length>1?`<div class="plato">${esc(x.det.join(" · "))}</div>`:x.det.length?`<div class="rat">${esc(x.det[0].replace(/ \d+$/,""))}</div>`:""}</div><div class="der"><div class="tot">${nf(x.v,0)}<small>und</small></div></div></div>`).join("");
+  if(conLineas)h+=`<div class="nota" style="padding:4px 2px">${conLineas}</div>`;
+  if(m.pend.length){const ps=[...new Map(m.pend.map(f=>[f.n+"|"+f.prod,f])).values()];
+    h+=`<div class="sinr"><b>Falta el CADA en la hoja:</b> ${esc(ps.map(f=>f.n+(f.prod?" ("+f.prod+")":"")).join(" · "))}</div>`}
+  if(!m.items.length&&!m.pend.length)h+=`<div class="sinr">Nada del material de la hoja aplica a este servicio.</div>`;
+  return h;
+}
+const PAXDEF={buffet:180,cocktail:50,tacos:50,coffee:100,eventos:0};
+const RAP=[25,50,100,150,200,300,500,800,1000];
+const S={tab:"buffet",pax:{...PAXDEF},lineas:1,q:""};
+try{const g=JSON.parse(localStorage.getItem("ratiosCocina")||"{}");if(g.pax)Object.assign(S.pax,g.pax);if(g.tab)S.tab=g.tab;if(g.lineas)S.lineas=g.lineas}catch(e){}
+const $=id=>document.getElementById(id);
+const nf=(v,d)=>v.toLocaleString("es-ES",{minimumFractionDigits:0,maximumFractionDigits:d});
+const ratio=it=>{
+ if(it.q==null)return"";
+ switch(it.t){
+  case"g":return nf(it.q,0)+" g por pax";
+  case"u":return nf(it.q,2)+" und por pax";
+  case"r":return nf(it.q,2)+" raciones por pax";
+  case"linea":return nf(it.q,0)+" "+it.un+" por línea";
+  case"cada":return"1 cada "+it.q+" pax";
+ }return"";
+};
+function calc(it,p,L){
+ if(L==null)L=S.lineas;
+ if(it.t==="txt")return{tot:it.txt,cls:"txt"};
+ if(it.q==null)return{tot:"sin cantidad",cls:"sin"};
+ let tot,sub="";
+ switch(it.t){
+  case"g":{const kg=it.q*p/1000;tot=nf(kg,kg<10?2:1)+"<small>kg</small>";break}
+  case"u":case"r":{const u=Math.ceil(it.q*p);tot=nf(u,0)+"<small>"+(it.t==="r"?"rac":"und")+"</small>";
+     if(it.caja&&u>0){const c=u/it.caja;const k=Math.ceil(c);sub=k+" "+(k===1?it.cajaN.replace(/s$/,"").replace("grandes","grande"):it.cajaN)+" ("+nf(c,2)+")"}break}
+  case"linea":tot=nf(it.q*L,1)+"<small>"+it.un+"</small>";break;
+  case"cada":tot=Math.ceil(p/it.q)+"<small>und</small>";break;
+ }
+ return{tot,sub,cls:""};
+}
+function render(){
+ document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.t===S.tab));
+ const isEv=S.tab==="eventos";
+ $("paxBox").style.display=isEv?"none":"";$("rapidos").style.display=isEv?"none":"";
+ $("dias").classList.toggle("on",isEv);$("evs").hidden=!isEv;$("lista").hidden=isEv;$("buscar").hidden=isEv;
+ if(isEv){$("lineasBox").classList.remove("on");renderEventos();try{localStorage.setItem("ratiosCocina",JSON.stringify({pax:S.pax,tab:S.tab,lineas:S.lineas}))}catch(e){}return}
+ const p=Math.max(0,parseInt($("pax").value)||0);
+ S.pax[S.tab]=p;
+ $("lineasBox").classList.toggle("on",S.tab==="buffet");
+ $("lineas").textContent=S.lineas;
+ const q=S.q.trim().toLowerCase();
+ let h="";
+ for(const [sec,items] of DATA[S.tab]){
+  const f=items.filter(it=>!q||(it.n+" "+(it.nota||"")).toLowerCase().includes(q));
+  if(!f.length)continue;
+  h+=`<div class="sec">${sec}</div>`;
+  for(const it of f){
+   const r=calc(it,p);
+   h+=`<div class="item ${r.cls}"><div class="izq"><div class="nom">${it.n}</div>${ratio(it)?`<div class="rat">${ratio(it)}</div>`:""}${it.nota?`<div class="nota">${it.nota}</div>`:""}</div><div class="der"><div class="tot">${r.tot}</div>${r.sub?`<div class="sub">${r.sub}</div>`:""}</div></div>`;
+  }
+ }
+ if(!q&&MAT[S.tab]){h+=`<div class="sec">🔧 Material cocina</div>`+materialHTML(materialCalc(S.tab,p,S.lineas,null,true),"")}
+ $("lista").innerHTML=h||`<div class="aviso">No hay nada con “${S.q}”.</div>`;
+ try{localStorage.setItem("ratiosCocina",JSON.stringify({pax:S.pax,tab:S.tab,lineas:S.lineas}))}catch(e){}
+}
+function setTab(t){S.tab=t;if(t!=="eventos")$("pax").value=S.pax[t];render();window.scrollTo(0,0)}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>setTab(b.dataset.t));
+$("pax").oninput=render;
+$("mas").onclick=()=>{$("pax").value=(parseInt($("pax").value)||0)+10;render()};
+$("menos").onclick=()=>{$("pax").value=Math.max(0,(parseInt($("pax").value)||0)-10);render()};
+$("lmas").onclick=()=>{S.lineas++;render()};
+$("lmenos").onclick=()=>{S.lineas=Math.max(1,S.lineas-1);render()};
+$("buscar").oninput=e=>{S.q=e.target.value;render()};
+$("rapidos").innerHTML=RAP.map(n=>`<button data-n="${n}">${n}</button>`).join("");
+$("rapidos").onclick=e=>{const n=e.target.dataset.n;if(n){$("pax").value=n;render()}};
+
+/* ===== Eventos: lee la página de Eventos y cruza cada menú con los ratios ===== */
+const REGLAS=[
+ ["cocktail","Jamón ibérico",/jam[oó]n ib/i],
+ ["cocktail","Embutido ibérico",/embutidos? ib|chorizo|salchich[oó]n|lomo ib/i],
+ ["cocktail","Embutido mallorquín",/sobrasada|butifarr|camaiot|estaci[oó]n mallorquina/i],
+ ["cocktail","Coca de trampo",/coca de tr[ae]mp/i],
+ ["cocktail","Empanadas",/empanada/i],
+ ["cocktail","Cocarrois",/cocarro/i],
+ ["cocktail","Quesos",/^(quesos|estaci[oó]n de quesos|selecci[oó]n de quesos|dados de queso|manchego|mah[oó]n|camembert|queso de cabra|idiaz[aá]bal|havarti)/i],
+ ["cocktail","Arroz sushi",/poke/i],
+ ["cocktail","Ensaladilla rusa",/ensaladilla/i],
+ ["cocktail","Babaganush / Muhammara",/baba ?g[ae]n|muhammara/i],
+ ["cocktail","Humus",/h?umm?us/i],
+ ["cocktail","Miniburger",/mini ?hamburguesa|mini ?(cheese)?burger/i],
+ ["cocktail","Dumpling de cerdo",/dumpling.*cerdo/i],
+ ["cocktail","Gyosas",/gyo[sz]a/i],
+ ["cocktail","Croquetas",/croqueta/i],
+ ["cocktail","Brocheta yakitori",/yakitori/i],
+ ["cocktail","Samosas",/samosa/i],
+ ["cocktail","Brownie",/brownie/i],
+ ["cocktail","Tarta manzana",/tarta.*manzana/i],
+ ["cocktail","Tarta zanahoria",/tarta de zanahoria|carrot cake/i],
+ ["cocktail","Profiterol",/profiterol/i],
+ ["cocktail","Candy bar",/candy/i],
+ ["buffet","Cremas",/^(sopa|crema)\b/i],
+ ["buffet","Salsas",/salsa de tomate|bolo[ñn]esa|carbonara|napolitana/i],
+ ["buffet","Salmón",/salm[oó]n(?! ahumado)/i],
+ ["buffet","Merluza y bacalao",/bacalao|merluza/i],
+ ["buffet","Lubina o dorada",/lubina|dorada/i],
+ ["buffet","Gratinados",/gratinado de/i],
+ ["buffet","Espagueti",/espagueti|spaghetti/i],
+ ["buffet","Pastas",/\bpasta\b/i],
+ ["buffet","Arroz",/^arroz|^wok de arroz/i],
+ ["buffet","Patata",/^patata(?!s?\s*chips)/i],
+ ["buffet","Pimientos",/^pimiento|^escalivada/i],
+ ["buffet","Espinacas congeladas",/^espinaca/i],
+ ["buffet","Brócoli congelado",/^br[oó]coli/i],
+ ["buffet","Carnes y barquetas",/carrillera|ternera|pollo asado|cerdo asado|cordero|solomillo/i],
+ ["buffet","Tartas",/^tartas?\b|tartas de/i],
+ ["buffet","Pan",/^panes?\b|selecci[oó]n de panes/i]
+];
+const PRODUCTO=new Set(["Miniburger","Dumpling de cerdo","Gyosas","Croquetas","Brocheta yakitori","Samosas","Brownie","Tarta manzana","Tarta zanahoria","Profiterol","Candy bar"]);
+const FIND=(lista,n)=>{for(const [,its] of DATA[lista]){const it=its.find(x=>x.n===n);if(it)return it}return null};
+const EV={data:null,dia:null,err:"",vista:"todo"};
+try{EV.vista=localStorage.getItem("ratiosVista")||"todo"}catch(e){}
+if(!["todo","comida","material"].includes(EV.vista))EV.vista="todo";
+const TIPOS={coctel:"Cóctel",alm:"Almuerzo",cena:"Cena",cb:"Coffee break"};
+const LISTA_DE={coctel:"cocktail",alm:"buffet",cena:"buffet",cb:"coffee"};
+const esc=x=>String(x??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const isoHoy=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const fh=h=>{const m=Math.round(h*60);return String(Math.floor(m/60)%24).padStart(2,"0")+":"+String(m%60).padStart(2,"0")};
+async function cargarEventos(){
+ try{
+  const r=await fetch("../eventos/index.html",{cache:"no-store"});
+  const t=await r.text();
+  const m=t.match(/const DATA = (\{[\s\S]*?\});\n/);
+  if(!m)throw new Error("sin datos");
+  EV.data=JSON.parse(m[1]);EV.err="";
+ }catch(e){EV.err="No se ha podido leer la página de Eventos. Comprueba la conexión y vuelve a abrir la pestaña."}
+ if(S.tab==="eventos")render();
+}
+function servEventos(){
+ if(!EV.data)return[];
+ const G={};EV.data.grupos.forEach(g=>G[g.id]=g);
+ return EV.data.servicios.filter(s=>TIPOS[s.t]).map(s=>Object.assign({grupo:G[s.g]||{n:s.g}},s));
+}
+const NOCOCINA=/^(caf[eé]|t[eé]s?\b|infusi|agua|leche|zumo|refresco|coffee break l[ií]quido|bebida)/i;
+function porAlias(orden,pl){const b=normN(pl);if(!b)return null;
+ for(const l of orden)for(const [,its] of (DATA[l]||[]))for(const it of its)if((it.alias||[]).includes(b)||(it.hoja||l==="coffee")&&normN(it.n)===b)return[l,it.n];return null}
+function cruzar(s){
+ const orden=s.t==="coctel"?["cocktail"]:s.t==="cb"?["coffee"]:["buffet","cocktail"];
+ const usados=new Map(),sin=[];
+ for(const [sec,platos] of (s.menu||[])){
+  if(/bebida|bodega/i.test(sec))continue;
+  for(const pl of platos){
+   let hit=null;
+   const bocado=/^(wrap|s[aá]ndwich|bocadillo|pan bao|brioche|tosta|quiche|mini|rollito)/i.test(pl);
+   if(NOCOCINA.test(pl))continue;
+   let hits=[];
+   const al=porAlias(orden,pl);
+   if(al)hits=[al];else if(s.t==="cb"){sin.push(pl);continue}
+   const prod=al?null:REGLAS.find(([li,nm,re])=>li==="cocktail"&&PRODUCTO.has(nm)&&re.test(pl));
+   if(al){}else if(prod)hits=[prod];
+   else if(/^(sopa|crema)\b/i.test(pl)&&orden.includes("buffet"))hits=REGLAS.filter(r=>r[1]==="Cremas");
+   else for(const l of orden){if(l==="buffet"&&bocado)continue;hits=REGLAS.filter(([li,,re])=>li===l&&re.test(pl));if(hits.length)break}
+   if(!hits.length){sin.push(pl);continue}
+   for(const hit of hits){
+    const k=hit[0]+"|"+hit[1];
+    if(!usados.has(k))usados.set(k,{lista:hit[0],it:FIND(hit[0],hit[1]),platos:[]});
+    usados.get(k).platos.push(pl);
+   }
+  }
+ }
+ return{con:[...usados.values()].filter(x=>x.it),sin};
+}
+function itemHTML(x,p,otra,L){
+ const r=calc(x.it,p,L);
+ return `<div class="item ${r.cls}"><div class="izq"><div class="nom">${x.it.n}${otra?` <span style="font-size:11px;color:var(--gris);font-weight:600">(ratio de ${x.lista})</span>`:""}</div>${ratio(x.it)?`<div class="rat">${ratio(x.it)}</div>`:""}${x.platos?`<div class="plato">${esc(x.platos.join(" · "))}</div>`:""}</div><div class="der"><div class="tot">${r.tot}</div>${r.sub?`<div class="sub">${r.sub}</div>`:""}</div></div>`;
+}
+function renderEventos(){
+ const box=$("evs");
+ if(EV.err){box.innerHTML=`<div class="aviso">${EV.err}</div>`;$("dias").innerHTML="";return}
+ if(!EV.data){box.innerHTML=`<div class="aviso">Cargando eventos…</div>`;return}
+ const hoy=isoHoy();
+ const all=servEventos().filter(s=>s.fecha>=hoy);
+ const dias=[...new Set(all.map(s=>s.fecha))].sort();
+ if(!dias.length){box.innerHTML=`<div class="aviso">No hay cócteles, almuerzos ni cenas a partir de hoy.</div>`;$("dias").innerHTML="";return}
+ if(!dias.includes(EV.dia))EV.dia=dias[0];
+ $("dias").innerHTML=dias.map(d=>{const f=new Date(d+"T12:00:00");const l=f.toLocaleDateString("es-ES",{weekday:"short",day:"numeric"}).replace(/\.$/,"");return `<button data-d="${d}" class="${d===EV.dia?"on":""}">${l.charAt(0).toUpperCase()+l.slice(1)}</button>`}).join("");
+ const ss=all.filter(s=>s.fecha===EV.dia).sort((a,b)=>a.start-b.start);
+ const tot=new Map(),totM=new Map();let h="";
+ for(const s of ss){
+  const p=typeof s.pax==="number"?s.pax:0;
+  const {con,sin}=cruzar(s);
+  const sinHora=/sin (horario|indicar)|franja/i.test(s.time||"");
+  const L=lineasEv(p),lp=LISTA_DE[s.t];
+  h+=`<div class="ev"><div class="evh"><div class="izq"><div class="hora">${sinHora?esc(s.time):fh(s.start)+" · "+esc(TIPOS[s.t])}</div><div class="tit">${esc(s.grupo.n)} · ${esc(s.title)}</div><div class="meta">📍 ${esc((s.salas&&s.salas.join(", "))||s.place)}${s.grupo.cm?" · "+esc(s.grupo.cm):""}</div></div><div class="px">${p||"—"}<small>pax</small></div></div><div class="evb${EV.vista==="todo"?" dos":""}"><div class="col colC"${EV.vista==="material"?" hidden":""}><div class="colt">🍽 Comida</div>`;
+  if(con.length){
+   for(const x of con){
+    h+=itemHTML(x,p,(s.t==="coctel")!==(x.lista==="cocktail")&&x.lista!=="tacos",L);
+    const r=calc(x.it,p),k=x.lista+"|"+x.it.n;
+    if(!tot.has(k))tot.set(k,{lista:x.lista,it:x.it,pax:0,L:0});
+    tot.get(k).pax+=p;tot.get(k).L+=L;
+   }
+  }
+  if(!s.menu||!s.menu.length)h+=`<div class="sinr">La BEO no trae el menú detallado de este servicio.</div>`;
+  else if(!con.length)h+=`<div class="sinr">Ningún plato de este menú tiene ratio todavía.</div>`;
+  if(sin.length)h+=`<div class="sinr"><b>Sin ratio todavía:</b> ${esc(sin.join(" · "))}</div>`;
+  if(p&&(s.t==="coctel"||s.t==="alm"||s.t==="cena"))h+=`<button class="btnr" data-tab="${s.t==="coctel"?"cocktail":"buffet"}" data-pax="${p}">Ver todos los ratios de ${s.t==="coctel"?"cocktail":"buffet"} con ${p} pax</button>`;
+  const porLista=new Map([[lp,new Set()]]);
+  for(const x of con){if(!porLista.has(x.lista))porLista.set(x.lista,new Set());porLista.get(x.lista).add(x.it.n)}
+  const mm={items:[],pend:[],hay:false};
+  for(const [li,set] of porLista){const m=materialCalc(li,p,L,set,li===lp||set.size>0);mm.hay=mm.hay||m.hay;mm.pend.push(...m.pend);
+    for(const x of m.items){const y=mm.items.find(z=>z.n===x.n);if(y){y.v+=x.v;y.det.push(...x.det)}else mm.items.push({...x,det:[...x.det]})}}
+  const txtL=(s.t==="alm"||s.t==="cena")?(PAX_LINEA>0?`${L} línea${L>1?"s":""} de buffet (1 cada ${PAX_LINEA} pax)`:"1 línea de buffet · pon «PAX POR LÍNEA» en la hoja BUFFET para calcularlas"):"";
+  h+=`</div><div class="col colM"${EV.vista==="comida"?" hidden":""}><div class="colt">🔧 Material cocina</div>${p?materialHTML(mm,txtL):`<div class="sinr">Sin pax: no se calcula material.</div>`}</div></div></div>`;
+  for(const x of mm.items){if(!totM.has(x.n))totM.set(x.n,0);totM.set(x.n,totM.get(x.n)+x.v)}
+ }
+ let t="";
+ if(tot.size>1&&ss.length>1){
+  if(EV.vista!=="material")t=`<div class="totdia"><div class="sec">Total del día · comida</div>`+[...tot.values()].map(x=>itemHTML({it:x.it,lista:x.lista},x.pax,false,x.L)).join("")+`</div>`;
+ }
+ if(totM.size&&ss.length>1&&EV.vista!=="comida")t+=`<div class="totdia"><div class="sec">Total del día · material cocina (si los servicios no se solapan, se reutiliza)</div>`+[...totM].map(([n,v])=>`<div class="item"><div class="izq"><div class="nom">${esc(n)}</div></div><div class="der"><div class="tot">${nf(v,0)}<small>und</small></div></div></div>`).join("")+`</div>`;
+ t=`<div class="vistas">${["todo","comida","material"].map(v=>`<button data-v="${v}" class="${EV.vista===v?"on":""}">${{todo:"Todo",comida:"🍽 Comida",material:"🔧 Material"}[v]}</button>`).join("")}</div>`+t;
+ box.innerHTML=t+h;
+}
+$("dias").onclick=e=>{const d=e.target.dataset.d;if(d){EV.dia=d;render();window.scrollTo(0,0)}};
+$("evs").onclick=e=>{const v=e.target.closest(".vistas button");if(v){EV.vista=v.dataset.v;try{localStorage.setItem("ratiosVista",EV.vista)}catch(e){}render();return}const b=e.target.closest(".btnr");if(!b)return;S.pax[b.dataset.tab]=+b.dataset.pax;setTab(b.dataset.tab)};
+if(S.tab!=="eventos")$("pax").value=S.pax[S.tab];
+render();
+cargarEventos();
+cargarHoja();
+</script>
+</body>
+</html>

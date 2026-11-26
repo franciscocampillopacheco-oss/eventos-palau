@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>¿Dónde lo tiro?</title>
+<meta name="theme-color" content="#1C2326">
+<style>
+:root{--ink:#1C2326;--mut:#5A6569;--bg:#F4F3EF;--card:#FFFFFF;--line:#DEDBD3;--red:#B3261E;--redbg:#FBE4E2;--blue:#1859A8;--bluebg:#E3EDF9;--yel:#E0A800;--yelbg:#FFF4CC}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:560px;margin:0 auto;padding:16px 16px 40px}
+header{display:flex;align-items:center;gap:10px;margin:4px 0 14px}
+header h1{font-size:22px;margin:0;font-weight:800;letter-spacing:-.01em}
+header small{display:block;color:var(--mut);font-size:12.5px;font-weight:500}
+.home{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--card);display:none;align-items:center;justify-content:center;font-size:18px;flex:none}
+body.res .home,body.list .home{display:flex}
+.cam{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:20px;border:0;border-radius:18px;background:var(--ink);color:#fff;font-size:20px;font-weight:800;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.cam svg{width:30px;height:30px}
+.hint{color:var(--mut);font-size:13px;text-align:center;margin:8px 0 18px}
+.search{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-size:16px}
+h2{font-size:15px;margin:22px 0 10px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 6px 12px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-size:13px;font-weight:650;line-height:1.15;text-align:center;min-height:96px;justify-content:center}
+.tile .e{font-size:30px;line-height:1}
+.tile.chem{grid-column:span 3;flex-direction:row;justify-content:flex-start;gap:14px;padding:14px 16px;min-height:0;font-size:15px;text-align:left}
+.tile.chem small{display:block;font-weight:500;color:var(--mut);font-size:12.5px;margin-top:2px}
+.plist{display:flex;flex-direction:column;gap:8px}
+.prod{display:flex;align-items:center;gap:12px;padding:8px 12px 8px 8px;border-radius:14px;border:1px solid var(--line);background:var(--card);text-align:left;width:100%}
+.prod img,.prod .ph{width:56px;height:56px;border-radius:10px;object-fit:contain;background:#fff;flex:none;border:1px solid #EEE}
+.prod .ph{display:flex;align-items:center;justify-content:center;font-size:26px;background:var(--bg)}
+.prod b{display:block;font-size:14.5px;line-height:1.2}
+.prod small{color:var(--mut);font-size:12px}
+.prod .n{margin-left:auto;flex:none;min-width:32px;height:32px;border-radius:16px;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px;padding:0 8px}
+.zone{font-size:12.5px;color:var(--mut);font-weight:700;margin:16px 0 6px;text-transform:uppercase;letter-spacing:.04em}
+.view{display:none}.view.on{display:block}
+/* resultado */
+.big{border-radius:18px;padding:18px;color:#fff;display:flex;gap:16px;align-items:center}
+.big .num{font-size:54px;font-weight:900;line-height:1;min-width:72px;height:72px;border-radius:36px;background:#fff;display:flex;align-items:center;justify-content:center;padding:0 10px}
+.big .t1{font-size:13px;font-weight:700;opacity:.9;text-transform:uppercase;letter-spacing:.05em}
+.big .t2{font-size:22px;font-weight:850;line-height:1.1;margin:3px 0}
+.big .t3{font-size:13px;opacity:.92}
+.what{margin:12px 0 0;color:var(--mut);font-size:14px}
+.what b{color:var(--ink)}
+.tip{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:15px;font-weight:600;display:flex;gap:10px;align-items:flex-start}
+.warn{background:#FFF0EE;border-color:#F3C2BC;color:#8E1D17}
+.mapc{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px}
+.mapc svg{display:block;width:100%;height:auto}
+.maphead{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mut);margin:2px 4px 6px}
+.lnk{border:0;background:none;color:var(--blue);font-weight:700;font-size:13px;padding:4px}
+.again{margin-top:16px;width:100%;padding:16px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-weight:800;font-size:16px}
+.amar{background:var(--yelbg);border:1px solid #F0D27A;border-radius:18px;padding:18px}
+.amar .t2{font-size:22px;font-weight:850}
+/* reconocimiento */
+.overlay{position:fixed;inset:0;background:rgba(20,24,26,.82);display:none;align-items:center;justify-content:center;z-index:9;padding:24px}
+.overlay.on{display:flex}
+.ov{background:var(--card);border-radius:18px;padding:22px;max-width:360px;width:100%;text-align:center}
+.ov img{max-width:100%;max-height:200px;border-radius:12px;margin-bottom:12px}
+.bar{height:8px;border-radius:4px;background:#EEE;overflow:hidden;margin-top:12px}
+.bar i{display:block;height:100%;width:0;background:var(--ink);transition:width .2s}
+.cands h3{font-size:18px;margin:4px 0 10px}
+.note{font-size:12.5px;color:var(--mut);margin-top:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.pulse{animation:pulse 1.2s ease-in-out infinite}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <button class="home" id="homeBtn" aria-label="Volver">←</button>
+ <div><h1>¿Dónde lo tiro?</h1><small>Zona de residuos peligrosos · Palma Bay y Palau</small></div>
+</header>
+
+<section class="view on" id="vHome">
+ <button class="cam" id="camBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Hacer foto</button>
+ <input type="file" id="file" accept="image/*" capture="environment" hidden>
+ <p class="hint">Si tiene etiqueta, que se lean bien las letras</p>
+ <input class="search" id="q" type="search" placeholder="O escribe qué es: pila, tablet, Suma D10…" autocomplete="off">
+ <div id="qres" class="plist" style="margin-top:10px"></div>
+ <div id="tilesBox">
+  <h2>O toca lo que tienes</h2>
+  <div class="tiles" id="tiles"></div>
+ </div>
+</section>
+
+<section class="view" id="vList">
+ <h2 style="margin-top:0">Productos de limpieza y químicos</h2>
+ <input class="search" id="q2" type="search" placeholder="Busca el producto…" autocomplete="off">
+ <div id="plist"></div>
+</section>
+
+<section class="view" id="vCand">
+ <div class="cands">
+  <h3 id="candTitle">¿Es alguno de estos?</h3>
+  <div class="plist" id="candList"></div>
+  <p class="note" id="candNote"></p>
+  <button class="again" id="noneBtn">No es ninguno</button>
+ </div>
+</section>
+
+<section class="view" id="vRes"><div id="res"></div></section>
+</div>
+
+<div class="overlay" id="ov"><div class="ov"><img id="ovImg" alt=""><div id="ovTxt" style="font-weight:700">Leyendo la etiqueta…</div><div class="bar"><i id="ovBar"></i></div></div></div>
+
+<script src="vendor/tesseract.min.js"></script>
+<script>
+var C={
+ 1:{n:'Cloro y alcalinos',r:'u',k:'Big-bag',ler:'15 01 10*',e:'🧴',w:'Lejía, hipoclorito, Suma, Room Care, desengrasantes',tip:'Envase vacío y con tapón.',warn:'Nunca junto a ácidos ni amoniaco.',kw:'lejia hipoclorito cloro clorado chlor alcalino hidroxido sosa caustica bromo'},
+ 2:{n:'Ácidos y amoniaco',r:'u',k:'Big-bag',ler:'15 01 10*',e:'🧪',w:'Descalcificantes, desincrustantes, pH minus, amoniaco',tip:'Envase vacío y con tapón.',warn:'Nunca junto a lejía ni cloro.',kw:'acido acid fosforico phosphoric clorhidrico sulfamico citrico amoniaco ammonia descalcificante desincrustante antical'},
+ 3:{n:'Envases metálicos',r:'u',k:'Big-bag',ler:'15 01 10*',e:'🥫',w:'Latas de chafing, latas vacías de pintura y disolvente',tip:'Latas vacías, sin líquido dentro.',kw:'chafing lata combustible'},
+ 4:{n:'Pintura y barniz',r:'u',k:'Bidón',ler:'08 01 11*',e:'🎨',w:'Esmaltes, pinturas, barnices',tip:'Botes bien cerrados.',kw:'pintura esmalte barniz imprimacion laca primer'},
+ 5:{n:'Disolventes',r:'u',k:'Bidón',ler:'14 06 03* / 20 01 13*',e:'⚗️',w:'Disolvente, acetona, diluyente',tip:'Cerrado y sin mezclar con otros líquidos.',kw:'disolvente acetona diluyente aguarras thinner'},
+ 6:{n:'Aceites',r:'u',k:'Bidón',ler:'13 02 05*',e:'🛢️',w:'Aceite de motor y lubricantes (no el de cocina)',tip:'Sin mezclar con otros líquidos. El aceite de cocina no va aquí.',kw:'lubricante motor hidraulico 15w40 10w40 5w30'},
+ 7:{n:'Trapos y absorbentes',r:'u',k:'Bidón',ler:'15 02 02*',e:'🧽',w:'Trapos, rodillos y paletinas con pintura o químicos',tip:'Solo trapos manchados de químicos o pintura.',kw:'trapo absorbente rodillo paletina'},
+ 8:{n:'Aerosoles',r:'u',k:'Bidón',ler:'15 01 11* / 16 05 04*',e:'💨',w:'Sprays y cartuchos de gas',tip:'No perforar ni aplastar.',kw:'aerosol spray presion propelente butano propano wd-40'},
+ 9:{n:'Medicamentos',r:'u',k:'Caja',ler:'18 01 03* / 20 01 31*',e:'💊',w:'Botiquín y medicamentos olvidados',tip:'Con su caja o blíster.',kw:'comprimidos capsulas jarabe medicamento paracetamol ibuprofeno farmacia sobres'},
+ 10:{n:'Pilas',r:'e',k:'Contenedor',ler:'20 01 33* / 16 06 04',e:'🔋',w:'Pilas AA, AAA, C, D y de botón',tip:'Solo pilas, también las de botón.',kw:'pila pilas alkaline alcalina lr6 lr03 lr14 lr20 1.5v duracell energizer varta panasonic cr2032 cr2025 mignon micro'},
+ 11:{n:'Baterías de litio',r:'e',k:'Contenedor',ler:'20 01 42*',e:'🪫',w:'Baterías de aspiradores, herramientas, patinetes',tip:'Si está hinchada o rota, avisa a Mantenimiento.',kw:'litio lithium li-ion liion 18650 bateria battery akku mah 18v 36v 14.4v 3.7v karcher'},
+ 12:{n:'Tóners',r:'e',k:'Contenedor',ler:'20 01 35* / 08 03 17*',e:'🖨️',w:'Tóners y cartuchos de tinta',tip:'Mejor dentro de su bolsa.',kw:'toner cartucho tinta ink kyocera brother epson canon laserjet'},
+ 13:{n:'Lámparas y tubos',r:'e',k:'Contenedor FR3',ler:'20 01 21*',e:'💡',w:'Bombillas, LED y tubos fluorescentes',tip:'Sin romper. Si se rompe un tubo, avisa.',kw:'bombilla lampara led tubo fluorescente e27 e14 gu10 lumen philips osram ledvance'},
+ 14:{n:'Vapeadores',r:'e',k:'Contenedor',ler:'20 01 35*',e:'🚬',w:'Vapeadores olvidados en habitaciones',tip:'Enteros, sin desmontar.',kw:'vape vaper puff puffs nicotina nicotine elfbar e-liquid'},
+ 15:{n:'Pequeños aparatos',r:'e',k:'Contenedor FR5',ler:'20 01 36',e:'☕',w:'Planchas, cafeteras, secadores, hervidores',tip:'Con cable y todo.',kw:'plancha cafetera secador hervidor batidora tostadora'},
+ 16:{n:'Informática',r:'e',k:'Contenedor FR6',ler:'20 01 35* / 20 01 36',e:'⌨️',w:'Teclados, ratones, móviles, cables, cargadores',tip:'Con cable y todo.',kw:'teclado raton keyboard mouse movil telefono tablet tableta ipad portatil ordenador cargador usb cable router logitech'},
+ 17:{n:'Electrodomésticos',r:'e',k:'Zona FR1 · FR2 · FR4',ler:'FR1 · FR2 · FR4',e:'📺',w:'Neveras, hornos, televisores, pantallas',tip:'No se mueve a mano: avisa a Mantenimiento.',kw:'nevera frigorifico minibar microondas horno television monitor pantalla lavadora'},
+ 18:{n:'Baterías de plomo',r:'e',k:'Contenedor',ler:'16 06 01*',e:'🚨',w:'Luces de emergencia, SAI, carros eléctricos',tip:'Pesan: avisa a Mantenimiento.',kw:'plomo lead acid vrla agm sai ups emergencia 12v'},
+ 0:{n:'Contenedor amarillo',r:'a',k:'',ler:'',e:'🟨',w:'Envases que no son peligrosos',tip:'',kw:''}
+};
+var TILES=[10,11,13,8,14,9,12,15,16,18,17,4,5,6,7,3];
+var P=[{"n": "Lejía concentrada 40 g/l", "z": "Cocina y office", "c": 1, "f": "1874", "k": "lejia hipoclorito cloro", "cod": "1874 · 11698"}, {"n": "Sprint limpiador clorado E2SP", "z": "Cocina y office", "c": 1, "f": "14562", "k": "sprint e2sp clorado diversey", "cod": "14562"}, {"n": "Recuperador clorado vajilla", "z": "Cocina y office", "c": 1, "f": "14572", "k": "", "cod": "14572"}, {"n": "Suma Chlordes D10.45 (5 y 20 L)", "z": "Cocina y office", "c": 1, "f": "14618", "k": "suma chlordes d10.45 d10 cloro", "cod": "14618 · 17148"}, {"n": "Suma Bac D10", "z": "Cocina y office", "c": 1, "f": "14619", "k": "suma bac d10", "cod": "14619"}, {"n": "Suma Grill D9", "z": "Cocina y office", "c": 1, "f": "14614", "k": "suma grill d9", "cod": "14614"}, {"n": "Suma Ultra L2E / Pur-Eco L2D", "z": "Cocina y office", "c": 1, "f": "14631", "k": "suma ultra l2e l2d pur-eco", "cod": "14631 · 17149"}, {"n": "Suma Special Pur-Eco L4 (5 y 20 L)", "z": "Cocina y office", "c": 1, "f": "14632", "k": "suma special l4 pur-eco", "cod": "14632 · 17150"}, {"n": "Suma Star D1", "z": "Cocina y office", "c": 1, "f": "14649", "k": "suma star d1", "cod": "14649"}, {"n": "Descalcificante lavavajillas", "z": "Cocina y office", "c": 2, "f": "14595", "k": "descalcificante acido fosforico", "cod": "14595"}, {"n": "Detergentes hornos Rational", "z": "Cocina y office", "c": 1, "f": "14554", "k": "rational cleaner tabs reiniger horno", "cod": "14554 · 17157 · 281527"}, {"n": "Abrillantador y descalcificación Rational", "z": "Cocina y office", "c": 2, "f": "", "k": "rational care descaler abrillantador", "cod": "17153 · 58260"}, {"n": "Desengrasante líquido enérgico", "z": "Cocina y office", "c": 1, "f": "50283", "k": "", "cod": "50283"}, {"n": "Multiuso enérgico incrustaciones", "z": "Cocina y office", "c": 1, "f": "14687", "k": "", "cod": "14687"}, {"n": "Espuma lavado manual", "z": "Cocina y office", "c": 1, "f": "52612", "k": "", "cod": "52612"}, {"n": "Pastillas lavavajillas máquina pequeña", "z": "Cocina y office", "c": 1, "f": "14630", "k": "", "cod": "14630"}, {"n": "Desinfectante fruta y verdura", "z": "Cocina y office", "c": 1, "f": "14588", "k": "fruta verdura desinfectante", "cod": "14588"}, {"n": "Pastillas cafetera y circuito de leche", "z": "Cocina y office", "c": 1, "f": "2807", "k": "", "cod": "2807 · 2808"}, {"n": "Granulado Gran-027 secadora cubiertos", "z": "Cocina y office", "c": 1, "f": "", "k": "", "cod": "8023"}, {"n": "Alcohol gel para chafing dish", "z": "Cocina y office", "c": 3, "f": "13036", "k": "chafing gel combustible alcohol", "cod": "13036"}, {"n": "Suma Rinse A5", "z": "Cocina y office", "c": 0, "f": "14596", "k": "suma rinse a5", "cod": "14596 · 14612"}, {"n": "Limpiador abrillantador acero inox", "z": "Cocina y office", "c": 0, "f": "14651", "k": "inox acero", "cod": "14651 · 17154"}, {"n": "Room Care R1 Plus", "z": "Pisos y zonas comunes", "c": 1, "f": "64633", "k": "room care r1", "cod": "64633"}, {"n": "Room Care R2-Des Plus", "z": "Pisos y zonas comunes", "c": 1, "f": "52809", "k": "room care r2", "cod": "52809"}, {"n": "Room Care R5.1 Plus", "z": "Pisos y zonas comunes", "c": 1, "f": "67226", "k": "room care r5.1 r5", "cod": "67226"}, {"n": "Desincrustante WC Taski", "z": "Pisos y zonas comunes", "c": 2, "f": "14611", "k": "taski desincrustante wc", "cod": "14611"}, {"n": "Amoniaco perfumado", "z": "Pisos y zonas comunes", "c": 2, "f": "9332", "k": "amoniaco ammonia", "cod": "9332"}, {"n": "Fregasuelos con insecticida", "z": "Pisos y zonas comunes", "c": 1, "f": "41878", "k": "", "cod": "41878"}, {"n": "Clax Pura 35D2", "z": "Pisos y zonas comunes", "c": 1, "f": "14662", "k": "clax pura 35d2", "cod": "14662"}, {"n": "Skip Pro Formula Active Clean", "z": "Pisos y zonas comunes", "c": 1, "f": "76744", "k": "skip active clean", "cod": "76744"}, {"n": "Cif crema vitrocerámica", "z": "Pisos y zonas comunes", "c": 1, "f": "14653", "k": "cif vitroceramica", "cod": "14653"}, {"n": "Ambientadores Blue Velvet y YHI Spa", "z": "Pisos y zonas comunes", "c": 1, "f": "24787", "k": "ambientador blue velvet yhi", "cod": "24787 · 85829"}, {"n": "EOS Screen urinarios", "z": "Pisos y zonas comunes", "c": 1, "f": "", "k": "eos screen urinario", "cod": "76762"}, {"n": "Jabón líquido manos granel", "z": "Pisos y zonas comunes", "c": 1, "f": "14573", "k": "", "cod": "14573"}, {"n": "Limpiador spray mopa", "z": "Pisos y zonas comunes", "c": 1, "f": "14624", "k": "", "cod": "14624"}, {"n": "Room Care R3 Plus", "z": "Pisos y zonas comunes", "c": 0, "f": "64632", "k": "room care r3", "cod": "64632"}, {"n": "Room Care R9 Plus", "z": "Pisos y zonas comunes", "c": 0, "f": "64631", "k": "room care r9", "cod": "64631"}, {"n": "Cif limpiador jabonoso madera", "z": "Pisos y zonas comunes", "c": 0, "f": "14576", "k": "cif madera jabonoso", "cod": "14576"}, {"n": "Mimosin Pro Formula", "z": "Pisos y zonas comunes", "c": 0, "f": "14645", "k": "mimosin", "cod": "14645"}, {"n": "Hipoclorito 50 y 150 g/l", "z": "Piscina y spa", "c": 1, "f": "11695", "k": "hipoclorito cloro", "cod": "11695 · 11710"}, {"n": "Bromo en tabletas", "z": "Piscina y spa", "c": 1, "f": "11688", "k": "bromo", "cod": "11688"}, {"n": "Disminuidor de pH", "z": "Piscina y spa", "c": 2, "f": "11709", "k": "minorador ph minus acido", "cod": "11680 · 11709 · 12771"}, {"n": "Incrementador de pH", "z": "Piscina y spa", "c": 1, "f": "36215", "k": "incrementador ph plus", "cod": "36215"}, {"n": "Regulador de alcalinidad", "z": "Piscina y spa", "c": 1, "f": "11681", "k": "", "cod": "11681"}, {"n": "Reductor de cloro", "z": "Piscina y spa", "c": 1, "f": "11674", "k": "", "cod": "11674 · 34936"}, {"n": "Algicida", "z": "Piscina y spa", "c": 1, "f": "11686", "k": "", "cod": "11686 · 12769"}, {"n": "Coagulante", "z": "Piscina y spa", "c": 2, "f": "11669", "k": "", "cod": "11669 · 141050"}, {"n": "Desengrasante borde piscina", "z": "Piscina y spa", "c": 1, "f": "11711", "k": "", "cod": "11711"}, {"n": "Esencias y aceites esenciales spa", "z": "Piscina y spa", "c": 1, "f": "1926", "k": "", "cod": "1926 · 50242 · 38857 · 38859 · 38860 · 38861 · 229084"}, {"n": "Esmaltes al disolvente: Campilak, Unimprimer, Pavicam, Indumix", "z": "Mantenimiento", "c": 4, "f": "30112", "k": "esmalte campilak unimprimer pavicam indumix", "cod": "30112 · 30152 · 47762 · 30122 · 30116 · 30477"}, {"n": "Pinturas al agua: Bruper Cril, B-60, esmalte al agua", "z": "Mantenimiento", "c": 4, "f": "30377", "k": "pintura bruper cril b-60", "cod": "30377 · 30413 · 34575"}, {"n": "Disolventes y acetona", "z": "Mantenimiento", "c": 5, "f": "30422", "k": "disolvente acetona diluyente", "cod": "30422 · 30412 · 42395 · 30410"}, {"n": "Trapos, rodillos y paletinas con pintura", "z": "Mantenimiento", "c": 7, "f": "", "k": "", "cod": ""}, {"n": "Recambio de gas para soplete", "z": "Mantenimiento", "c": 8, "f": "252343", "k": "gas soplete butano propano cartucho", "cod": "252343"}, {"n": "Pilas alcalinas AA, AAA y C", "z": "Pilas y aparatos", "c": 10, "f": "6597", "k": "pila alcalina alkaline duracell", "cod": "6597 · 59332 · 58673 · 58755 · 58761"}, {"n": "Baterías de aspirador Kärcher", "z": "Pilas y aparatos", "c": 11, "f": "112332", "k": "karcher bateria litio", "cod": "112332"}, {"n": "Planchas, cafeteras de habitación, minibatidor", "z": "Pilas y aparatos", "c": 15, "f": "", "k": "", "cod": ""}, {"n": "Teclados, ratones, etiquetas electrónicas", "z": "Pilas y aparatos", "c": 16, "f": "", "k": "", "cod": ""}];
+var STOP={para:1,con:1,del:1,los:1,las:1,plus:1,liquido:1,litros:1,limpiador:1,formula:1,pro:1,y:1,de:1,al:1,en:1,el:1,la:1};
+
+function norm(s){return (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9.\-]+/g,' ').trim();}
+function words(s){return norm(s).split(/\s+/).filter(Boolean);}
+function lev(a,b){if(Math.abs(a.length-b.length)>2)return 9;var d=[],i,j;for(i=0;i<=a.length;i++)d[i]=[i];for(j=0;j<=b.length;j++)d[0][j]=j;for(i=1;i<=a.length;i++)for(j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return d[a.length][b.length];}
+function hit(kw,toks,prefix){
+ for(var i=0;i<toks.length;i++){var t=toks[i];
+  if(t==kw)return 1;
+  if(prefix&&t.length>=2&&kw.indexOf(t)==0)return .8;
+  if(kw.length>=4&&t.length>=4&&(t.indexOf(kw)==0||kw.indexOf(t)==0&&t.length>=kw.length-1))return .9;
+  if(!prefix&&kw.length>=5&&lev(t,kw)<=(kw.length>=8?2:1))return .7;
+ }return 0;}
+// candidatos: productos + contenedores genéricos
+var CANDS=[];
+P.forEach(function(p,i){var ws={};words(p.n+' '+p.k).forEach(function(w){if(!STOP[w]&&(w.length>=3||/\d/.test(w)))ws[w]=1});CANDS.push({type:'p',i:i,c:p.c,kws:Object.keys(ws)});});
+Object.keys(C).forEach(function(n){if(+n===0)return;var ws={};words(C[n].n+' '+C[n].kw).forEach(function(w){if(!STOP[w]&&w.length>=2)ws[w]=1});CANDS.push({type:'c',c:+n,kws:Object.keys(ws)});});
+function rank(text,prefix){
+ var toks=words(text);if(!toks.length)return[];
+ var out=[];
+ CANDS.forEach(function(cd){var s=0,m=0;cd.kws.forEach(function(k){var h=hit(k,toks,prefix);if(h){s+=h*(k.length<=3&&!/\d/.test(k)?.6:1);m++;}});
+  if(s>0)out.push({cd:cd,s:s+(cd.type=='p'?.05:0)});});
+ out.sort(function(a,b){return b.s-a.s});return out;}
+
+// ---------- vistas ----------
+function $(id){return document.getElementById(id)}
+function show(v){['vHome','vList','vCand','vRes'].forEach(function(x){$(x).classList.toggle('on',x==v)});document.body.className=v=='vHome'?'':(v=='vRes'?'res':'list');window.scrollTo(0,0);}
+function col(n){var r=C[n].r;return r=='u'?'var(--red)':r=='e'?'var(--blue)':'var(--yel)';}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]});}
+function prodBtn(p,i){var b=document.createElement('button');b.className='prod';
+ b.innerHTML=(p.f?'<img loading="lazy" src="fotos/'+p.f+'.jpg" alt="">':'<span class="ph">'+C[p.c].e+'</span>')+'<span><b>'+esc(p.n)+'</b><small>'+esc(p.z)+'</small></span>'+(p.c?'<span class="n" style="background:'+col(p.c)+'">'+p.c+'</span>':'<span class="n" style="background:var(--yel);color:#3A2E00">A</span>');
+ b.onclick=function(){result(p.c,p.n)};return b;}
+function contBtn(n){var b=document.createElement('button');b.className='prod';
+ b.innerHTML='<span class="ph">'+C[n].e+'</span><span><b>'+esc(C[n].n)+'</b><small>'+esc(C[n].w)+'</small></span><span class="n" style="background:'+col(n)+'">'+n+'</span>';
+ b.onclick=function(){result(n)};return b;}
+
+var tiles=$('tiles');
+TILES.forEach(function(n){var b=document.createElement('button');b.className='tile';b.innerHTML='<span class="e">'+C[n].e+'</span>'+esc(C[n].n);b.onclick=function(){result(n)};tiles.appendChild(b);});
+var ch=document.createElement('button');ch.className='tile chem';ch.innerHTML='<span class="e">🧴</span><span>Producto de limpieza o químico<small>Lejía, Suma, Room Care, piscina, Rational…</small></span>';ch.onclick=function(){renderList('');show('vList')};tiles.insertBefore(ch,tiles.firstChild);
+
+function renderList(q){var box=$('plist');box.innerHTML='';var last='';
+ var list=P.map(function(p,i){return i});
+ if(q){var r=rank(q,true).filter(function(x){return x.cd.type=='p'});list=r.map(function(x){return x.cd.i});}
+ list.forEach(function(i){var p=P[i];if(!q&&p.z!=last){last=p.z;var h=document.createElement('div');h.className='zone';h.textContent=p.z;box.appendChild(h);}box.appendChild(prodBtn(p,i));});
+ if(!list.length)box.innerHTML='<p class="note">No lo encuentro. Prueba con otra palabra de la etiqueta.</p>';}
+$('q2').oninput=function(){renderList(this.value.trim())};
+$('q').oninput=function(){var q=this.value.trim(),box=$('qres');box.innerHTML='';$('tilesBox').style.display=q?'none':'';
+ if(!q)return;var r=rank(q,true),seen={};r.slice(0,8).forEach(function(x){var key=x.cd.type+(x.cd.type=='p'?x.cd.i:x.cd.c);if(seen[key])return;seen[key]=1;box.appendChild(x.cd.type=='p'?prodBtn(P[x.cd.i],x.cd.i):contBtn(x.cd.c));});
+ if(!box.children.length)box.innerHTML='<p class="note">No lo encuentro. Toca el dibujo que más se parezca o pregunta a tu responsable.</p>';};
+$('homeBtn').onclick=function(){if($('vRes').classList.contains('on')&&history.length>1&&location.hash){history.back();}else go('');};
+function go(h){if(location.hash!=h)location.hash=h;else route();}
+window.addEventListener('hashchange',route);
+function route(){var h=location.hash.slice(1).split('|')[0];if(/^c\d+$/.test(h)){renderResult(+h.slice(1),decodeURIComponent((location.hash.split('|')[1]||'')));show('vRes');}else if(h=='list'){show('vList')}else if(h=='cand'){show('vCand')}else{show('vHome')}}
+$('noneBtn').onclick=function(){go('');};
+
+// ---------- resultado ----------
+var CUR={c:1,full:false};
+function result(n,what){location.hash='c'+n+(what?'|'+encodeURIComponent(what):'');}
+function renderResult(n,what){
+ var c=C[n];var h='';
+ if(n===0){h='<div class="amar"><div class="t1" style="font-size:13px;font-weight:700;color:#7A5B00;text-transform:uppercase;letter-spacing:.05em">No es peligroso</div><div class="t2">Contenedor amarillo</div><div style="margin-top:6px;font-size:15px">No va a los cuartos de peligrosos. Envase vacío al contenedor amarillo de envases.</div></div>'+(what?'<p class="what">Has elegido: <b>'+esc(what)+'</b></p>':'');}
+ else{var room=c.r=='u'?'Cuarto 1 · Urbaser':'Cuarto 2 · ERP';
+  h='<div class="big" style="background:'+col(n)+'"><div class="num" style="color:'+col(n)+'">'+n+'</div><div><div class="t1">'+room+'</div><div class="t2">'+esc(c.n)+'</div><div class="t3">'+esc(c.k)+' · LER '+esc(c.ler)+'</div></div></div>'+
+  (what?'<p class="what">Has elegido: <b>'+esc(what)+'</b></p>':'<p class="what">'+esc(c.w)+'</p>')+
+  (c.warn?'<div class="tip warn"><span>⚠️</span><span>'+esc(c.warn)+'</span></div>':'')+
+  '<div class="tip"><span>👉</span><span>'+esc(c.tip)+'</span></div>'+
+  '<div class="mapc"><div class="maphead"><span>Sigue la flecha desde la entrada</span><button class="lnk" id="fullBtn">Ver plano completo</button></div><div id="map"></div></div>';}
+ h+='<button class="again" onclick="go(\'\')">📷 Otro residuo</button>';
+ $('res').innerHTML=h;CUR={c:n,full:false};
+ if(n!==0){drawMap();$('fullBtn').onclick=function(){CUR.full=!CUR.full;this.textContent=CUR.full?'Acercar':'Ver plano completo';drawMap();};}
+}
+
+// ---------- plano (metros) ----------
+var BOX=[
+ {n:1,x:-3.35,y:1.35,w:.85,h:1,l:'Cloro'},{n:1,x:-2.45,y:1.35,w:.85,h:1,l:'Cloro'},{n:3,x:-1.55,y:1.35,w:.85,h:1,l:'Envases|metálicos'},
+ {n:2,x:-3.35,y:2.65,w:.85,h:.9,l:'Ácidos y|amoniaco'},{n:-1,x:-.65,y:1.35,w:.55,h:.55,l:'Repuestos'},
+ {n:-2,x:-3.35,y:3.62,w:1.42,h:.64,l:''},
+ {n:4,cx:-3.02,cy:3.94,r:.28},{n:5,cx:-2.52,cy:3.93,r:.2},{n:6,cx:-2.1,cy:3.93,r:.2},
+ {n:7,cx:-.76,cy:3.57,r:.22},{n:8,cx:-.28,cy:3.57,r:.22},{n:9,x:-.95,y:3.9,w:.85,h:.35,l:'Medicamentos'},
+ {n:17,x:1.85,y:.55,w:.8,h:1.2,l:'Electro-|domésticos'},{n:13,x:3.3,y:.75,w:1.5,h:.36,l:'Lámparas y tubos'}
+];
+[10,11,14,18,12,15,16].forEach(function(n,i){BOX.push({n:n,x:2.75+i*.57,y:.05,w:.53,h:.5,l:({10:'Pilas',11:'Litio',14:'Vapea-|dores',18:'Plomo',12:'Tóners',15:'Peq.|aparatos',16:'Infor-|mática'})[n]});});
+var APP={1:[[-.3,2.65],[-1.6,2.55],[-2.5,2.5]],3:[[-.3,2.65],[-1.1,2.5]],2:[[-.3,2.65],[-1.6,2.8],[-2.35,3.1]],4:[[-.3,2.65],[-1.6,3.0],[-2.5,3.45]],5:[[-.3,2.65],[-1.6,3.0],[-2.5,3.45]],6:[[-.3,2.65],[-1.6,3.0],[-2.1,3.5]],7:[[-.3,2.65],[-.76,3.2]],8:[[-.3,2.65],[-.3,3.2]],9:[[-.3,2.65],[-1.3,3.2],[-1.3,4.05],[-1.0,4.08]],
+ 17:[[6.1,1.4],[2.9,1.4],[2.75,1.2]],13:[[6.1,1.4],[4.05,1.4],[4.05,1.18]]};
+[10,11,14,18,12,15,16].forEach(function(n,i){var cx=2.75+i*.57+.265;APP[n]=[[6.1,1.4],[cx,1.4],[cx,.62]];});
+function drawMap(){
+ var n=CUR.c,U=C[n].r=='u',vb=CUR.full?[-3.75,-.75,10.95,5.4]:(U?[-3.6,.95,4.9,3.45]:[1.6,-.5,5.4,3.65]);
+ var on=col(n).replace('var(--red)','#B3261E').replace('var(--blue)','#1859A8'),bg=U?'#FBE4E2':'#E3EDF9';
+ var s='<svg viewBox="'+vb.join(' ')+'" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif"><defs><marker id="ar" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="'+on+'"/></marker></defs>';
+ function room(x,y,w,h,f){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+f+'" stroke="#1C2326" stroke-width=".07"/>';}
+ s+=room(-3.4,1.3,3.4,3.0,U?bg:'#F2F2F2')+room(0,2,6.8,1.3,'#FAFAF8')+room(1.8,0,5,1.8,U?'#F2F2F2':bg);
+ s+='<rect x="-.1" y="2.2" width=".2" height=".9" fill="#FAFAF8"/><rect x="5.65" y="1.7" width=".9" height=".4" fill="#FAFAF8"/><rect x="5.65" y="3.22" width=".9" height=".16" fill="#FAFAF8"/>';
+ var lab=[];
+ BOX.forEach(function(b){var t=b.n===n,f=t?'#FFFFFF':'#E6E6E6',st=t?on:'#9A9A9A',sw=t?.06:.025,dash=b.n<0?' stroke-dasharray=".06 .05"':'';
+  if(b.n==-2){f='#EDEDED';st='#BBBBBB';}
+  if(b.r){s+='<circle cx="'+b.cx+'" cy="'+b.cy+'" r="'+b.r+'" fill="'+f+'" stroke="'+st+'" stroke-width="'+sw+'"/>';
+   s+='<text x="'+b.cx+'" y="'+(b.cy+.07)+'" text-anchor="middle" font-size=".2" font-weight="800" fill="'+(t?on:'#8A8A8A')+'">'+b.n+'</text>';
+   if(t)s+='<circle class="pulse" cx="'+b.cx+'" cy="'+b.cy+'" r="'+(b.r+.08)+'" fill="none" stroke="'+on+'" stroke-width=".05"/>';return;}
+  s+='<rect x="'+b.x+'" y="'+b.y+'" width="'+b.w+'" height="'+b.h+'" rx=".05" fill="'+(t?on:f)+'" stroke="'+st+'" stroke-width="'+sw+'"'+dash+'/>';
+  if(t)s+='<rect class="pulse" x="'+(b.x-.07)+'" y="'+(b.y-.07)+'" width="'+(b.w+.14)+'" height="'+(b.h+.14)+'" rx=".09" fill="none" stroke="'+on+'" stroke-width=".05"/>';
+  var ls=b.l.split('|'),fs=b.w<.6?.11:.13;ls.forEach(function(l,i){s+='<text x="'+(b.x+b.w/2)+'" y="'+(b.y+b.h/2+(i-(ls.length-1)/2)*fs*1.15+fs*.35+(b.n>0&&b.h>.45?.06:0))+'" text-anchor="middle" font-size="'+fs+'" font-weight="'+(t?800:500)+'" fill="'+(t?'#FFFFFF':'#7A7A7A')+'">'+esc(l)+'</text>';});
+  if(b.n>0){lab.push('<circle cx="'+(b.x+.02)+'" cy="'+(b.y+.02)+'" r=".12" fill="'+(t?'#FFFFFF':'#9A9A9A')+'" stroke="'+(t?on:'#FFFFFF')+'" stroke-width=".03"/><text x="'+(b.x+.02)+'" y="'+(b.y+.065)+'" text-anchor="middle" font-size=".13" font-weight="800" fill="'+(t?on:'#FFFFFF')+'">'+b.n+'</text>');}
+ });
+ s+=lab.join('');
+ // ruta
+ var pts=[[6.1,3.6],[6.1,2.65]].concat(U?[[0.3,2.65]]:[]).concat(APP[n]||[]);
+ s+='<polyline points="'+pts.map(function(p){return p.join(',')}).join(' ')+'" fill="none" stroke="'+on+'" stroke-width=".07" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray=".16 .11" marker-end="url(#ar)"/>';
+ s+='<circle cx="6.1" cy="3.6" r=".1" fill="'+on+'"/>';
+ s+='<text x="6.1" y="3.92" text-anchor="middle" font-size=".17" font-weight="800" fill="#1C2326">ENTRADA</text>';
+ s+='<text x="'+(U?-3.35:1.85)+'" y="'+(U?1.18:-.2)+'" font-size=".19" font-weight="800" fill="'+(U?on:'#8A8A8A')+'">'+(U?'CUARTO 1 · URBASER':'CUARTO 1')+'</text>';
+ s+='<text x="'+(U?1.85:1.85)+'" y="-.2" font-size=".19" font-weight="800" fill="'+(U?'#8A8A8A':on)+'">CUARTO 2 · ERP</text>';
+ if(!U)s+='<text x="-3.35" y="1.18" font-size=".19" font-weight="800" fill="#8A8A8A">CUARTO 1 · URBASER</text>';
+ s+='<text x="2.2" y="2.72" font-size=".15" fill="#8A8A8A">Pasillo</text></svg>';
+ $('map').innerHTML=s;}
+
+// ---------- foto + lectura ----------
+var worker=null;
+async function getWorker(prog){
+ if(worker)return worker;
+ var abs=function(p){return new URL(p,location.href).href};var src='var _f=self.fetch;self.fetch=function(u,o){u=String(u);if(u.indexOf("spa.traineddata")>=0){return _f("'+abs('lang/spa.traineddata.gz.txt')+'").then(function(r){return r.text()}).then(function(t){var b=atob(t.trim()),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new Response(a)})}return _f(u,o)};importScripts("'+abs('vendor/worker.min.js')+'");';var wurl=URL.createObjectURL(new Blob([src],{type:'text/javascript'}));worker=await Tesseract.createWorker('spa',1,{workerPath:wurl,workerBlobURL:false,corePath:abs('vendor/core'),langPath:abs('lang'),gzip:true,logger:function(m){if(m.status=='recognizing text')prog(.35+.65*m.progress);else if(m.progress!=null)prog(.35*m.progress);}});
+ return worker;}
+function prep(file){return new Promise(function(ok,ko){var img=new Image();img.onload=function(){var M=1600,sc=Math.min(1,M/Math.max(img.width,img.height)),w=Math.round(img.width*sc),h=Math.round(img.height*sc);
+ var cv=document.createElement('canvas');cv.width=w;cv.height=h;var x=cv.getContext('2d');x.drawImage(img,0,0,w,h);var col=document.createElement('canvas');col.width=w;col.height=h;col.getContext('2d').drawImage(img,0,0,w,h);
+ var d=x.getImageData(0,0,w,h),a=d.data,mn=255,mx=0,i,g;for(i=0;i<a.length;i+=4){g=.299*a[i]+.587*a[i+1]+.114*a[i+2];a[i]=g;if(g<mn)mn=g;if(g>mx)mx=g;}
+ var r=255/Math.max(1,mx-mn);for(i=0;i<a.length;i+=4){g=(a[i]-mn)*r;a[i]=a[i+1]=a[i+2]=g;}x.putImageData(d,0,0);ok({cv:cv,color:col,url:img.src});};img.onerror=ko;img.src=URL.createObjectURL(file);});}
+function rot(cv){var c=document.createElement('canvas');c.width=cv.height;c.height=cv.width;var x=c.getContext('2d');x.translate(c.width,0);x.rotate(Math.PI/2);x.drawImage(cv,0,0);return c;}
+$('camBtn').onclick=function(){$('file').click()};
+// ---------- reconocer objetos (sin etiqueta) ----------
+var HUM=null;
+function loadScript(src){return new Promise(function(ok,ko){var e=document.createElement('script');e.src=src;e.onload=ok;e.onerror=ko;document.head.appendChild(e);});}
+async function getHuman(){if(HUM)return HUM;if(!window.Human)await loadScript('vendor/human.js');
+ HUM=new Human.Human({backend:'webgl',modelBasePath:new URL('models/',location.href).href,debug:false,cacheModels:true,
+  face:{enabled:false},body:{enabled:false},hand:{enabled:false},gesture:{enabled:false},segmentation:{enabled:false},
+  object:{enabled:true,modelPath:'centernet.json',minConfidence:.12,maxDetected:8}});
+ await HUM.load();return HUM;}
+var OBJ={'cell phone':[16,15,17],'laptop':[16,15,17],'tv':[16,17,15],'keyboard':[16,15],'mouse':[16,15],'remote':[16,15,17],
+ 'microwave':[17,15,16],'oven':[16,17,15],'toaster':[15,17],'refrigerator':[17],'hair drier':[15],'clock':[15,16],'bottle':['chem'],'vase':['chem'],'cup':['chem']};
+async function detectObj(cv){try{var h=await getHuman();var r=await h.detect(cv);return (r.object||[]).map(function(o){return{l:o.label,s:o.score}}).sort(function(a,b){return b.s-a.s});}catch(e){return[];}}
+$('file').onchange=async function(){var f=this.files[0];this.value='';if(!f)return;
+ var ov=$('ov'),bar=$('ovBar');ov.classList.add('on');$('ovTxt').textContent='Mirando la foto…';bar.style.width='3%';
+ var txt='',objs=[];
+ try{var pr=await prep(f);$('ovImg').src=pr.url;
+  var pObj=detectObj(pr.color);
+  var w=await getWorker(function(p){bar.style.width=Math.round(p*100)+'%'});
+  var r=await w.recognize(pr.cv);txt=r.data.text;
+  if(rank(txt).length==0||words(txt).filter(function(t){return t.length>=4}).length<3){$('ovTxt').textContent='Probando girada…';var r2=await w.recognize(rot(pr.cv));txt+=' '+r2.data.text;}
+  $('ovTxt').textContent='Casi…';objs=await pObj;
+ }catch(e){}
+ ov.classList.remove('on');candidates(txt,objs);
+};
+function chemBtn(){var b=document.createElement('button');b.className='prod';b.innerHTML='<span class="ph">🧴</span><span><b>Producto de limpieza o químico</b><small>Elige el tuyo en la lista</small></span>';b.onclick=function(){renderList('');location.hash='list'};return b;}
+function candidates(txt,objs){
+ objs=objs||[];var r=rank(txt,false),box=$('candList');box.innerHTML='';var seen={},k=0,strong=r.length&&r[0].s>=1.8;
+ function add(key,el){if(seen[key])return;seen[key]=1;k++;box.appendChild(el);}
+ var oc=[];objs.forEach(function(o){(OBJ[o.l]||[]).forEach(function(c){if(oc.indexOf(c)<0)oc.push(c)})});
+ var elec=oc.some(function(c){return c!=='chem'});
+ function addObj(){oc.forEach(function(c){if(c==='chem')add('chem',chemBtn());else add('c'+c,contBtn(c));});}
+ if(!strong)addObj();
+ r.forEach(function(x){if(k>=5||x.s<.9)return;add(x.cd.type=='p'?'p'+x.cd.i:'c'+x.cd.c,x.cd.type=='p'?prodBtn(P[x.cd.i],x.cd.i):contBtn(x.cd.c));});
+ if(strong)addObj();
+ if(k){$('candTitle').textContent=(!strong&&elec)?'Parece un aparato electrónico. ¿Cuál es?':'¿Es alguno de estos?';$('candNote').textContent='Toca el tuyo para ver dónde va.';}
+ else{$('candTitle').textContent='No lo he reconocido';$('candNote').textContent='Haz la foto más cerca y con luz, o toca el dibujo que más se parezca.';}
+ location.hash='cand';}
+route();
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Apps Android</title>
+<style>
+:root{--bg:#F2F5F7;--card:#fff;--ink:#0E2233;--muted:#5A6C7B;--line:#D9E1E7;--sea:#1C5D8C}
+@media (prefers-color-scheme:dark){:root{--bg:#0B1620;--card:#122230;--ink:#E6EEF4;--muted:#93A6B5;--line:#24384A;--sea:#6FB2E2}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:640px;margin:0 auto;padding:28px 16px 48px;display:grid;gap:16px}
+h1{font-size:28px;margin:0}
+p{margin:0}
+.sub{color:var(--muted)}
+.app{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center}
+.app img{width:64px;height:64px;border-radius:14px}
+.app h2{font-size:19px;margin:0 0 2px}
+.app p{color:var(--muted);font-size:14px}
+.btn{grid-column:1/-1;display:block;text-align:center;background:var(--sea);color:#fff;text-decoration:none;font-weight:700;padding:13px;border-radius:10px}
+.pasos{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.pasos h2{font-size:17px;margin:0 0 8px}
+.pasos ol{margin:0;padding-left:20px;display:grid;gap:6px}
+small{color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Apps Android</h1>
+  <p class="sub">Para instalar en el móvil Android. Gratis y sin Google Play.</p>
+
+  <div class="app">
+    <img src="../eventos/icono-eventos-192.png" alt="">
+    <div><h2>Eventos Palau</h2><p>BEO del Palau de Congressos de Palma y Meliá Palma Bay. Avisa 30 min antes de cada servicio con F&amp;B, aunque la app esté cerrada.</p></div>
+    <a class="btn" href="eventos-palau.apk" download>Descargar Eventos Palau</a>
+  </div>
+
+  <div class="app">
+    <img src="../ratios/icono-192.png" alt="">
+    <div><h2>Ratios cocina</h2><p>Cantidades por pax y material de cocina de cada evento.</p></div>
+    <a class="btn" href="ratios-cocina.apk" download>Descargar Ratios cocina</a>
+  </div>
+
+  <div class="pasos">
+    <h2>Cómo se instala</h2>
+    <ol>
+      <li>Pulsa «Descargar» y abre el archivo cuando termine.</li>
+      <li>Si el móvil avisa de que no deja instalar apps de esta fuente, pulsa <b>Ajustes</b>, activa <b>Permitir de esta fuente</b> y vuelve atrás.</li>
+      <li>Pulsa <b>Instalar</b>. Si sale un aviso de Play Protect, pulsa <b>Instalar de todas formas</b>.</li>
+      <li>En Eventos Palau, al abrirla la primera vez, acepta las notificaciones.</li>
+    </ol>
+  </div>
+  <small>Las apps muestran siempre la información al día de la web, no hace falta actualizarlas.</small>
+</main>
+</body>
+</html>

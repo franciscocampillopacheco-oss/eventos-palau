@@ -1,0 +1,1413 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Eventos Palau y Palma Bay//ES
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Eventos F&B
+X-WR-TIMEZONE:Europe/Madrid
+REFRESH-INTERVAL;VALUE=DURATION:PT1H
+X-PUBLISHED-TTL:PT1H
+BEGIN:VTIMEZONE
+TZID:Europe/Madrid
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:13ec7c2acd0b8d782e38@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261112T080000
+DTEND;TZID=Europe/Madrid:20261112T200000
+SUMMARY:Jornadas de Lectura (FUEIB) · Water coolers (2 water coolers)
+LOCATION:Auditorium Mallorca
+DESCRIPTION:Bebidas · Sin hora propia (va con el set up 08:00–20:00)\nPa
+ x: 2 water coolers\nSala: Auditorium Mallorca\nCatering manager: Nora Nava
+ res\nGarrafa 18\,9 l · + 2 refill · Nuevo en MOD 2\n⚠ Va en «Miscella
+ neous» con la hora del set up del 12/11: es material del evento\, sin hor
+ a propia. Confirmar con Conference si los 2 water coolers se quedan el 13 
+ y el 14.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Jornadas de Lectura (FUEIB) · Water coolers (2 water coolers)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:96cbd2e32651290b0f14@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261113T113000
+DTEND;TZID=Europe/Madrid:20261113T120000
+SUMMARY:Jornadas de Lectura (FUEIB) · Coffee Break AM dulce (400 pax)
+LOCATION:Hall Auditorium Mallorca
+DESCRIPTION:Coffee break · 11:30–12:00\nPax: 400 pax\nSala: Hall 1 Audit
+ orium Mallorca\nCatering manager: Nora Navares\nMenú 1 · MOD 2: bollerí
+ a confirmada
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Jornadas de Lectura (FUEIB) · Coffee Break AM dulce (400 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bdc527deb4ac0a2f7b6a@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261113T133000
+DTEND;TZID=Europe/Madrid:20261113T150000
+SUMMARY:Jornadas de Lectura (FUEIB) · Almuerzo de trabajo (40 pax)
+LOCATION:Restaurante Trasluz
+DESCRIPTION:Almuerzo · 13:30–15:00\nPax: 40 pax\nSala: Restaurante Trasl
+ uz\nCatering manager: Nora Navares\nBanquete · Menú 2 · MOD 2: antes 30
+  pax\n⚠ MOD 2: sube de 30 a 40 pax y ya trae menú. La agenda del BEO po
+ ne «14:00 a 15:30h Tiempo libre para salir a comer»\, pero el almuerzo e
+ s 13:30–15:00: confirmar con Conference la hora y quiénes son estos 40 
+ pax.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Jornadas de Lectura (FUEIB) · Almuerzo de trabajo (40 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:9d238ffebca3ebd17613@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261113T173000
+DTEND;TZID=Europe/Madrid:20261113T180000
+SUMMARY:Jornadas de Lectura (FUEIB) · Coffee Break PM dulce (400 pax)
+LOCATION:Hall Auditorium Mallorca
+DESCRIPTION:Coffee break · 17:30–18:00\nPax: 400 pax\nSala: Hall 1 Audit
+ orium Mallorca\nCatering manager: Nora Navares\nMenú 2 · MOD 2: bollerí
+ a confirmada
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Jornadas de Lectura (FUEIB) · Coffee Break PM dulce (400 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:3a15ebdee1125e1f5196@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261114T110000
+DTEND;TZID=Europe/Madrid:20261114T113000
+SUMMARY:Jornadas de Lectura (FUEIB) · Coffee Break AM dulce (400 pax)
+LOCATION:Hall Auditorium Mallorca
+DESCRIPTION:Coffee break · 11:00–11:30\nPax: 400 pax\nSala: Hall 1 Audit
+ orium Mallorca\nCatering manager: Nora Navares\nMenú 3 · MOD 2: bollerí
+ a confirmada
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Jornadas de Lectura (FUEIB) · Coffee Break AM dulce (400 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:b1daafaacb9a6960df06@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261114T173000
+DTEND;TZID=Europe/Madrid:20261114T180000
+SUMMARY:Lifewave · Coffee Break líquido (60 pax)
+LOCATION:Portopi
+DESCRIPTION:Coffee break · 17:30–18:00\nPax: 60 pax\nSala: Portopi\nCate
+ ring manager: Marta Cerezales
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Lifewave · Coffee Break líquido (60 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:3cc234d26d80c638dd14@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261114T080000
+DTEND;TZID=Europe/Madrid:20261114T200000
+SUMMARY:SUSE 2026 · Coffee Station ELYXR (10 pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Café permanente · 08:00–20:00\nPax: 10 pax\nSala: ELYXR –
+  Orga Team\nCatering manager: Ana Riera
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Coffee Station ELYXR (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:b70262620a19315be124@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261114T120000
+DTEND;TZID=Europe/Madrid:20261114T133000
+SUMMARY:SUSE 2026 · Almuerzo staff ELYXR (10 pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Almuerzo · 12:00–13:30\nPax: 10 pax\nSala: ELYXR – Orga Te
+ am\nCatering manager: Ana Riera\nMenú sábado
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Almuerzo staff ELYXR (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:621493ea7e41e418b1ba@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261115T080000
+DTEND;TZID=Europe/Madrid:20261115T200000
+SUMMARY:SUSE 2026 · Coffee Station ELYXR (10 pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Café permanente · 08:00–20:00\nPax: 10 pax\nSala: ELYXR –
+  Orga Team\nCatering manager: Ana Riera
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Coffee Station ELYXR (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:c87dbd6e707cd19368e3@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261115T120000
+DTEND;TZID=Europe/Madrid:20261115T133000
+SUMMARY:SUSE 2026 · Almuerzo staff ELYXR (10 pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Almuerzo · 12:00–13:30\nPax: 10 pax\nSala: ELYXR – Orga Te
+ am\nCatering manager: Ana Riera\nMenú domingo
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Almuerzo staff ELYXR (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:425a79017e9c641800fb@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261116T070000
+DTEND;TZID=Europe/Madrid:20261116T190000
+SUMMARY:SUSE 2026 · Coffee Station ELYXR (20 pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Café permanente · 07:00–19:00\nPax: 20 pax\nSala: ELYXR –
+  Orga Team\nCatering manager: Ana Riera\n⚠ El BEO pone 07:00–19:00 per
+ o la composición dice «a partir de las 08:00 h»: confirmar hora de inic
+ io con Conference
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Coffee Station ELYXR (20 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:194e54fba6be6bdea097@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261116T120000
+DTEND;TZID=Europe/Madrid:20261116T133000
+SUMMARY:SUSE 2026 · Almuerzo staff ELYXR (20 pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Almuerzo · 12:00–13:30\nPax: 20 pax\nSala: ELYXR – Orga Te
+ am\nCatering manager: Ana Riera\nMenú 3 · lunes
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Almuerzo staff ELYXR (20 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:4ee0a48ce984e2f46417@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261116T101500
+DTEND;TZID=Europe/Madrid:20261116T104500
+SUMMARY:SUSE 2026 · Coffee Break · Menú 1 (130 pax)
+LOCATION:Hall Menorca
+DESCRIPTION:Coffee break · 10:15–10:45\nPax: 130 pax\nSala: Hall Menorca
+  – PEM Meetings\nCatering manager: Ana Riera\nBambú / biodegradable\n
+ ⚠ Alérgenos: cartelito con símbolo en todos los buffets\, cócteles y 
+ coffee breaks. Menús especiales en el punto bajo Mezzanine Hotel (tótem)
+ : tarjeta naranja = sin gluten\, azul = sin lactosa\, roja = alergia/intol
+ erancia. El listado Excel de dietas especiales no viene en el PDF: pedirlo
+  a Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Coffee Break · Menú 1 (130 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:7d13059a0e4241a8d344@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261116T121500
+DTEND;TZID=Europe/Madrid:20261116T133000
+SUMMARY:SUSE 2026 · Sandwich Bar (130 pax)
+LOCATION:Hall Menorca
+DESCRIPTION:Almuerzo · 12:15–13:30\nPax: 130 pax\nSala: Hall Menorca –
+  PEM Meetings\nCatering manager: Ana Riera\nBambú / biodegradable\n⚠ Al
+ érgenos: cartelito con símbolo en todos los buffets\, cócteles y coffee
+  breaks. Menús especiales en el punto bajo Mezzanine Hotel (tótem): tarj
+ eta naranja = sin gluten\, azul = sin lactosa\, roja = alergia/intoleranci
+ a. El listado Excel de dietas especiales no viene en el PDF: pedirlo a Con
+ ference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Sandwich Bar (130 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:8844923cc1d125a5ff2e@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261116T150000
+DTEND;TZID=Europe/Madrid:20261116T151500
+SUMMARY:SUSE 2026 · Coffee Break · Menú 2 (130 pax)
+LOCATION:Hall Menorca
+DESCRIPTION:Coffee break · 15:00–15:15\nPax: 130 pax\nSala: Hall Menorca
+  – PEM Meetings\nCatering manager: Ana Riera\nBambú / biodegradable\n
+ ⚠ Alérgenos: cartelito con símbolo en todos los buffets\, cócteles y 
+ coffee breaks. Menús especiales en el punto bajo Mezzanine Hotel (tótem)
+ : tarjeta naranja = sin gluten\, azul = sin lactosa\, roja = alergia/intol
+ erancia. El listado Excel de dietas especiales no viene en el PDF: pedirlo
+  a Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Coffee Break · Menú 2 (130 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:9ecd9774ae6b4e2f320a@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261116T114500
+DTEND;TZID=Europe/Madrid:20261116T133000
+SUMMARY:SUSE 2026 · Almuerzo especial VIP (10 pax)
+LOCATION:Inca
+DESCRIPTION:Almuerzo · 11:45–13:30\nPax: 10 pax\nSala: Sala Inca (VIPs)\
+ nCatering manager: Ana Riera\nTodo vajilla · Recibidor de Sala Inca\n⚠ 
+ Dietas especiales (5 pax): 1 sin gluten · 1 sin gluten y sin lactosa · 1
+  pescetariano (vegetariano también aceptable) · 1 sin cerdo · 1 sin que
+ so. Montaje en el pequeño recibidor de la sala Inca.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Almuerzo especial VIP (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:3c9526bc31faf848f255@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261116T070000
+DTEND;TZID=Europe/Madrid:20261116T190000
+SUMMARY:SUSE 2026 · Bebidas permanente VIP (10 pax)
+LOCATION:Inca
+DESCRIPTION:Bebidas · 07:00–19:00\nPax: 10 pax\nSala: Sala Inca (VIPs)\n
+ Catering manager: Ana Riera\nTodo vajilla
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Bebidas permanente VIP (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:e562ecb4d4ab865b1e76@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261116T100000
+DTEND;TZID=Europe/Madrid:20261116T180000
+SUMMARY:SUSE 2026 · Refreshing Corner · bebidas y fruta (75 pax)
+LOCATION:Connecting Hall
+DESCRIPTION:Bebidas · 10:00–18:00\nPax: 75 pax\nSala: Connecting Hall (P
+ lanta 0)\nCatering manager: Ana Riera\n10–12 h: 50 pax/h · 12–18 h: 7
+ 5 pax/h · Bambú / biodegradable
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Refreshing Corner · bebidas y fruta (75 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:36e97ab40cc2b8b5b30f@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261116T120000
+DTEND;TZID=Europe/Madrid:20261116T180000
+SUMMARY:SUSE 2026 · Refreshing Corner · rincón de comida (75 pax)
+LOCATION:Connecting Hall
+DESCRIPTION:Almuerzo · 12:00–18:00\nPax: 75 pax\nSala: Connecting Hall (
+ Planta 0)\nCatering manager: Ana Riera\n75 pax/hora · Bambú / biodegrada
+ ble
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Refreshing Corner · rincón de comida (75 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:028a5193343b5d2cd44f@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261116T180000
+DTEND;TZID=Europe/Madrid:20261116T200000
+SUMMARY:SUSE 2026 · Cena cóctel (500 pax)
+LOCATION:EXPO
+DESCRIPTION:Cóctel · 18:00–20:00\nPax: 500 pax\nSala: Zona EXPO\nCateri
+ ng manager: Ana Riera\n120 min · Bambú / biodegradable\n⚠ Alérgenos: 
+ cartelito con símbolo en todos los buffets\, cócteles y coffee breaks. M
+ enús especiales en el punto bajo Mezzanine Hotel (tótem): tarjeta naranj
+ a = sin gluten\, azul = sin lactosa\, roja = alergia/intolerancia. El list
+ ado Excel de dietas especiales no viene en el PDF: pedirlo a Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Cena cóctel (500 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:feaaf682822ffda9ce07@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261117T070000
+DTEND;TZID=Europe/Madrid:20261117T190000
+SUMMARY:SUSE 2026 · Coffee Station ELYXR (14 pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Café permanente · 07:00–19:00\nPax: 14 pax\nSala: ELYXR –
+  Orga Team\nCatering manager: Ana Riera\n⚠ El BEO pone 07:00–19:00 per
+ o la composición dice «a partir de las 08:00 h»: confirmar hora de inic
+ io con Conference
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Coffee Station ELYXR (14 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:460019b5d0cfdb8b33e0@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261117T123000
+DTEND;TZID=Europe/Madrid:20261117T143000
+SUMMARY:SUSE 2026 · Almuerzo staff ELYXR (14 pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Almuerzo · 12:30–14:30\nPax: 14 pax\nSala: ELYXR – Orga Te
+ am\nCatering manager: Ana Riera\nMenú 4 · martes
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Almuerzo staff ELYXR (14 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:90c51d507bfa262395a3@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261117T070000
+DTEND;TZID=Europe/Madrid:20261117T190000
+SUMMARY:SUSE 2026 · Bebidas permanente VIP (10 pax)
+LOCATION:Inca
+DESCRIPTION:Bebidas · 07:00–19:00\nPax: 10 pax\nSala: Sala Inca (VIPs)\n
+ Catering manager: Ana Riera\nTodo vajilla
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Bebidas permanente VIP (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:c1c0cd8d2e9d70948c6e@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261117T080000
+DTEND;TZID=Europe/Madrid:20261117T200000
+SUMMARY:SUSE 2026 · Fruta variada · distribución general (15 band.)
+LOCATION:Varias salas (Palau)
+DESCRIPTION:Fruta · 08:00–20:00\nPax: 15 band.\nSala: Repartida por Pala
+ u\nCatering manager: Ana Riera\n15 bandejas · Fruta sin pelar: plátanos\
+ , manzanas\, peras y uvas · Horario de la línea (sala Facturación + Exc
+ lusividad)\n⚠ Repartidas por el Palau (cocina). Horario tomado de la lí
+ nea del BEO (08:00–20:00)
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Fruta variada · distribución general (15 band.)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:0e2ba22ea4578ec8e5dc@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261117T110000
+DTEND;TZID=Europe/Madrid:20261117T113000
+SUMMARY:SUSE 2026 · Coffee Break AM (750 pax)
+LOCATION:EXPO
+DESCRIPTION:Coffee break · 11:00–11:30\nPax: 750 pax\nSala: Zona EXPO\nC
+ atering manager: Ana Riera\nMenú 1 · Bambú / biodegradable\n⚠ Alérge
+ nos: cartelito con símbolo en todos los buffets\, cócteles y coffee brea
+ ks. Menús especiales en el punto bajo Mezzanine Hotel (tótem): tarjeta n
+ aranja = sin gluten\, azul = sin lactosa\, roja = alergia/intolerancia. El
+  listado Excel de dietas especiales no viene en el PDF: pedirlo a Conferen
+ ce.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Coffee Break AM (750 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:6ae292aa8024e7901b4d@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261117T130000
+DTEND;TZID=Europe/Madrid:20261117T143000
+SUMMARY:SUSE 2026 · Almuerzo buffet (750 pax)
+LOCATION:EXPO\, Mezzanine Mallorca
+DESCRIPTION:Almuerzo · 13:00–14:30\nPax: 750 pax\nSala: EXPO 1+2 · bar 
+ y postres en Mezzanine Mallorca\nCatering manager: Ana Riera\nPlatos bamb
+ ú · Vaso cristal · Cubiertos metal\n⚠ Alérgenos: cartelito con símb
+ olo en todos los buffets\, cócteles y coffee breaks. Menús especiales en
+  el punto bajo Mezzanine Hotel (tótem): tarjeta naranja = sin gluten\, az
+ ul = sin lactosa\, roja = alergia/intolerancia. El listado Excel de dietas
+  especiales no viene en el PDF: pedirlo a Conference. · Después del lunc
+ h cambio de montaje en EXPO para la cena temática (todos sentados en mesa
+  banquete)\; suplemento por cambio de montaje (camarero\, 4.800 €). Al t
+ erminar la cena hay que volver al montaje inicial
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Almuerzo buffet (750 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:328d7368d14a499e11a8@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261117T163000
+DTEND;TZID=Europe/Madrid:20261117T170000
+SUMMARY:SUSE 2026 · Coffee Break PM (750 pax)
+LOCATION:Connecting Hall
+DESCRIPTION:Coffee break · 16:30–17:00\nPax: 750 pax\nSala: Connecting H
+ all Illes – Hall Mallorca 1ª planta\nCatering manager: Ana Riera\nMenú
+  2 · Bambú / biodegradable\n⚠ Cambia de ubicación por el montaje de l
+ a cena temática en zona EXPO · Alérgenos: cartelito con símbolo en tod
+ os los buffets\, cócteles y coffee breaks. Menús especiales en el punto 
+ bajo Mezzanine Hotel (tótem): tarjeta naranja = sin gluten\, azul = sin l
+ actosa\, roja = alergia/intolerancia. El listado Excel de dietas especiale
+ s no viene en el PDF: pedirlo a Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Coffee Break PM (750 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:40c137063dbbb3415e5d@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261117T180000
+DTEND;TZID=Europe/Madrid:20261117T200000
+SUMMARY:SUSE 2026 · Cena buffet temática · Mediterráneo (750 pax)
+LOCATION:EXPO
+DESCRIPTION:Cena · 18:00–20:00\nPax: 750 pax\nSala: EXPO 1+2\nCatering m
+ anager: Ana Riera\nBanquete\, todos sentados · Platos bambú · Copas cri
+ stal · Cubertería metal\n⚠ Decoración mediterránea y marinera en est
+ aciones. Lema: remar todos juntos en la misma dirección. LED azules de AI
+ CO. · Alérgenos: cartelito con símbolo en todos los buffets\, cócteles
+  y coffee breaks. Menús especiales en el punto bajo Mezzanine Hotel (tót
+ em): tarjeta naranja = sin gluten\, azul = sin lactosa\, roja = alergia/in
+ tolerancia. El listado Excel de dietas especiales no viene en el PDF: pedi
+ rlo a Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Cena buffet temática · Mediterráneo (750 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:46e67d50942d87181255@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261117T194500
+DTEND;TZID=Europe/Madrid:20261118T000000
+SUMMARY:SUSE 2026 · Open bar · según consumo (cargo SUSE) (5.600 € mí
+ nimo)
+LOCATION:Connecting Hall
+DESCRIPTION:Open bar · 19:45–00:00\nPax: 5.600 € mínimo\nSala: Connec
+ ting Hall – zona Illes\nCatering manager: Ana Riera\n4 estaciones · 2 d
+ obles en Hall Illes · 2 estándar en Connecting Hall\n⚠ No quieren bebi
+ das energéticas
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Open bar · según consumo (cargo SUSE) (5.600 €
+  mínimo)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:eb879e88519ea7441dc4@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261118T070000
+DTEND;TZID=Europe/Madrid:20261118T190000
+SUMMARY:SUSE 2026 · Coffee Station ELYXR (10 pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Café permanente · 07:00–19:00\nPax: 10 pax\nSala: ELYXR –
+  Orga Team\nCatering manager: Ana Riera\n⚠ El BEO pone 07:00–19:00 per
+ o la composición dice «a partir de las 08:00 h»: confirmar hora de inic
+ io con Conference
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Coffee Station ELYXR (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:ebe08289b71b8873bc00@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261118T120000
+DTEND;TZID=Europe/Madrid:20261118T140000
+SUMMARY:SUSE 2026 · Almuerzo staff ELYXR (10 pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Almuerzo · 12:00–14:00\nPax: 10 pax\nSala: ELYXR – Orga Te
+ am\nCatering manager: Ana Riera\nMenú 5 · miércoles
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Almuerzo staff ELYXR (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:88c45c93729e8cde8a0f@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261118T070000
+DTEND;TZID=Europe/Madrid:20261118T190000
+SUMMARY:SUSE 2026 · Bebidas permanente VIP (10 pax)
+LOCATION:Inca
+DESCRIPTION:Bebidas · 07:00–19:00\nPax: 10 pax\nSala: Sala Inca (VIPs)\n
+ Catering manager: Ana Riera\nTodo vajilla
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Bebidas permanente VIP (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:e5983b49eccbc5d2ba94@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261118T080000
+DTEND;TZID=Europe/Madrid:20261118T200000
+SUMMARY:SUSE 2026 · Fruta variada · distribución general (15 band.)
+LOCATION:Varias salas (Palau)
+DESCRIPTION:Fruta · 08:00–20:00\nPax: 15 band.\nSala: Repartida por Pala
+ u\nCatering manager: Ana Riera\n15 bandejas · Fruta sin pelar: plátanos\
+ , manzanas\, peras y uvas · Horario de la línea (sala Facturación + Exc
+ lusividad)\n⚠ Repartidas por el Palau (cocina). Horario tomado de la lí
+ nea del BEO (08:00–20:00)
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Fruta variada · distribución general (15 band.)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:397a9f9cfc31ecceada7@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261118T100000
+DTEND;TZID=Europe/Madrid:20261118T103000
+SUMMARY:SUSE 2026 · Coffee Break AM (750 pax)
+LOCATION:EXPO
+DESCRIPTION:Coffee break · 10:00–10:30\nPax: 750 pax\nSala: Zona EXPO\nC
+ atering manager: Ana Riera\nMenú 3 · Bambú / biodegradable · Cambio: a
+ ntes 11:00–11:30 (BEO)\n⚠ Alérgenos: cartelito con símbolo en todos 
+ los buffets\, cócteles y coffee breaks. Menús especiales en el punto baj
+ o Mezzanine Hotel (tótem): tarjeta naranja = sin gluten\, azul = sin lact
+ osa\, roja = alergia/intolerancia. El listado Excel de dietas especiales n
+ o viene en el PDF: pedirlo a Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Coffee Break AM (750 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:1810feed5e039b52a54c@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261118T123000
+DTEND;TZID=Europe/Madrid:20261118T140000
+SUMMARY:SUSE 2026 · Almuerzo buffet (750 pax)
+LOCATION:EXPO\, Mezzanine Mallorca
+DESCRIPTION:Almuerzo · 12:30–14:00\nPax: 750 pax\nSala: EXPO 1+2 · bar 
+ y postres en Mezzanine Mallorca\nCatering manager: Ana Riera\nPlatos bamb
+ ú · Vaso cristal · Cubiertos metal\n⚠ Alérgenos: cartelito con símb
+ olo en todos los buffets\, cócteles y coffee breaks. Menús especiales en
+  el punto bajo Mezzanine Hotel (tótem): tarjeta naranja = sin gluten\, az
+ ul = sin lactosa\, roja = alergia/intolerancia. El listado Excel de dietas
+  especiales no viene en el PDF: pedirlo a Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Almuerzo buffet (750 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:1d46e884739759704d93@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261118T160000
+DTEND;TZID=Europe/Madrid:20261118T163000
+SUMMARY:SUSE 2026 · Coffee Break PM (750 pax)
+LOCATION:EXPO
+DESCRIPTION:Coffee break · 16:00–16:30\nPax: 750 pax\nSala: Zona EXPO\nC
+ atering manager: Ana Riera\nMenú 1 · Bambú / biodegradable\n⚠ Alérge
+ nos: cartelito con símbolo en todos los buffets\, cócteles y coffee brea
+ ks. Menús especiales en el punto bajo Mezzanine Hotel (tótem): tarjeta n
+ aranja = sin gluten\, azul = sin lactosa\, roja = alergia/intolerancia. El
+  listado Excel de dietas especiales no viene en el PDF: pedirlo a Conferen
+ ce.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Coffee Break PM (750 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:070ed0f65ceab3d8dbf0@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261119T070000
+DTEND;TZID=Europe/Madrid:20261119T190000
+SUMMARY:SUSE 2026 · Coffee Station ELYXR (10 pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Café permanente · 07:00–19:00\nPax: 10 pax\nSala: ELYXR –
+  Orga Team\nCatering manager: Ana Riera\n⚠ El BEO pone 07:00–19:00 per
+ o la composición dice «a partir de las 08:00 h»: confirmar hora de inic
+ io con Conference
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Coffee Station ELYXR (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:7df91fc3601ce69e66b0@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261119T123000
+DTEND;TZID=Europe/Madrid:20261119T143000
+SUMMARY:SUSE 2026 · Almuerzo staff ELYXR (10 pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Almuerzo · 12:30–14:30\nPax: 10 pax\nSala: ELYXR – Orga Te
+ am\nCatering manager: Ana Riera\nMenú 6 · jueves
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Almuerzo staff ELYXR (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f3b9d699f9c8e1ac5f48@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261119T070000
+DTEND;TZID=Europe/Madrid:20261119T190000
+SUMMARY:SUSE 2026 · Bebidas permanente VIP (10 pax)
+LOCATION:Inca
+DESCRIPTION:Bebidas · 07:00–19:00\nPax: 10 pax\nSala: Sala Inca (VIPs)\n
+ Catering manager: Ana Riera\nTodo vajilla
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Bebidas permanente VIP (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:02425a9b05ea8667cbbf@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261119T080000
+DTEND;TZID=Europe/Madrid:20261119T200000
+SUMMARY:SUSE 2026 · Fruta variada · distribución general (15 band.)
+LOCATION:Varias salas (Palau)
+DESCRIPTION:Fruta · 08:00–20:00\nPax: 15 band.\nSala: Repartida por Pala
+ u\nCatering manager: Ana Riera\n15 bandejas · Fruta sin pelar: plátanos\
+ , manzanas\, peras y uvas · Horario de la línea (sala Facturación + Exc
+ lusividad)\n⚠ Repartidas por el Palau (cocina). Horario tomado de la lí
+ nea del BEO (08:00–20:00)
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Fruta variada · distribución general (15 band.)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:792ff5d78c2d4b6cf081@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261119T103000
+DTEND;TZID=Europe/Madrid:20261119T110000
+SUMMARY:SUSE 2026 · Coffee Break AM (750 pax)
+LOCATION:EXPO
+DESCRIPTION:Coffee break · 10:30–11:00\nPax: 750 pax\nSala: Zona EXPO\nC
+ atering manager: Ana Riera\nMenú 2 · Bambú / biodegradable\n⚠ Alérge
+ nos: cartelito con símbolo en todos los buffets\, cócteles y coffee brea
+ ks. Menús especiales en el punto bajo Mezzanine Hotel (tótem): tarjeta n
+ aranja = sin gluten\, azul = sin lactosa\, roja = alergia/intolerancia. El
+  listado Excel de dietas especiales no viene en el PDF: pedirlo a Conferen
+ ce.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Coffee Break AM (750 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f75f877e02c381e43c07@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261119T130000
+DTEND;TZID=Europe/Madrid:20261119T143000
+SUMMARY:SUSE 2026 · Almuerzo buffet (750 pax)
+LOCATION:EXPO\, Mezzanine Mallorca
+DESCRIPTION:Almuerzo · 13:00–14:30\nPax: 750 pax\nSala: EXPO 1+2 · bar 
+ y postres en Mezzanine Mallorca\nCatering manager: Ana Riera\nPlatos bamb
+ ú · Vaso cristal · Cubiertos metal\n⚠ Alérgenos: cartelito con símb
+ olo en todos los buffets\, cócteles y coffee breaks. Menús especiales en
+  el punto bajo Mezzanine Hotel (tótem): tarjeta naranja = sin gluten\, az
+ ul = sin lactosa\, roja = alergia/intolerancia. El listado Excel de dietas
+  especiales no viene en el PDF: pedirlo a Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Almuerzo buffet (750 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:a57342e83538e6178d35@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261119T160000
+DTEND;TZID=Europe/Madrid:20261119T163000
+SUMMARY:SUSE 2026 · Coffee Break PM (750 pax)
+LOCATION:EXPO
+DESCRIPTION:Coffee break · 16:00–16:30\nPax: 750 pax\nSala: Zona EXPO\nC
+ atering manager: Ana Riera\nMenú 3 · Bambú / biodegradable\n⚠ Alérge
+ nos: cartelito con símbolo en todos los buffets\, cócteles y coffee brea
+ ks. Menús especiales en el punto bajo Mezzanine Hotel (tótem): tarjeta n
+ aranja = sin gluten\, azul = sin lactosa\, roja = alergia/intolerancia. El
+  listado Excel de dietas especiales no viene en el PDF: pedirlo a Conferen
+ ce.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Coffee Break PM (750 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:647ab8a0def031395a60@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261117T080000
+DTEND;TZID=Europe/Madrid:20261117T200000
+SUMMARY:SUSE 2026 · Botellines de agua mineral (1.510 botellines (previsi
+ ón) · MOD.1)
+LOCATION:Varias salas (Palau)
+DESCRIPTION:Bebidas · 08:00–20:00\nPax: 1.510 botellines (previsión) ·
+  MOD.1\nSala: Repartidos por el Palau\nCatering manager: Ana Riera\n1\,50 
+ € / botellín · Horario de la línea (sala Facturación + Exclusividad)
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Botellines de agua mineral (1.510 botellines (prev
+ isión) · MOD.1)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:499efa1119b30ff7e52c@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261118T080000
+DTEND;TZID=Europe/Madrid:20261118T200000
+SUMMARY:SUSE 2026 · Botellines de agua mineral (1.470 botellines (previsi
+ ón) · MOD.1)
+LOCATION:Varias salas (Palau)
+DESCRIPTION:Bebidas · 08:00–20:00\nPax: 1.470 botellines (previsión) ·
+  MOD.1\nSala: Repartidos por el Palau\nCatering manager: Ana Riera\n1\,50 
+ € / botellín · Horario de la línea (sala Facturación + Exclusividad)
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Botellines de agua mineral (1.470 botellines (prev
+ isión) · MOD.1)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:739c9f5d1ae85cc475eb@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261119T080000
+DTEND;TZID=Europe/Madrid:20261119T200000
+SUMMARY:SUSE 2026 · Botellines de agua mineral (2.088 botellines (previsi
+ ón) · MOD.1)
+LOCATION:Varias salas (Palau)
+DESCRIPTION:Bebidas · 08:00–20:00\nPax: 2.088 botellines (previsión) ·
+  MOD.1\nSala: Repartidos por el Palau\nCatering manager: Ana Riera\n1\,50 
+ € / botellín · Horario de la línea (sala Facturación + Exclusividad)
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Botellines de agua mineral (2.088 botellines (prev
+ isión) · MOD.1)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:efd1f18f58faa6b4bea5@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261116T083000
+DTEND;TZID=Europe/Madrid:20261116T180000
+SUMMARY:SUSE 2026 · Botellines de agua mineral · Pre event (215 botelline
+ s (previsión))
+LOCATION:Palma Meeting
+DESCRIPTION:Bebidas · 08:30–18:00\nPax: 215 botellines (previsión)\nSal
+ a: Palma + Rooftop Palma\nCatering manager: Ana Riera\n1\,50 € / botell
+ ín · Nuevo en MOD.1
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:SUSE 2026 · Botellines de agua mineral · Pre event (215 botel
+ lines (previsión))
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:fd4961dc6c5bd82034ff@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261120T140000
+DTEND;TZID=Europe/Madrid:20261120T153000
+SUMMARY:Almuerzo GEBC · Almuerzo de trabajo 1 (24 pax)
+LOCATION:Portixol 2
+DESCRIPTION:Almuerzo · 14:00–15:30\nPax: 24 pax\nSala: Portixol 2\nCater
+ ing manager: Marta Cerezales\nBanquete · 4 mesas redondas de 6 · Menú 1
+  · + vino y cerveza\n⚠ MOD 2: cambio de sala\, ahora PORTIXOL 2 (antes 
+ Restaurante Trasluz). Montaje: 4 mesas redondas de 6 personas (24 pax)\; C
+ onference tiene las minutas. 24 pax en el BEO\; el perfil dice 20 personas
+  y pueden subir hasta 30\, sin confirmar el nº final hasta 48 h antes. Al
+ ergias e intolerancias: «Pte. de confirmación». 13:00–14:00 bienvenid
+ a: las bebidas de ese rato las paga cada asistente (pago directo).
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Almuerzo GEBC · Almuerzo de trabajo 1 (24 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:b14c337f4c5856a66509@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261120T093000
+DTEND;TZID=Europe/Madrid:20261120T100000
+SUMMARY:HUB7 · Redeia · Coffee Break dulce · Menú 3 (19 pax)
+LOCATION:Hall The Level
+DESCRIPTION:Coffee break · 09:30–10:00\nPax: 19 pax\nSala: Hall The Leve
+ l\nCatering manager: Nora Navares\n⚠ MOD 1: pax 25 → 19 (reducen comen
+ sales del coffee break\; a devolver 69 € tras el evento).
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:HUB7 · Redeia · Coffee Break dulce · Menú 3 (19 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:6feb12a50c8747fc9fe6@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261123T163000
+DTEND;TZID=Europe/Madrid:20261123T213000
+SUMMARY:Nautalia · Roche (23 nov) · Coffee Break permanente KM0 (19 pax)
+LOCATION:Portopi
+DESCRIPTION:Coffee break · 16:30–21:30\nPax: 19 pax\nSala: Portopi\nCate
+ ring manager: Nora Navares\n+ fruta cortada · + wrap de salmón\n⚠ MOD 
+ 1: sube a 19 pax (antes 15). Los suplementos (fruta cortada y wrap de salm
+ ón y alcaparras) son solo de 16:30 a 17:00. Reposición a las 19:00 (paus
+ a). Antes salía como coffee sin hora ni menú.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Nautalia · Roche (23 nov) · Coffee Break permanente KM0 (19 p
+ ax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:24ec06f1dc72c48176b4@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261125T090000
+DTEND;TZID=Europe/Madrid:20261125T170000
+SUMMARY:Hapag Lloyd · Recordati (SWP) · Coffee permanente backstage · Sw
+ eet & Savory (15 pax)
+LOCATION:Auditorium Mallorca
+DESCRIPTION:Coffee break · 09:00–17:00\nPax: 15 pax\nSala: Auditorium Ma
+ llorca · backstage\nCatering manager: Paquita López\nBackstage\n⚠ MOD 
+ 1: nuevo\, en el backstage durante el set up.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Hapag Lloyd · Recordati (SWP) · Coffee permanente backstage 
+ · Sweet & Savory (15 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:91e00f2a5875c7c189a3@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261126T080000
+DTEND;TZID=Europe/Madrid:20261126T160000
+SUMMARY:Hapag Lloyd · Recordati (SWP) · Coffee permanente backstage · Sw
+ eet & Savory (15 pax)
+LOCATION:Auditorium Mallorca
+DESCRIPTION:Coffee break · 08:00–16:00\nPax: 15 pax\nSala: Auditorium Ma
+ llorca · backstage\nCatering manager: Paquita López\nBackstage\n⚠ MOD 
+ 1: nuevo\, en el backstage.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Hapag Lloyd · Recordati (SWP) · Coffee permanente backstage 
+ · Sweet & Savory (15 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:67a71dc51bb71f15b4eb@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261126T163000
+DTEND;TZID=Europe/Madrid:20261126T170000
+SUMMARY:Hapag Lloyd · Recordati (SWP) · PM coffee break · Sweet & Savory
+  2 + extras (220 pax)
+LOCATION:Hall Auditorium Mallorca
+DESCRIPTION:Coffee break · 16:30–17:00\nPax: 220 pax\nSala: Hall 1 Audit
+ orium Mallorca\nCatering manager: Paquita López\n+ refrescos · + fruta c
+ ortada\n⚠ Hora ya indicada (antes orientativa).
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Hapag Lloyd · Recordati (SWP) · PM coffee break · Sweet & Sa
+ vory 2 + extras (220 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f63f1f82ac03777fa542@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261127T110000
+DTEND;TZID=Europe/Madrid:20261127T113000
+SUMMARY:Hapag Lloyd · Recordati (SWP) · AM coffee break · Sweet & Savory
+  3 + extras (220 pax)
+LOCATION:Hall Auditorium Mallorca
+DESCRIPTION:Coffee break · 11:00–11:30\nPax: 220 pax\nSala: Hall 1 Audit
+ orium Mallorca\nCatering manager: Paquita López\n+ refrescos · + fruta d
+ e temporada\n⚠ Cambio: es AM a las 11:00 (antes salía como PM sin hora)
+ .
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Hapag Lloyd · Recordati (SWP) · AM coffee break · Sweet & Sa
+ vory 3 + extras (220 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:efdb975b9a7ee5f7f877@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261128T143000
+DTEND;TZID=Europe/Madrid:20261128T160000
+SUMMARY:OCB · L'Aferrada · Cóctel · Menú 2 (150 pax)
+LOCATION:Hall Eivissa
+DESCRIPTION:Cóctel · 14:30–16:00\nPax: 150 pax\nSala: Hall Eivissa\nCat
+ ering manager: Nora Navares\nMenú 2 · Bodega I incluida\n⚠ Alérgenos 
+ e intolerancias: no constan en el BEO\, a confirmar. Hora ya indicada (14:
+ 30–16:00\; antes orientativa).
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:OCB · L'Aferrada · Cóctel · Menú 2 (150 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:82960e220e322c8c4cb2@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261130T110000
+DTEND;TZID=Europe/Madrid:20261130T113000
+SUMMARY:Tot Destins Viatges · Coffee break (50 pax)
+LOCATION:Santa Catalina
+DESCRIPTION:Coffee break · 11:00–11:30\nPax: 50 pax\nSala: Santa Catalin
+ a\nCatering manager: Nora Navares\n⚠ El BEO no trae el menú del coffee\
+ ; en MARS pone 30 asistentes en F&B y la línea del coffee 50 pax. Confirm
+ ar menú y pax.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Tot Destins Viatges · Coffee break (50 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:b5fd4fb05598f37d4556@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261201T120000
+DTEND;TZID=Europe/Madrid:20261201T130000
+SUMMARY:Plus Voyages · Clariane · Almuerzo de trabajo 2 (17 pax)
+LOCATION:Restaurante Trasluz
+DESCRIPTION:Almuerzo · 12:00–13:00\nPax: 17 pax\nSala: Restaurante Trasl
+ uz\nCatering manager: Marta Cerezales\nMenú 2\n⚠ Alérgenos e intoleran
+ cias: pendientes.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Plus Voyages · Clariane · Almuerzo de trabajo 2 (17 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:8ed6588c98e7086484d2@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261201T153000
+DTEND;TZID=Europe/Madrid:20261201T160000
+SUMMARY:Plus Voyages · Clariane · Coffee break dulce 2 (17 pax)
+LOCATION:Santa Catalina
+DESCRIPTION:Coffee break · 15:30–16:00\nPax: 17 pax\nSala: Santa Catalin
+ a\nCatering manager: Marta Cerezales
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Plus Voyages · Clariane · Coffee break dulce 2 (17 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:b356d9aa1968dac6a28e@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261203T083000
+DTEND;TZID=Europe/Madrid:20261203T090000
+SUMMARY:Air Europa · Convención de ventas · Coffee break líquido (115 p
+ ax)
+LOCATION:Hall Menorca
+DESCRIPTION:Coffee break · 08:30–09:00\nPax: 115 pax\nSala: Hall Menorca
+ \nCatering manager: Marta Cerezales
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Air Europa · Convención de ventas · Coffee break líquido (1
+ 15 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:fea1b09bc314c91046ca@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261203T110000
+DTEND;TZID=Europe/Madrid:20261203T113000
+SUMMARY:Air Europa · Convención de ventas · Coffee break dulce y salado 
+ 1 (115 pax)
+LOCATION:Sala Palma
+DESCRIPTION:Coffee break · 11:00–11:30\nPax: 115 pax\nSala: Sala Palma +
+  Rooftop\nCatering manager: Marta Cerezales\nMenú 1\n⚠ La agenda del BE
+ O pone el coffee 11:00–11:30 como horario provisional.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Air Europa · Convención de ventas · Coffee break dulce y sal
+ ado 1 (115 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:4b9cbe1b799480117d09@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261203T134500
+DTEND;TZID=Europe/Madrid:20261203T151500
+SUMMARY:Air Europa · Convención de ventas · Lunch buffet de trabajo 2 (1
+ 15 pax)
+LOCATION:Hall Menorca
+DESCRIPTION:Almuerzo · 13:45–15:15\nPax: 115 pax\nSala: Hall Menorca\nCa
+ tering manager: Marta Cerezales\n+ vino y cerveza · + café\n⚠ Ojo en e
+ l BEO: «Merluza - OK Patri». La agenda pone el almuerzo de 13:00 a 14:30
+  y el servicio va de 13:45 a 15:15: confirmar hora.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Air Europa · Convención de ventas · Lunch buffet de trabajo 
+ 2 (115 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:488c052b19db794f6a74@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261204T090000
+DTEND;TZID=Europe/Madrid:20261204T093000
+SUMMARY:Air Europa · Convención de ventas · Coffee break líquido (103 p
+ ax)
+LOCATION:Hall Menorca
+DESCRIPTION:Coffee break · 09:00–09:30\nPax: 103 pax\nSala: Hall Menorca
+ \nCatering manager: Marta Cerezales
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Air Europa · Convención de ventas · Coffee break líquido (1
+ 03 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:2ac07f849ceb1fead78c@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261204T110000
+DTEND;TZID=Europe/Madrid:20261204T113000
+SUMMARY:Air Europa · Convención de ventas · Coffee break dulce y salado 
+ (103 pax)
+LOCATION:Hall Menorca
+DESCRIPTION:Coffee break · 11:00–11:30\nPax: 103 pax\nSala: Hall Menorca
+ \nCatering manager: Marta Cerezales\n⚠ Marcado con «OJO» en el BEO: cr
+ oissant de cereales y wrap de jamón cocido\, queso y espinacas.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Air Europa · Convención de ventas · Coffee break dulce y sal
+ ado (103 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:47521bec12d43170cdf6@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261204T134500
+DTEND;TZID=Europe/Madrid:20261204T151500
+SUMMARY:Air Europa · Convención de ventas · Cocktail 1 (82 pax)
+LOCATION:Sala Palma
+DESCRIPTION:Cóctel · 13:45–15:15\nPax: 82 pax\nSala: Sala Palma + Rooft
+ op\nCatering manager: Marta Cerezales\n+ café
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Air Europa · Convención de ventas · Cocktail 1 (82 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:30f96bc1b4f84c518687@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261211T230000
+DTEND;TZID=Europe/Madrid:20261212T000000
+SUMMARY:Quirónsalud · Cóctel · Tickets de copas (1200 pax)
+LOCATION:EXPO
+DESCRIPTION:Open bar · 23:00–23:59\nPax: 1200 pax\nSala: EXPO 1+2\nCater
+ ing manager: Ana Riera
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Quirónsalud · Cóctel · Tickets de copas (1200 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:2cdd73cab46e81559c0d@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261218T190000
+DTEND;TZID=Europe/Madrid:20261218T210000
+SUMMARY:Hospital Sant Joan de Déu · Navidad · Barra libre 2 horas (433 p
+ ax)
+LOCATION:EXPO
+DESCRIPTION:Open bar · 19:00–21:00\nPax: 433 pax\nSala: EXPO 1+2\nCateri
+ ng manager: Ana Riera
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Hospital Sant Joan de Déu · Navidad · Barra libre 2 horas (4
+ 33 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:fe57dee369841624d47a@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261124T151500
+DTEND;TZID=Europe/Madrid:20261124T161500
+SUMMARY:Cepheid · Cóctel 3 sin alcohol (+ suplemento grupo pequeño) (10 
+ pax)
+LOCATION:Restaurante Trasluz
+DESCRIPTION:Cóctel · 15:15–16:15\nPax: 10 pax\nSala: Restaurante Traslu
+ z\nCatering manager: Marta Cerezales\nCóctel 3 · Sin alcohol · + café\
+ n⚠ MOD 1: añade suplemento de café. OJO: NO alcohol (refrescos y agua 
+ mineral). Duración 1 hora: sacar el caliente 5 minutos después de empeza
+ r. Alérgenos e intolerancias no indicados en el BEO: confirmar con Confer
+ ence.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Cepheid · Cóctel 3 sin alcohol (+ suplemento grupo pequeño) 
+ (10 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:48b1977f4cf8ebd1c4d6@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261126T190000
+DTEND;TZID=Europe/Madrid:20261126T193000
+SUMMARY:Iberdrola · Balantia · Copa de cava de bienvenida (50 pax)
+LOCATION:Restaurante Trasluz
+DESCRIPTION:Cóctel · 19:00–19:30\nPax: 50 pax\nSala: Restaurante Traslu
+ z\nCatering manager: Nora Navares\n+ extensión de bebidas 1 hora · Bodeg
+ a I incluida\n⚠ El BEO añade «Extensión bebidas 1 hora» a la copa de
+  cava de 19:00 a 19:30: confirmar hasta qué hora se sirven bebidas. Alér
+ genos e intolerancias no indicados en el BEO: confirmar con Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Iberdrola · Balantia · Copa de cava de bienvenida (50 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:fb5f33543c92632392f6@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261126T210000
+DTEND;TZID=Europe/Madrid:20261126T223000
+SUMMARY:Iberdrola · Balantia · Cóctel · Menú 3 (50 pax)
+LOCATION:Restaurante Trasluz
+DESCRIPTION:Cóctel · 21:00–22:30\nPax: 50 pax\nSala: Restaurante Traslu
+ z\nCatering manager: Nora Navares\nMenú 3 · Bodega I incluida\n⚠ Alér
+ genos e intolerancias no indicados en el BEO: confirmar con Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Iberdrola · Balantia · Cóctel · Menú 3 (50 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:59041f80ecb3a41ce63a@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261125T090000
+DTEND;TZID=Europe/Madrid:20261125T170000
+SUMMARY:EY · BCD UK · Coffee break permanente dulce y salado (36 pax)
+LOCATION:Santa Catalina
+DESCRIPTION:Coffee break · 09:00–17:00\nPax: 36 pax\nSala: Santa Catalin
+ a\nCatering manager: Paquita López\n⚠ Comida solo en las pausas: 10:50
+ –11:05 y 15:15–15:30. Alérgenos e intolerancias no indicados en el BE
+ O: confirmar con Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:EY · BCD UK · Coffee break permanente dulce y salado (36 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:8b015386b7438674d67e@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261125T123000
+DTEND;TZID=Europe/Madrid:20261125T131500
+SUMMARY:EY · BCD UK · Business lunch (36 pax)
+LOCATION:Restaurante Trasluz
+DESCRIPTION:Almuerzo · 12:30–13:15\nPax: 36 pax\nSala: Restaurante Trasl
+ uz\nCatering manager: Paquita López\nChef choice · Banquete\n⚠ Alérge
+ nos e intolerancias no indicados en el BEO: confirmar con Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:EY · BCD UK · Business lunch (36 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:46ebfdcda05a07b3c2e2@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261126T090000
+DTEND;TZID=Europe/Madrid:20261126T175000
+SUMMARY:EY · BCD UK · Coffee break permanente dulce y salado (36 pax)
+LOCATION:Santa Catalina
+DESCRIPTION:Coffee break · 09:00–17:50\nPax: 36 pax\nSala: Santa Catalin
+ a\nCatering manager: Paquita López\n⚠ Comida solo en las pausas: 10:30
+ –10:45\, 14:15–14:25 y 15:55–16:05. Alérgenos e intolerancias no in
+ dicados en el BEO: confirmar con Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:EY · BCD UK · Coffee break permanente dulce y salado (36 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:fb356e351fa1142d8eff@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261126T120000
+DTEND;TZID=Europe/Madrid:20261126T124500
+SUMMARY:EY · BCD UK · Business lunch (36 pax)
+LOCATION:Restaurante Trasluz
+DESCRIPTION:Almuerzo · 12:00–12:45\nPax: 36 pax\nSala: Restaurante Trasl
+ uz\nCatering manager: Paquita López\nChef choice · Banquete\n⚠ Alérge
+ nos e intolerancias no indicados en el BEO: confirmar con Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:EY · BCD UK · Business lunch (36 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f482ab3655038dea47a0@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261127T090000
+DTEND;TZID=Europe/Madrid:20261127T131500
+SUMMARY:EY · BCD UK · Coffee break permanente dulce y salado (36 pax)
+LOCATION:Santa Catalina
+DESCRIPTION:Coffee break · 09:00–13:15\nPax: 36 pax\nSala: Santa Catalin
+ a\nCatering manager: Paquita López\n⚠ Comida solo en la pausa de 11:30
+ –11:45 (bollería y saladas distintas a las de ayer). Alérgenos e intol
+ erancias no indicados en el BEO: confirmar con Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:EY · BCD UK · Coffee break permanente dulce y salado (36 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bebe641d1b52869c5fb9@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261127T131500
+DTEND;TZID=Europe/Madrid:20261127T140000
+SUMMARY:EY · BCD UK · Cocktail lunch (30 pax)
+LOCATION:Restaurante Trasluz
+DESCRIPTION:Almuerzo · 13:15–14:00\nPax: 30 pax\nSala: Restaurante Trasl
+ uz\nCatering manager: Paquita López\nChef choice · Cóctel\n⚠ MOD 1: 3
+ 0 pax (antes 33). «5 personas tienen prisa por irse al aeropuerto\, es po
+ sible que nos pidan alguna cajita para llevarse la comida». Alérgenos e 
+ intolerancias no indicados en el BEO: confirmar con Conference.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:EY · BCD UK · Cocktail lunch (30 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:33250c6218e117797a3c@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261129T072000
+DTEND;TZID=Europe/Madrid:20261129T080000
+SUMMARY:Elecciones Ecuador 2026 · Coffee break dulce-salado AM (33 pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Coffee break · 07:20–08:00\nPax: 33 pax\nSala: Elyxr Café\n
+ Catering manager: Ana Riera\nMenú 2\n⚠ OJO: son 40 pax en total\; en fa
+ ctura solo deben aparecer 33 (reparto del total sobre las personas factura
+ bles).
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Elecciones Ecuador 2026 · Coffee break dulce-salado AM (33 pax
+ )
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:2fcdb1b1c1b100926d63@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261129T130000
+DTEND;TZID=Europe/Madrid:20261129T150000
+SUMMARY:Elecciones Ecuador 2026 · Light standing buffet (staff) (33 pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Almuerzo · 13:00–15:00\nPax: 33 pax\nSala: Elyxr Café\nCate
+ ring manager: Ana Riera\nMenú 1\n⚠ OJO: son 40 pax en total\; en factur
+ a solo deben aparecer 33 (reparto del total sobre las personas facturables
+ ).
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Elecciones Ecuador 2026 · Light standing buffet (staff) (33 pa
+ x)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:7b786a8a59768d095a34@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261129T180000
+DTEND;TZID=Europe/Madrid:20261129T190000
+SUMMARY:Elecciones Ecuador 2026 · Merienda-cena (bocadillo) (33 pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Cena · 18:00–19:00\nPax: 33 pax\nSala: Elyxr Café\nCatering
+  manager: Ana Riera\n⚠ OJO: son 40 pax en total\; en factura solo deben 
+ aparecer 33 (reparto del total sobre las personas facturables).
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Elecciones Ecuador 2026 · Merienda-cena (bocadillo) (33 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:65d9459ea9dbad928137@eventos-palau
+DTSTAMP:20261126T000000Z
+DTSTART;TZID=Europe/Madrid:20261129T150000
+DTEND;TZID=Europe/Madrid:20261129T230000
+SUMMARY:Elecciones Ecuador 2026 · Coffee break líquido permanente PM (33 
+ pax)
+LOCATION:Elyxr Café
+DESCRIPTION:Coffee break · 15:00–23:00\nPax: 33 pax\nSala: Elyxr Café\n
+ Catering manager: Ana Riera\nPermanente 8 h\n⚠ OJO: son 40 pax en total\
+ ; en factura solo deben aparecer 33 (reparto del total sobre las personas 
+ facturables).
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Elecciones Ecuador 2026 · Coffee break líquido permanente PM 
+ (33 pax)
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+END:VCALENDAR

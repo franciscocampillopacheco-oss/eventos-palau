@@ -1,0 +1,50 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'com.paco.webapp'
+    compileSdk 34
+    defaultConfig {
+        minSdk 24
+        targetSdk 34
+        versionCode 2
+        versionName "1.1"
+    }
+    signingConfigs {
+        paco {
+            storeFile file('../paco-apps.jks')
+            storePassword 'pacoapps2026'
+            keyAlias 'paco'
+            keyPassword 'pacoapps2026'
+        }
+    }
+    buildFeatures { buildConfig true }
+    flavorDimensions = ["app"]
+    productFlavors {
+        ratios {
+            dimension "app"
+            applicationId "com.paco.ratioscocina"
+            resValue "string", "app_name", "Ratios cocina"
+            resValue "color", "barra", "#1C3A5E"
+            buildConfigField "String", "URL", '"https://franciscocampillopacheco-oss.github.io/eventos-palau/ratios/"'
+            buildConfigField "boolean", "AVISOS", "false"
+        }
+        eventos {
+            dimension "app"
+            applicationId "com.paco.eventospalau"
+            resValue "string", "app_name", "Eventos Palau"
+            resValue "color", "barra", "#0E2233"
+            buildConfigField "String", "URL", '"https://franciscocampillopacheco-oss.github.io/eventos-palau/eventos/"'
+            buildConfigField "boolean", "AVISOS", "true"
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.paco
+        }
+    }
+    lint { abortOnError false; checkReleaseBuilds false }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

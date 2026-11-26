@@ -1,0 +1,76 @@
+name: Sync desde Google Drive
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install google-api-python-client google-auth
+
+      - name: Download latest index.html from Google Drive
+        env:
+          GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
+          GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FILE_ID }}
+        run: |
+          cat << 'EOF' > sync.py
+          import os, json
+          from google.oauth2 import service_account
+          from googleapiclient.discovery import build
+          from googleapiclient.http import MediaIoBaseDownload
+          import io
+
+          creds_json = json.loads(os.environ['GDRIVE_CREDENTIALS'])
+          creds = service_account.Credentials.from_service_account_info(
+              creds_json,
+              scopes=['https://www.googleapis.com/auth/drive.readonly']
+          )
+          service = build('drive', 'v3', credentials=creds)
+          
+          # Search for most recent index.html in the folder
+          folder_id = os.environ['GDRIVE_FOLDER_ID']
+          results = service.files().list(
+              q=f"name='index.html' and '{folder_id}' in parents and trashed=false",
+              orderBy='modifiedTime desc',
+              pageSize=1,
+              fields='files(id, name, modifiedTime)'
+          ).execute()
+          
+          files = results.get('files', [])
+          if not files:
+              raise Exception('No index.html found in Drive folder')
+          
+          file_id = files[0]['id']
+          print(f"Downloading: {files[0]['name']} (modified: {files[0]['modifiedTime']})")
+          
+          request = service.files().get_media(fileId=file_id)
+          fh = io.BytesIO()
+          downloader = MediaIoBaseDownload(fh, request)
+          done = False
+          while not done:
+              _, done = downloader.next_chunk()
+          with open('index.html', 'wb') as f:
+              f.write(fh.getvalue())
+          print("Descargado correctamente")
+          EOF
+          python sync.py
+
+      - name: Commit y push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add index.html
+          git diff --staged --quiet || git commit -m "Actualizar infografia desde Drive"
+          git push

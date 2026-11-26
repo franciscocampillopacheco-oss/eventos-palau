@@ -1,0 +1,60 @@
+name: Apps Android
+
+# Compila las dos apps de Android (Ratios cocina y Eventos Palau) y deja los APK en apps/ de la web.
+on:
+  push:
+    branches: [main]
+    paths: ["android/**", ".github/workflows/apps-android.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: apps-android
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.7"
+      - name: Compilar
+        working-directory: android
+        run: |
+          set -o pipefail
+          gradle assembleRelease --no-daemon --stacktrace 2>&1 | tee build.log
+      - name: Publicar APK
+        run: |
+          mkdir -p apps
+          cp android/app/build/outputs/apk/ratios/release/app-ratios-release.apk apps/ratios-cocina.apk
+          cp android/app/build/outputs/apk/eventos/release/app-eventos-release.apk apps/eventos-palau.apk
+          rm -f android/build.log android/build-error.log
+          git config user.name "github-actions"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A apps android
+          if git diff --staged --quiet; then echo "Sin cambios"; exit 0; fi
+          git commit -m "Apps Android: APK compilados"
+          git pull --rebase origin main
+          git push
+          curl -s -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/pages/builds || true
+      - name: Guardar el error para revisarlo
+        if: failure()
+        run: |
+          tail -c 60000 android/build.log > android/build-error.log || true
+          git config user.name "github-actions"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add android/build-error.log
+          git commit -m "Apps Android: error de compilación" || exit 0
+          git pull --rebase origin main
+          git push
