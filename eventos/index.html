@@ -692,7 +692,7 @@ document.getElementById("view").addEventListener("keydown",e=>{const r=e.target.
   const setH=()=>document.documentElement.style.setProperty("--toph",top.offsetHeight+"px");
     if(window.ResizeObserver)new ResizeObserver(setH).observe(top);setH();})();
 </script>
-<div id="gate" hidden><div class="gbox"><b>Eventos</b><span id="gmsg">Dibuja el patrón</span>
+<div id="gate" hidden><div class="gbox"><span id="gmsg">Dibuja el patrón</span>
 <svg id="gpad" viewBox="0 0 300 300" role="img" aria-label="Patrón de desbloqueo"><polyline id="gline" points="" fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
 <style>
 #gate{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-left,0px))}

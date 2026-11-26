@@ -46,7 +46,7 @@ def descifrar_data(html):
     return json.loads(des(base64.b64decode(m.group(1)), clave()))
 
 
-GATE = r"""<div id="gate" hidden><div class="gbox"><b>Eventos</b><span id="gmsg">Dibuja el patrón</span>
+GATE = r"""<div id="gate" hidden><div class="gbox"><span id="gmsg">Dibuja el patrón</span>
 <svg id="gpad" viewBox="0 0 300 300" role="img" aria-label="Patrón de desbloqueo"><polyline id="gline" points="" fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
 <style>
 #gate{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-left,0px))}
