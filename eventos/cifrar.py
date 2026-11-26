@@ -72,7 +72,7 @@ async function derive(p){const k=await crypto.subtle.importKey("raw",new TextEnc
   return new Uint8Array(await crypto.subtle.deriveBits({name:"PBKDF2",salt:hex(SALT),iterations:ITER,hash:"SHA-256"},k,256));}
 const dec=(buf,k)=>{buf=new Uint8Array(buf);return crypto.subtle.decrypt({name:"AES-GCM",iv:buf.slice(0,12)},k||KEY,buf.slice(12));};
 window.DEC=b=>dec(b);
-window.HON=ls("beo-hist")==="1";
+window.HON=true;
 async function start(raw){
   const k=await imp(raw);
   const d=JSON.parse(new TextDecoder().decode(await dec(b64(ENC),k)));
